@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>日本語 文法クイズ</title>
+<meta name="description" content="일본어 동사 활용 퀴즈 앱 - N5/N4 문법">
+<meta name="theme-color" content="#16162a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="日本語クイズ">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2316162a'/><text y='68' x='50' text-anchor='middle' font-size='60' font-family='serif'>日</text></svg>">
+<script>
+// Inline PWA manifest
+const manifestData={name:'日本語 文法クイズ',short_name:'日本語クイズ',description:'일본어 동사 활용 퀴즈',start_url:'.',display:'standalone',background_color:'#16162a',theme_color:'#16162a',orientation:'portrait',icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='38' fill='%2316162a'/><text y='140' x='96' text-anchor='middle' font-size='120' font-family='serif' fill='%23e8b840'>日</text></svg>",sizes:'192x192',type:'image/svg+xml'},{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%2316162a'/><text y='380' x='256' text-anchor='middle' font-size='340' font-family='serif' fill='%23e8b840'>日</text></svg>",sizes:'512x512',type:'image/svg+xml'}]};
+const blob=new Blob([JSON.stringify(manifestData)],{type:'application/json'});
+const manifestURL=URL.createObjectURL(blob);
+const link=document.createElement('link');link.rel='manifest';link.href=manifestURL;document.currentScript.after(link);
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Noto+Serif+JP:wght@400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#16162a;--ink2:#32325a;
+  --paper:#f6f1e9;--paper2:#ede5d8;--paper3:#e2d8c8;
+  --acc:#bf4a1a;--accL:#e0703e;
+  --gold:#c49228;--goldL:#e8b840;
+  --ok:#27714a;--okL:#3a9e68;
+  --ng:#bf4a1a;
+  --blue:#2255aa;--blueL:#4477cc;
+  --FP:'Space Mono',monospace;
+  --FJ:'Noto Serif JP',serif;
+  --FB:'Noto Sans JP',sans-serif;
+  --r8:8px;--r12:12px;--r16:16px;
+}
+
+body{font-family:var(--FB);background:var(--ink);min-height:100vh;color:var(--paper);overflow-x:hidden}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:stretch;padding:0 16px}
+.nav-logo{font-family:var(--FJ);font-size:16px;color:var(--paper);letter-spacing:3px;padding:14px 16px 14px 0;margin-right:8px;border-right:1px solid rgba(255,255,255,.1)}
+.nav-logo span{color:var(--accL)}
+.nav-tabs{display:flex;gap:2px;align-items:center;flex:1}
+.ntab{font-family:var(--FP);font-size:11px;letter-spacing:1px;padding:10px 16px;border:none;background:none;color:rgba(245,240,232,.45);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;margin-top:2px}
+.ntab:hover{color:var(--paper)}
+.ntab.on{color:var(--goldL);border-bottom-color:var(--goldL)}
+.nav-today{font-family:var(--FP);font-size:11px;color:rgba(245,240,232,.4);padding:0 12px;display:flex;align-items:center;gap:6px;margin-left:auto}
+.nav-today b{color:var(--goldL)}
+.gen-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:200;background:linear-gradient(90deg,transparent 0%,var(--goldL) 50%,transparent 100%);background-size:200%;animation:genSlide 1s linear infinite;display:none}
+.gen-bar.on{display:block}
+@keyframes genSlide{to{background-position:-200% 0}}
+
+/* ── VIEWS ── */
+.view{display:none;padding:70px 16px 40px;max-width:560px;margin:0 auto}
+.view.on{display:block}
+
+/* ══════════════ HOME ══════════════ */
+.home-hero{text-align:center;padding:16px 0 24px}
+.hero-date{font-family:var(--FP);font-size:10px;letter-spacing:2px;color:rgba(245,240,232,.35);margin-bottom:8px}
+.hero-greeting{font-family:var(--FJ);font-size:26px;color:var(--paper);margin-bottom:4px}
+.hero-sub{font-size:13px;color:rgba(245,240,232,.5)}
+
+/* Goal progress */
+.goal-card{background:var(--paper);border-radius:var(--r16);padding:20px 22px;margin-bottom:14px;position:relative;overflow:hidden}
+.goal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc),var(--gold))}
+.gc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.gc-label{font-family:var(--FP);font-size:10px;letter-spacing:2px;color:rgba(26,26,46,.4);text-transform:uppercase}
+.gc-count{font-family:var(--FP);font-size:20px;font-weight:700;color:var(--ink)}
+.gc-count span{font-size:13px;color:rgba(26,26,46,.4);font-weight:400}
+.dots-row{display:flex;gap:5px;margin-bottom:12px}
+.dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--paper3);background:transparent;transition:all .3s;flex-shrink:0}
+.dot.done{background:var(--ok);border-color:var(--ok)}
+.dot.done.gold{background:var(--gold);border-color:var(--gold)}
+.gc-msg{font-size:12px;color:rgba(26,26,46,.5);font-style:italic}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.stat-box{background:var(--paper);border-radius:var(--r12);padding:12px 10px;text-align:center}
+.stat-num{font-family:var(--FP);font-size:22px;font-weight:700;color:var(--ink);line-height:1}
+.stat-num.fire{color:var(--acc)}
+.stat-lbl{font-size:10px;color:rgba(26,26,46,.45);margin-top:3px;letter-spacing:.5px}
+
+/* Calendar */
+.cal-card{background:var(--paper);border-radius:var(--r16);padding:18px 20px;margin-bottom:14px}
+.cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.cal-title{font-family:var(--FP);font-size:10px;letter-spacing:2px;color:rgba(26,26,46,.4);text-transform:uppercase}
+.cal-legend{display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(26,26,46,.35)}
+.cal-legend .swatch{width:10px;height:10px;border-radius:2px;display:inline-block}
+.dow-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.dow{font-family:var(--FP);font-size:9px;color:rgba(26,26,46,.3);text-align:center;padding:2px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{aspect-ratio:1;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--FP);font-size:9px;cursor:default;position:relative;transition:transform .15s}
+.cal-day:hover{transform:scale(1.15)}
+.cal-day.empty{background:rgba(26,26,46,.06);color:rgba(26,26,46,.2)}
+.cal-day.c1{background:rgba(39,113,74,.2);color:rgba(39,113,74,.8)}
+.cal-day.c2{background:rgba(39,113,74,.45);color:#1f5538}
+.cal-day.c3{background:var(--ok);color:#fff}
+.cal-day.today{box-shadow:0 0 0 2px var(--gold)}
+.cal-day.future{background:transparent;color:rgba(26,26,46,.12);cursor:default}
+
+/* Deploy guide */
+.deploy-card{background:rgba(34,85,170,.12);border:1px solid rgba(68,119,204,.3);border-radius:var(--r12);padding:16px 18px;margin-bottom:14px;cursor:pointer}
+.deploy-title{font-family:var(--FP);font-size:11px;letter-spacing:1px;color:var(--blueL);display:flex;justify-content:space-between;align-items:center}
+.deploy-body{display:none;margin-top:14px}
+.deploy-body.open{display:block}
+.deploy-step{display:flex;gap:10px;margin-bottom:12px;font-size:13px;color:rgba(26,26,46,.8)}
+.step-num{font-family:var(--FP);font-size:11px;background:var(--blue);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.deploy-step a{color:var(--blueL);text-decoration:underline}
+.deploy-step code{background:rgba(26,26,46,.08);padding:1px 5px;border-radius:3px;font-family:var(--FP);font-size:11px}
+
+.start-btn{width:100%;padding:16px;border:none;border-radius:var(--r12);background:linear-gradient(135deg,var(--acc),var(--gold));color:#fff;font-family:var(--FP);font-size:13px;letter-spacing:2px;cursor:pointer;transition:all .2s;margin-bottom:8px}
+.start-btn:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,146,40,.3)}
+
+/* ══════════════ QUIZ ══════════════ */
+.form-tabs{display:flex;gap:4px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;margin-bottom:4px}
+.form-tabs::-webkit-scrollbar{display:none}
+.ftab{font-family:var(--FP);font-size:10px;letter-spacing:1px;padding:5px 10px;border-radius:4px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:rgba(245,240,232,.5);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.ftab:hover{color:var(--paper);background:rgba(255,255,255,.1)}
+.ftab.on{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+
+.today-strip{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.ts-dots{display:flex;gap:3px}
+.ts-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);background:transparent}
+.ts-dot.done{background:var(--gold);border-color:var(--gold)}
+.ts-label{font-family:var(--FP);font-size:10px;color:rgba(245,240,232,.4)}
+.pool-info{font-family:var(--FP);font-size:9px;color:rgba(245,240,232,.3)}
+
+/* Form badge */
+.badge-row{display:flex;align-items:center;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.fbadge{font-family:var(--FP);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:3px}
+.ft{background:rgba(196,146,40,.2);color:var(--gold);border:1px solid rgba(196,146,40,.4)}
+.fm{background:rgba(68,119,204,.2);color:#7eb8f7;border:1px solid rgba(68,119,204,.4)}
+.fn{background:rgba(191,74,26,.2);color:var(--accL);border:1px solid rgba(191,74,26,.4)}
+.fk{background:rgba(39,113,74,.2);color:#5bc88a;border:1px solid rgba(39,113,74,.4)}
+.fj{background:rgba(140,60,180,.2);color:#c87bf7;border:1px solid rgba(140,60,180,.4)}
+.fs{background:rgba(200,120,40,.2);color:#f0a050;border:1px solid rgba(200,120,40,.4)}
+.fi{background:rgba(40,160,200,.2);color:#60d0f0;border:1px solid rgba(40,160,200,.4)}
+.fme{background:rgba(200,40,60,.2);color:#f07090;border:1px solid rgba(200,40,60,.4)}
+.fg{background:rgba(140,200,40,.2);color:#b0e870;border:1px solid rgba(140,200,40,.4)}
+.fp{background:rgba(200,160,40,.2);color:#f0d060;border:1px solid rgba(200,160,40,.4)}
+
+/* Card */
+.card{background:var(--paper);border-radius:var(--r16);padding:22px 24px 20px;box-shadow:0 20px 60px rgba(0,0,0,.5);position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc),var(--gold))}
+.q-label{font-family:var(--FP);font-size:9px;letter-spacing:2px;color:rgba(26,26,46,.32);text-transform:uppercase;margin-bottom:8px}
+
+.word-bar{background:rgba(26,26,46,.06);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:7px 12px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wb-k{font-family:var(--FJ);font-size:20px;color:var(--ink);font-weight:700}
+.wb-r{font-family:var(--FJ);font-size:12px;color:var(--ink2)}
+.wb-m{font-size:12px;color:var(--acc);font-weight:600}
+
+.q-text{font-family:var(--FJ);font-size:19px;color:var(--ink);line-height:1.75;margin-bottom:6px}
+.blank{display:inline-block;border-bottom:2.5px solid var(--acc);min-width:50px;text-align:center;color:var(--acc);font-weight:700;padding:0 4px;font-family:var(--FJ)}
+.q-hint{font-family:var(--FP);font-size:10px;letter-spacing:1px;color:rgba(26,26,46,.38);margin-bottom:16px;padding:4px 0}
+
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.ch{background:var(--paper2);border:1.5px solid transparent;border-radius:var(--r8);padding:10px 12px;font-family:var(--FJ);font-size:16px;color:var(--ink);cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:flex-start;gap:8px;min-height:44px}
+.ch:hover:not(:disabled){background:var(--paper3);border-color:var(--ink2)}
+.ch.ok{background:rgba(39,113,74,.15);border-color:var(--ok);color:var(--ok)}
+.ch.ok .cl{background:var(--ok);color:#fff}
+.ch.ng{background:rgba(191,74,26,.1);border-color:var(--ng);color:var(--ng)}
+.ch.ng .cl{background:var(--ng);color:#fff}
+.ch:disabled{cursor:default}
+.cl{font-family:var(--FP);font-size:9px;min-width:18px;height:18px;border-radius:3px;background:rgba(26,26,46,.1);color:rgba(26,26,46,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+
+/* Korean translation */
+.kr-line{font-size:12px;color:rgba(26,26,46,.38);font-style:italic;line-height:1.6;padding:8px 12px;background:rgba(26,26,46,.04);border-radius:6px;margin-bottom:10px;font-family:var(--FB)}
+
+/* Feedback */
+.fb{font-size:13px;display:none;padding:12px 14px;border-radius:var(--r8);margin-bottom:10px}
+.fb.on{display:block}
+.fb.ok{background:rgba(39,113,74,.1);color:#1f5538;border:1px solid rgba(39,113,74,.3)}
+.fb.ng{background:rgba(191,74,26,.08);color:#8a2f0e;border:1px solid rgba(191,74,26,.25)}
+.fb strong{display:block;font-size:14px;margin-bottom:4px;font-family:var(--FJ)}
+.rule-box{margin-top:8px;padding:8px 10px;background:rgba(26,26,46,.06);border-radius:6px;font-size:12px;color:rgba(26,26,46,.6);line-height:1.7}
+.rule-box b{color:var(--ink)}
+.grp-tag{display:inline-block;margin-top:6px;font-family:var(--FP);font-size:10px;padding:2px 7px;border-radius:3px}
+.gt1{background:rgba(196,146,40,.15);color:#8a6210}
+.gt1w{background:rgba(200,40,40,.12);color:#901010}
+.gt2{background:rgba(68,119,204,.15);color:#1a3f8a}
+.gt3{background:rgba(140,60,180,.15);color:#6020a0}
+
+.next-btn{width:100%;padding:12px;border:none;border-radius:var(--r8);background:var(--ink);color:var(--paper);font-family:var(--FP);font-size:11px;letter-spacing:2px;cursor:pointer;transition:all .2s;display:none}
+.next-btn.on{display:block}
+.next-btn:hover{background:var(--ink2);transform:translateY(-1px)}
+
+.action-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.skip{font-family:var(--FP);font-size:10px;letter-spacing:1px;color:rgba(245,240,232,.28);background:none;border:none;cursor:pointer;padding:6px 0;transition:color .2s}
+.skip:hover{color:rgba(245,240,232,.6)}
+.qnum{font-family:var(--FP);font-size:10px;color:rgba(245,240,232,.28)}
+
+/* Loading card */
+.loading-card{background:var(--paper);border-radius:var(--r16);padding:36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.spin{font-size:28px;animation:sp 1s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* Animations */
+@keyframes sIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shk{0%,100%{transform:translateX(0)}25%,75%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
+.card.ani{animation:sIn .25s ease}
+.card.shk{animation:shk .3s ease}
+
+/* Responsive */
+@media(max-width:400px){
+  .choices{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="gen-bar" id="genBar"></div>
+
+<nav>
+  <div class="nav-logo">日本語 <span>文法</span></div>
+  <div class="nav-tabs">
+    <button class="ntab on" data-v="home">🏠 홈</button>
+    <button class="ntab" data-v="quiz">✏️ 퀴즈</button>
+    <button class="ntab" data-v="settings">⚙️ 설정</button>
+  </div>
+  <div class="nav-today">오늘 <b id="navToday">0</b>/10</div>
+</nav>
+
+<!-- ════════ HOME VIEW ════════ -->
+<div class="view on" id="homeView">
+  <div class="home-hero">
+    <div class="hero-date" id="heroDate"></div>
+    <div class="hero-greeting" id="heroGreeting"></div>
+    <div class="hero-sub" id="heroSub"></div>
+  </div>
+
+  <!-- Today Goal -->
+  <div class="goal-card">
+    <div class="gc-top">
+      <div class="gc-label">오늘의 목표 · 今日の目標</div>
+      <div class="gc-count" id="gcCount">0<span>/10</span></div>
+    </div>
+    <div class="dots-row" id="dotsRow"></div>
+    <div class="gc-msg" id="gcMsg"></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num fire" id="stStreak">0</div><div class="stat-lbl">🔥 연속일</div></div>
+    <div class="stat-box"><div class="stat-num" id="stWeek">0</div><div class="stat-lbl">이번 주</div></div>
+    <div class="stat-box"><div class="stat-num" id="stMonth">0</div><div class="stat-lbl">이번 달</div></div>
+    <div class="stat-box"><div class="stat-num" id="stTotal">0</div><div class="stat-lbl">총 누적</div></div>
+  </div>
+
+  <!-- Calendar -->
+  <div class="cal-card">
+    <div class="cal-header">
+      <div class="cal-title">학습 캘린더 · 학습 이력</div>
+      <div class="cal-legend">
+        <span class="swatch" style="background:rgba(39,113,74,.2)"></span>1+
+        <span class="swatch" style="background:rgba(39,113,74,.45)"></span>5+
+        <span class="swatch" style="background:var(--ok)"></span>10+
+      </div>
+    </div>
+    <div class="dow-row">
+      <div class="dow">일</div><div class="dow">월</div><div class="dow">화</div>
+      <div class="dow">수</div><div class="dow">목</div><div class="dow">금</div><div class="dow">토</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <!-- Deploy guide -->
+  <div class="deploy-card" id="deployCard">
+    <div class="deploy-title">
+      🌐 웹사이트로 만드는 방법 (Netlify, 무료, 2분)
+      <span id="deployArrow">▼</span>
+    </div>
+    <div class="deploy-body" id="deployBody">
+      <div class="deploy-step"><div class="step-num">1</div><div>이 파일을 다운로드합니다. (<code>japanese_quiz.html</code>)</div></div>
+      <div class="deploy-step"><div class="step-num">2</div><div><a href="https://app.netlify.com/drop" target="_blank">app.netlify.com/drop</a> 에 접속합니다. 회원가입 불필요.</div></div>
+      <div class="deploy-step"><div class="step-num">3</div><div>HTML 파일을 <b>그대로 드래그 &amp; 드롭</b>합니다. ⚠️ 폴더가 아닌 파일 자체를 드롭하세요.</div></div>
+      <div class="deploy-step"><div class="step-num">4</div><div>즉시 <code>xxxx.netlify.app</code> 형식의 URL이 생성됩니다. 북마크하거나 공유하세요!</div></div>
+      <div class="deploy-step"><div class="step-num">5</div><div>(선택) Netlify에 회원가입하면 URL을 원하는 이름으로 바꿀 수 있습니다. 예: <code>my-japanese-quiz.netlify.app</code></div></div>
+      <div style="font-size:11px;color:rgba(26,26,46,.45);padding:8px 12px;background:rgba(26,26,46,.05);border-radius:6px;margin-top:4px">
+        ⚠️ 단, Netlify에 배포한 경우 Claude API 자동 생성 기능은 작동하지 않습니다 (API키 필요). 기본 문제 은행(50개)만 사용됩니다. Claude.ai에서 사용 시에는 무한 생성이 됩니다.
+      </div>
+    </div>
+  </div>
+
+  <button class="start-btn" onclick="goQuiz()">오늘 학습 시작 → 今日も頑張ろう！</button>
+</div>
+
+<!-- ════════ SETTINGS VIEW ════════ -->
+<div class="view" id="settingsView">
+  <div style="padding:8px 0 20px">
+    <div style="font-family:var(--FJ);font-size:22px;color:var(--paper);margin-bottom:6px">設定 · 설정</div>
+    <div style="font-size:12px;color:rgba(245,240,232,.4)">API 키 설정 및 앱 설치 안내</div>
+  </div>
+
+  <!-- API Key -->
+  <div class="goal-card" style="margin-bottom:14px">
+    <div class="gc-top" style="margin-bottom:12px">
+      <div class="gc-label">🆓 Google Gemini API 키 (완전 무료)</div>
+      <div id="apiStatus" style="font-family:var(--FP);font-size:10px;padding:3px 8px;border-radius:3px;background:rgba(196,146,40,.15);color:#9a6e1a">미설정</div>
+    </div>
+    <div style="font-size:12px;color:rgba(26,26,46,.55);margin-bottom:12px;line-height:1.7">
+      구글 계정만 있으면 <b style="color:var(--ink)">완전 무료</b>로 무한 자동생성됩니다.<br>
+      신용카드 등록 불필요 · 하루 2,500문제까지 무료 · 키는 이 기기에만 저장됩니다.
+    </div>
+    <div style="background:rgba(34,85,170,.08);border-radius:var(--r8);padding:10px 12px;margin-bottom:12px;font-size:12px;color:rgba(26,26,46,.65);line-height:1.9">
+      <b style="color:var(--ink)">발급 방법 (2분)</b><br>
+      1. <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--blue)">aistudio.google.com/apikey</a> 접속<br>
+      2. 구글 계정 로그인<br>
+      3. "Create API Key" 클릭<br>
+      4. 키 복사 후 아래 입력 → 저장
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <input type="password" id="apiKeyInput" placeholder="AIzaSy..." 
+        style="flex:1;padding:10px 12px;border-radius:var(--r8);border:1.5px solid var(--paper3);background:var(--paper2);font-family:var(--FP);font-size:11px;color:var(--ink);outline:none">
+      <button onclick="saveApiKey()" 
+        style="padding:10px 16px;border:none;border-radius:var(--r8);background:var(--ok);color:#fff;font-family:var(--FP);font-size:11px;cursor:pointer;white-space:nowrap">저장</button>
+    </div>
+    <div style="font-size:11px;color:rgba(26,26,46,.4);line-height:1.6">
+      💡 Claude.ai에서 사용할 때는 키 없이도 자동생성됩니다.<br>
+      Netlify · PWA · 폰에서 직접 열 때만 키가 필요합니다.
+    </div>
+  </div>
+
+  <!-- PWA Install -->
+  <div class="goal-card" style="margin-bottom:14px">
+    <div class="gc-top" style="margin-bottom:12px">
+      <div class="gc-label">📱 홈 화면에 앱 추가 (PWA)</div>
+    </div>
+    <div style="font-size:12px;color:rgba(26,26,46,.55);line-height:1.8;margin-bottom:12px">
+      이 앱을 스마트폰 홈 화면에 추가하면 일반 앱처럼 사용할 수 있습니다.<br>
+      스플래시 화면, 전체 화면, 오프라인 기본 문제도 지원합니다.
+    </div>
+    <div style="background:rgba(26,26,46,.06);border-radius:var(--r8);padding:12px 14px">
+      <div style="font-family:var(--FP);font-size:10px;color:rgba(26,26,46,.5);letter-spacing:1px;margin-bottom:10px">설치 방법</div>
+      <div style="font-size:12px;color:rgba(26,26,46,.7);line-height:2">
+        <b>🤖 안드로이드 (Chrome):</b> 주소창 오른쪽 ⋮ 메뉴 → <b>"홈 화면에 추가"</b><br>
+        <b>🍎 아이폰 (Safari):</b> 하단 공유 버튼 □↑ → <b>"홈 화면에 추가"</b><br>
+        <b>💻 PC (Chrome):</b> 주소창 오른쪽 ⊕ 아이콘 → <b>"설치"</b>
+      </div>
+    </div>
+    <div id="installBtnWrap" style="margin-top:12px;display:none">
+      <button id="installBtn" onclick="installPWA()" 
+        style="width:100%;padding:12px;border:none;border-radius:var(--r8);background:linear-gradient(135deg,var(--blue),var(--blueL));color:#fff;font-family:var(--FP);font-size:12px;letter-spacing:1px;cursor:pointer">
+        📲 이 기기에 앱 설치하기
+      </button>
+    </div>
+  </div>
+
+  <!-- Play Store info -->
+  <div class="deploy-card" id="playStoreCard" style="margin-bottom:14px">
+    <div class="deploy-title">
+      🏪 Google Play Store 등록 방법
+      <span id="playArrow">▼</span>
+    </div>
+    <div class="deploy-body" id="playBody">
+      <div style="font-size:12px;color:rgba(26,26,46,.6);line-height:1.8;margin-bottom:12px;padding:10px;background:rgba(26,26,46,.05);border-radius:6px">
+        Netlify에 배포한 웹사이트를 <b>TWA (Trusted Web Activity)</b> 방식으로 Play Store에 등록할 수 있습니다. 코드 재작성 없이 가능합니다.
+      </div>
+      <div class="deploy-step"><div class="step-num">1</div><div>먼저 Netlify에 배포 → URL 확보 (홈 탭 참고)</div></div>
+      <div class="deploy-step"><div class="step-num">2</div><div><a href="https://play.google.com/console" target="_blank">play.google.com/console</a> → 개발자 계정 등록 ($25 일회성)</div></div>
+      <div class="deploy-step"><div class="step-num">3</div><div><a href="https://www.pwabuilder.com" target="_blank">pwabuilder.com</a> 에서 Netlify URL 입력 → Android 패키지 자동 생성</div></div>
+      <div class="deploy-step"><div class="step-num">4</div><div>생성된 AAB 파일을 Play Console에 업로드 → 검토 (보통 1~3일)</div></div>
+      <div class="deploy-step"><div class="step-num">5</div><div>앱 심사 통과 후 스토어에 무료 등록 가능</div></div>
+      <div style="font-size:11px;color:rgba(26,26,46,.4);margin-top:8px;padding:8px;background:rgba(26,26,46,.04);border-radius:6px">
+        ⚠️ 단, Play Store 등록 앱에서 API 키가 소스에 노출됩니다. 공개 배포 시에는 별도 백엔드 서버(Netlify Functions 등) 로 API를 중계하는 것을 권장합니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- Data management -->
+  <div class="goal-card" style="margin-bottom:14px">
+    <div class="gc-label" style="margin-bottom:12px">데이터 관리</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button onclick="exportData()" style="padding:10px;border:1px solid var(--paper3);border-radius:var(--r8);background:var(--paper2);color:var(--ink2);font-family:var(--FP);font-size:10px;letter-spacing:1px;cursor:pointer">📤 데이터 내보내기</button>
+      <button onclick="confirmReset()" style="padding:10px;border:1px solid rgba(191,74,26,.3);border-radius:var(--r8);background:rgba(191,74,26,.08);color:var(--ng);font-family:var(--FP);font-size:10px;letter-spacing:1px;cursor:pointer">🗑 기록 초기화</button>
+    </div>
+  </div>
+</div>
+<div class="view" id="quizView">
+  <div class="form-tabs" id="formTabs">
+    <button class="ftab on" data-f="all">전체</button>
+    <button class="ftab" data-f="te">て형</button>
+    <button class="ftab" data-f="masu">ます형</button>
+    <button class="ftab" data-f="nai">ない형</button>
+    <button class="ftab" data-f="kano">가능형</button>
+    <button class="ftab" data-f="judou">수동형</button>
+    <button class="ftab" data-f="shieki">사역형</button>
+    <button class="ftab" data-f="iko">의향형</button>
+    <button class="ftab" data-f="meirei">명령형</button>
+    <button class="ftab" data-f="group">그룹판별</button>
+    <button class="ftab" data-f="particle">조사</button>
+  </div>
+  <div class="today-strip">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="ts-dots" id="tsDots"></div>
+      <div class="ts-label" id="tsLabel"></div>
+    </div>
+    <div class="pool-info" id="poolInfo"></div>
+  </div>
+  <div class="badge-row">
+    <span class="fbadge" id="fBadge"></span>
+  </div>
+  <div id="cardArea"></div>
+  <div class="action-row">
+    <button class="skip" id="skipBtn">모르겠어요 (skip)</button>
+    <div class="qnum" id="qNum"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  QUESTION BANK — N5/N4, Full Sentences
+// ══════════════════════════════════════════
+const SEED = [
+// ──────────── て형 ────────────
+{f:'te',form:'て형',word:{k:'食べる',r:'たべる',m:'먹다'},
+ q:'毎朝、ごはんを___から、学校に行きます。',
+ kr:'매일 아침, 밥을 ___ 학교에 갑니다.',
+ hint:'食べる → て形',
+ choices:['たべて','たべって','たべにて','たべいて'],ans:'たべて',
+ ex:'たべる → たべ＋て',rule:'2그룹 て형: る를 빼고 +て (たべ＋て)',grp:'2그룹'},
+
+{f:'te',form:'て형',word:{k:'飲む',r:'のむ',m:'마시다'},
+ q:'薬を___から、ゆっくり横になってください。',
+ kr:'약을 ___ 천천히 누우세요.',
+ hint:'飲む → て形',
+ choices:['のんで','のみて','のむて','のって'],ans:'のんで',
+ ex:'のむ → のん＋で',rule:'1그룹 む→んで (ぬ・む・ぶ로 끝나면 →んで)',grp:'1그룹'},
+
+{f:'te',form:'て형',word:{k:'書く',r:'かく',m:'쓰다'},
+ q:'住所と名前を___から、受付に出してください。',
+ kr:'주소와 이름을 ___ 접수처에 제출해 주세요.',
+ hint:'書く → て形',
+ choices:['かいて','かきて','かって','かくて'],ans:'かいて',
+ ex:'かく → かい＋て',rule:'1그룹 く→いて (※いく만 例外→いって)',grp:'1그룹'},
+
+{f:'te',form:'て형',word:{k:'行く',r:'いく',m:'가다'},
+ q:'コンビニに___、牛乳とパンを買ってきました。',
+ kr:'편의점에 ___ 우유와 빵을 사왔습니다.',
+ hint:'行く → て形 ※예외!',
+ choices:['いって','いきて','いいて','いくて'],ans:'いって',
+ ex:'いく → いって (유일한 예외!)',rule:'いく만 く→いて 규칙의 예외: →いって',grp:'1그룹 예외'},
+
+{f:'te',form:'て형',word:{k:'待つ',r:'まつ',m:'기다리다'},
+ q:'バス停で友達を___いたら、急に雨が降ってきました。',
+ kr:'버스 정류장에서 친구를 기다리고 있으니 갑자기 비가 내리기 시작했습니다.',
+ hint:'待つ → て形',
+ choices:['まって','まちて','まつて','まとて'],ans:'まって',
+ ex:'まつ → まっ＋て',rule:'1그룹 つ→って (う・つ・る로 끝나면 →って)',grp:'1그룹'},
+
+{f:'te',form:'て形',word:{k:'乗る',r:'のる',m:'타다'},
+ q:'電車に___から、だいたい三十分で駅に着きます。',
+ kr:'전철을 ___ 약 30분이면 역에 도착합니다.',
+ hint:'乗る → て形 (1그룹 주의!)',
+ choices:['のって','のりて','のるて','のれて'],ans:'のって',
+ ex:'のる → のっ＋て',rule:'乗る는 1그룹! る→って (2그룹 たべる→たべて 와 구별)',grp:'1그룹'},
+
+{f:'te',form:'て형',word:{k:'起きる',r:'おきる',m:'일어나다'},
+ q:'毎朝六時に___から、シャワーを浴びて出かけます。',
+ kr:'매일 아침 6시에 ___ 샤워를 하고 외출합니다.',
+ hint:'起きる → て形',
+ choices:['おきて','おきって','おいて','おきりて'],ans:'おきて',
+ ex:'おきる → おき＋て',rule:'2그룹 て형: る→て (おき+て)',grp:'2그룹'},
+
+{f:'te',form:'て형',word:{k:'する',r:'する',m:'하다'},
+ q:'宿題を全部___から、ゲームをしてもいいですよ。',
+ kr:'숙제를 전부 ___ 게임을 해도 됩니다.',
+ hint:'する → て形',
+ choices:['して','すて','するて','せて'],ans:'して',
+ ex:'する → して (불규칙)',rule:'3그룹 する 전체 활용: して・します・しない・できる・される・させる',grp:'3그룹'},
+
+{f:'te',form:'て형',word:{k:'来る',r:'くる',m:'오다'},
+ q:'友達が家に___から、一緒に晩ご飯を食べました。',
+ kr:'친구가 집에 ___ 함께 저녁밥을 먹었습니다.',
+ hint:'来る → て形',
+ choices:['きて','くて','こて','くりて'],ans:'きて',
+ ex:'くる → きて (불규칙)',rule:'3그룹 くる 전체 활용: きて・きます・こない・こられる・こよう',grp:'3그룹'},
+
+{f:'te',form:'て형',word:{k:'帰る',r:'かえる',m:'돌아가다'},
+ q:'会社から___から、すぐに夕ご飯を作り始めました。',
+ kr:'회사에서 ___ 바로 저녁밥을 만들기 시작했습니다.',
+ hint:'帰る → て形 (1그룹 주의!)',
+ choices:['かえって','かえりて','かえるて','かえにて'],ans:'かえって',
+ ex:'かえる → かえっ＋て',rule:'帰る는 1그룹 예외! る→って (かえって・かえります)',grp:'1그룹 주의'},
+
+// ──────────── ます형 ────────────
+{f:'masu',form:'ます형',word:{k:'起きる',r:'おきる',m:'일어나다'},
+ q:'私は毎朝六時に___。週末でも遅くまで寝ません。',
+ kr:'저는 매일 아침 6시에 일어납니다. 주말에도 늦게까지 자지 않습니다.',
+ hint:'起きる → ます形',
+ choices:['おきます','おきります','おこます','おけます'],ans:'おきます',
+ ex:'おきる → おき＋ます',rule:'2그룹 ます형: る를 빼고 +ます (おき＋ます)',grp:'2그룹'},
+
+{f:'masu',form:'ます형',word:{k:'飲む',r:'のむ',m:'마시다'},
+ q:'お医者さんに、毎食後に薬を三錠___と言われました。',
+ kr:'의사 선생님께 매 식후에 약을 3알 마시라고 들었습니다.',
+ hint:'飲む → ます形',
+ choices:['のみます','のんます','のむます','のまます'],ans:'のみます',
+ ex:'のむ → のみ＋ます',rule:'1그룹 ます형: 어미 u단→i단+ます (む→み)',grp:'1그룹'},
+
+{f:'masu',form:'ます형',word:{k:'食べる',r:'たべる',m:'먹다'},
+ q:'私は朝ごはんにいつもパンとコーヒーを___。',
+ kr:'저는 아침밥으로 항상 빵과 커피를 먹습니다.',
+ hint:'食べる → ます形',
+ choices:['たべます','たべります','たべいます','たべえます'],ans:'たべます',
+ ex:'たべる → たべ＋ます',rule:'2그룹: る→+ます (たべ+ます)',grp:'2그룹'},
+
+{f:'masu',form:'ます형',word:{k:'話す',r:'はなす',m:'말하다'},
+ q:'週に一度、日本語の先生と電話で三十分___。',
+ kr:'주 1회 일본어 선생님과 전화로 30분 이야기합니다.',
+ hint:'話す → ます形',
+ choices:['はなします','はなさます','はなすます','はなします'],ans:'はなします',
+ ex:'はなす → はなし＋ます',rule:'1그룹 す→し+ます',grp:'1그룹'},
+
+{f:'masu',form:'ます형',word:{k:'来る',r:'くる',m:'오다'},
+ q:'明日の午後三時に、友達が家に___。楽しみです。',
+ kr:'내일 오후 3시에 친구가 집에 옵니다. 기대됩니다.',
+ hint:'来る → ます形',
+ choices:['きます','くます','こます','くります'],ans:'きます',
+ ex:'くる → きます (불규칙)',rule:'くる→きます (불규칙. こない・きて・こられる)',grp:'3그룹'},
+
+{f:'masu',form:'ます형',word:{k:'する',r:'する',m:'하다'},
+ q:'毎晩寝る前に、その日の日本語の勉強を復習___。',
+ kr:'매일 밤 자기 전에 그날의 일본어 공부를 복습합니다.',
+ hint:'する → ます形',
+ choices:['します','するます','せます','しります'],ans:'します',
+ ex:'する → します (불규칙)',rule:'する→します (불규칙)',grp:'3그룹'},
+
+// ──────────── ない형 ────────────
+{f:'nai',form:'ない형',word:{k:'行く',r:'いく',m:'가다'},
+ q:'今日は頭が痛いので、学校に___つもりです。',
+ kr:'오늘은 머리가 아파서 학교에 가지 않을 예정입니다.',
+ hint:'行く → ない形',
+ choices:['いかない','いきない','いかれない','いかくない'],ans:'いかない',
+ ex:'いく → いか＋ない',rule:'1그룹 ない형: 어미 u단→a단+ない (く→か)',grp:'1그룹'},
+
+{f:'nai',form:'ない형',word:{k:'食べる',r:'たべる',m:'먹다'},
+ q:'ダイエット中なので、夜は甘いものを___ようにしています。',
+ kr:'다이어트 중이라 밤에는 단 것을 먹지 않으려 하고 있습니다.',
+ hint:'食べる → ない形',
+ choices:['たべない','たべくない','たべわない','たべじゃない'],ans:'たべない',
+ ex:'たべる → たべ＋ない',rule:'2그룹 ない형: る→+ない (たべ+ない)',grp:'2그룹'},
+
+{f:'nai',form:'ない형',word:{k:'来る',r:'くる',m:'오다'},
+ q:'田中さんは急用ができて、今日の会議に___そうです。',
+ kr:'다나카 씨는 급한 일이 생겨서 오늘 회의에 오지 않는다고 합니다.',
+ hint:'来る → ない形',
+ choices:['こない','くない','きない','こられない'],ans:'こない',
+ ex:'くる → こない (불규칙)',rule:'くる→こない (불규칙. こ+ない)',grp:'3그룹'},
+
+{f:'nai',form:'ない형',word:{k:'する',r:'する',m:'하다'},
+ q:'明日は大事な試験があるので、今夜はゲームを___と決めました。',
+ kr:'내일 중요한 시험이 있어서 오늘 밤은 게임을 하지 않기로 결심했습니다.',
+ hint:'する → ない形',
+ choices:['しない','せない','さない','すない'],ans:'しない',
+ ex:'する → しない (불규칙)',rule:'する→しない (불규칙)',grp:'3그룹'},
+
+{f:'nai',form:'ない형',word:{k:'飲む',r:'のむ',m:'마시다'},
+ q:'お酒に弱いので、パーティーでもあまり___ようにしています。',
+ kr:'술에 약해서 파티에서도 별로 마시지 않으려 하고 있습니다.',
+ hint:'飲む → ない形',
+ choices:['のまない','のみない','のめない','のむない'],ans:'のまない',
+ ex:'のむ → のま＋ない',rule:'1그룹 む→ま+ない',grp:'1그룹'},
+
+{f:'nai',form:'ない형',word:{k:'帰る',r:'かえる',m:'돌아가다'},
+ q:'今夜は仕事が忙しくて、早く家に___かもしれません。',
+ kr:'오늘 밤은 일이 바빠서 일찍 집에 돌아가지 못할지도 모릅니다.',
+ hint:'帰る → ない形 (1그룹!)',
+ choices:['かえらない','かえりない','かえれない','かえくない'],ans:'かえらない',
+ ex:'かえる → かえら＋ない',rule:'帰る는 1그룹! → かえらない (2그룹처럼 생겼지만 1그룹)',grp:'1그룹 주의'},
+
+// ──────────── 가능형 ────────────
+{f:'kano',form:'가능형',word:{k:'話す',r:'はなす',m:'말하다'},
+ q:'日本に来てから六ヶ月で、もっと自然に日本語が___ようになりました。',
+ kr:'일본에 온 지 6개월 만에 더 자연스럽게 일본어를 말할 수 있게 됐습니다.',
+ hint:'話す → 可能形',
+ choices:['はなせる','はなされる','はなしれる','はなすれる'],ans:'はなせる',
+ ex:'はなす → はなせ＋る',rule:'1그룹 가능형: 어미 u단→e단+る (す→せ)',grp:'1그룹'},
+
+{f:'kano',form:'가능형',word:{k:'食べる',r:'たべる',m:'먹다'},
+ q:'最初は辛かったけど、練習してからは、辛い食べ物も___ようになりました。',
+ kr:'처음엔 매웠지만 연습 후에는 매운 음식도 먹을 수 있게 됐습니다.',
+ hint:'食べる → 可能形',
+ choices:['たべられる','たべれる','たべかれる','たべされる'],ans:'たべられる',
+ ex:'たべる → たべ＋られる',rule:'2그룹 가능형: る→られる (구어체 ら抜き たべれる도 사용)',grp:'2그룹'},
+
+{f:'kano',form:'가능형',word:{k:'する',r:'する',m:'하다'},
+ q:'この難しい仕事は、あの人なら一人で___と思いますよ。',
+ kr:'이 어려운 일은 저 사람이라면 혼자 할 수 있다고 생각합니다.',
+ hint:'する → 可能形 (특수!)',
+ choices:['できる','しられる','しれる','させる'],ans:'できる',
+ ex:'する → できる (완전히 다른 단어!)',rule:'する의 가능형은 できる. 이것만 특별히 암기!',grp:'3그룹'},
+
+{f:'kano',form:'가능형',word:{k:'読む',r:'よむ',m:'읽다'},
+ q:'もっと練習して、新聞の難しい漢字も___ようになりたいです。',
+ kr:'더 연습해서 신문의 어려운 한자도 읽을 수 있게 되고 싶습니다.',
+ hint:'読む → 可能形',
+ choices:['よめる','よまれる','よみれる','よむれる'],ans:'よめる',
+ ex:'よむ → よめ＋る',rule:'1그룹 む→め+る',grp:'1그룹'},
+
+{f:'kano',form:'가능형',word:{k:'来る',r:'くる',m:'오다'},
+ q:'来週の誕生日パーティーに___かどうか、まだはっきりしません。',
+ kr:'다음 주 생일 파티에 올 수 있을지 아직 확실하지 않습니다.',
+ hint:'来る → 可能形',
+ choices:['こられる','くれる','きれる','これる'],ans:'こられる',
+ ex:'くる → こられる (불규칙)',rule:'くる→こられる (불규칙)',grp:'3그룹'},
+
+// ──────────── 수동형 ────────────
+{f:'judou',form:'수동형',word:{k:'読む',r:'よむ',m:'읽다'},
+ q:'この小説は世界中の人に___ていて、映画にもなりました。',
+ kr:'이 소설은 전 세계 사람들에게 읽히고 있으며 영화도 됐습니다.',
+ hint:'読む → 受身形',
+ choices:['よまれて','よめられて','よみられて','よんで'],ans:'よまれて',
+ ex:'よむ → よまれ＋て',rule:'1그룹 수동형: u단→a단+れる (む→ま+れる)',grp:'1그룹'},
+
+{f:'judou',form:'수동형',word:{k:'叱る',r:'しかる',m:'꾸짖다'},
+ q:'授業中に友達と話してしまって、先生に___しまいました。',
+ kr:'수업 중에 친구와 이야기해서 선생님께 혼나 버렸습니다.',
+ hint:'叱る → 受身形',
+ choices:['しかられて','しかれて','しかされて','しかりられて'],ans:'しかられて',
+ ex:'しかる → しかられ＋て',rule:'1그룹 る→ら+れる (叱る는 1그룹!)',grp:'1그룹'},
+
+{f:'judou',form:'수동형',word:{k:'食べる',r:'たべる',m:'먹다'},
+ q:'冷蔵庫に入れておいたケーキが、弟に___てしまっていました。',
+ kr:'냉장고에 넣어 두었던 케이크를 남동생이 먹어 버린 것이었습니다.',
+ hint:'食べる → 受身形',
+ choices:['たべられて','たべれられて','たべかれて','たべされて'],ans:'たべられて',
+ ex:'たべる → たべられ＋て',rule:'2그룹 수동형: る→られる (가능형과 형태 동일)',grp:'2그룹'},
+
+{f:'judou',form:'수동형',word:{k:'呼ぶ',r:'よぶ',m:'부르다'},
+ q:'会議中に急に名前を___て、とても驚きました。',
+ kr:'회의 중에 갑자기 이름이 불려서 매우 깜짝 놀랐습니다.',
+ hint:'呼ぶ → 受身形',
+ choices:['よばれて','よびられて','よばせて','よんで'],ans:'よばれて',
+ ex:'よぶ → よばれ＋て',rule:'1그룹 ぶ→ば+れる',grp:'1그룹'},
+
+{f:'judou',form:'수동형',word:{k:'する',r:'する',m:'하다'},
+ q:'新しい学校でも、先生にたくさん心配___ました。',
+ kr:'새 학교에서도 선생님께 많이 걱정받았습니다.',
+ hint:'する → 受身形',
+ choices:['されました','しられました','させられました','しれました'],ans:'されました',
+ ex:'する → されました (불규칙)',rule:'する→される (불규칙)',grp:'3그룹'},
+
+// ──────────── 사역형 ────────────
+{f:'shieki',form:'사역형',word:{k:'食べる',r:'たべる',m:'먹다'},
+ q:'お母さんは、毎晩子供に野菜をたくさん___ます。',
+ kr:'엄마는 매일 밤 아이에게 야채를 많이 먹입니다.',
+ hint:'食べる → 使役形',
+ choices:['たべさせ','たべせさ','たべかせ','たべされ'],ans:'たべさせ',
+ ex:'たべる → たべさせ＋ます',rule:'2그룹 사역형: る→させる (たべ+させます)',grp:'2그룹'},
+
+{f:'shieki',form:'사역형',word:{k:'待つ',r:'まつ',m:'기다리다'},
+ q:'約束の時間に大幅に遅れて、友達を長い間___しまいました。',
+ kr:'약속 시간에 많이 늦어서 친구를 오래 기다리게 해 버렸습니다.',
+ hint:'待つ → 使役形',
+ choices:['またせて','まてさせて','またせられて','まちせて'],ans:'またせて',
+ ex:'まつ → またせ＋て',rule:'1그룹 つ→た+せる (またせて)',grp:'1그룹'},
+
+{f:'shieki',form:'사역형',word:{k:'する',r:'する',m:'하다'},
+ q:'部長は新入社員に、毎日残業を___ましたが、それは問題です。',
+ kr:'부장은 신입사원에게 매일 야근을 시켰습니다만 그것은 문제입니다.',
+ hint:'する → 使役形',
+ choices:['させました','しさせました','させられました','せさせました'],ans:'させました',
+ ex:'する → させ＋ました',rule:'する→させる (불규칙)',grp:'3그룹'},
+
+{f:'shieki',form:'사역형',word:{k:'行く',r:'いく',m:'가다'},
+ q:'親は子供を一人で、遠い学校まで___のはかわいそうだと思いました。',
+ kr:'부모는 아이를 혼자 먼 학교까지 가게 하는 것은 불쌍하다고 생각했습니다.',
+ hint:'行く → 使役形',
+ choices:['いかせる','いきせる','いかれる','いかさせる'],ans:'いかせる',
+ ex:'いく → いかせ＋る',rule:'1그룹 く→か+せる',grp:'1그룹'},
+
+// ──────────── 의향형 ────────────
+{f:'iko',form:'의향형',word:{k:'食べる',r:'たべる',m:'먹다'},
+ q:'今夜は久しぶりに、みんなでお寿司を___と思っています。',
+ kr:'오늘 밤은 오랜만에 다 같이 스시를 먹을까 생각하고 있습니다.',
+ hint:'食べる → 意向形',
+ choices:['たべよう','たべおう','たべましょう','たべう'],ans:'たべよう',
+ ex:'たべる → たべよう',rule:'2그룹 의향형: る→よう',grp:'2그룹'},
+
+{f:'iko',form:'의향형',word:{k:'行く',r:'いく',m:'가다'},
+ q:'来週の連休に、みんなで一緒に海に___か！楽しそう！',
+ kr:'다음 주 연휴에 다 같이 바다에 갈까요! 재미있을 것 같아요!',
+ hint:'行く → 意向形',
+ choices:['いこう','いこ','いきましょう','いけう'],ans:'いこう',
+ ex:'いく → いこう',rule:'1그룹 의향형: u단→o단+う (く→こう)',grp:'1그룹'},
+
+{f:'iko',form:'의향형',word:{k:'する',r:'する',m:'하다'},
+ q:'新しい年になったので、毎日三十分は運動___と強く決めました。',
+ kr:'새 해가 됐으니 매일 30분은 운동하기로 굳게 결심했습니다.',
+ hint:'する → 意向形',
+ choices:['しよう','せよう','するよう','させよう'],ans:'しよう',
+ ex:'する → しよう (불규칙)',rule:'する→しよう (불규칙)',grp:'3그룹'},
+
+{f:'iko',form:'의향형',word:{k:'来る',r:'くる',m:'오다'},
+ q:'せっかくだから、みんなで一緒に___！一人より楽しいよ！',
+ kr:'모처럼이니 다 같이 오자! 혼자보다 즐거울 거야!',
+ hint:'来る → 意向形',
+ choices:['こよう','くよう','きよう','こおう'],ans:'こよう',
+ ex:'くる → こよう (불규칙)',rule:'くる→こよう (불규칙)',grp:'3그룹'},
+
+// ──────────── 명령형 ────────────
+{f:'meirei',form:'명령형',word:{k:'来る',r:'くる',m:'오다'},
+ q:'（お父さんが子供に）早く___！もう電車が来るよ！急いで！',
+ kr:'(아버지가 아이에게) 빨리 와! 이제 전철 온다고! 서둘러!',
+ hint:'来る → 命令形',
+ choices:['こい','くれ','きろ','こよ'],ans:'こい',
+ ex:'くる → こい (불규칙)',rule:'くる 명령형→こい (불규칙)',grp:'3그룹'},
+
+{f:'meirei',form:'명령형',word:{k:'食べる',r:'たべる',m:'먹다'},
+ q:'（お母さんが子供に）ちゃんと野菜も___！体に悪いよ！',
+ kr:'(엄마가 아이에게) 제대로 야채도 먹어! 몸에 나쁘다고!',
+ hint:'食べる → 命令形',
+ choices:['たべろ','たべれ','たべよ','たべい'],ans:'たべろ',
+ ex:'たべる → たべろ',rule:'2그룹 명령형: る→ろ (문어체는 たべよ)',grp:'2그룹'},
+
+{f:'meirei',form:'명령형',word:{k:'読む',r:'よむ',m:'읽다'},
+ q:'この大事な書類をよく___。間違いがあったら困るから。',
+ kr:'이 중요한 서류를 잘 읽어. 실수가 있으면 곤란하니까.',
+ hint:'読む → 命令形',
+ choices:['よめ','よみろ','よもう','よまれ'],ans:'よめ',
+ ex:'よむ → よめ',rule:'1그룹 명령형: u단→e단 (む→め)',grp:'1그룹'},
+
+// ──────────── 그룹 판별 ────────────
+{f:'group',form:'그룹판별',word:{k:'書く',r:'かく',m:'쓰다'},
+ q:'「書く（かく）」は何グループの動詞ですか。て形・ます形を考えてみましょう。',
+ kr:'「書く」는 몇 그룹 동사입니까? て형・ます형을 생각해봅시다.',
+ hint:'어미를 확인하세요',
+ choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'1グループ（う動詞）',
+ ex:'く로 끝남 → 1그룹 확정',rule:'1그룹: て形→かいて / ます形→かきます / ない形→かかない',grp:'1그룹'},
+
+{f:'group',form:'그룹판별',word:{k:'食べる',r:'たべる',m:'먹다'},
+ q:'「食べる（たべる）」は何グループの動詞ですか。る前の文字に注目！',
+ kr:'「食べる」는 몇 그룹 동사입니까? る 앞 글자에 주목하세요!',
+ hint:'る 앞이 え단 → 대부분 2그룹',
+ choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'2グループ（る動詞）',
+ ex:'べ는 え단 → 2그룹',rule:'2그룹: て형→たべて / ます形→たべます / ない形→たべない',grp:'2그룹'},
+
+{f:'group',form:'그룹판별',word:{k:'する',r:'する',m:'하다'},
+ q:'「する」は何グループの動詞ですか。全ての活用形が特殊です。',
+ kr:'「する」는 몇 그룹 동사입니까? 모든 활용형이 특수합니다.',
+ hint:'2개뿐인 불규칙 동사 중 하나',
+ choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'3グループ（不規則）',
+ ex:'する는 3그룹 불규칙',rule:'する 전체: して・します・しない・できる・される・させる・しよう・しろ',grp:'3그룹'},
+
+{f:'group',form:'그룹판별',word:{k:'来る',r:'くる',m:'오다'},
+ q:'「来る（くる）」は何グループの動詞ですか。日本語で不規則動詞は二つだけです。',
+ kr:'「来る」는 몇 그룹 동사입니까? 일본어 불규칙 동사는 두 개뿐입니다.',
+ hint:'する와 함께 두 개뿐인 불규칙',
+ choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'3グループ（不規則）',
+ ex:'くる는 3그룹 불규칙',rule:'くる 전체: きて・きます・こない・こられる・こさせる・こよう・こい',grp:'3그룹'},
+
+{f:'group',form:'그룹판별',word:{k:'帰る',r:'かえる',m:'돌아가다'},
+ q:'「帰る（かえる）」は何グループの動詞ですか。見た目に騙されないで！',
+ kr:'「帰る」는 몇 그룹 동사입니까? 겉모습에 속지 마세요!',
+ hint:'주의! る 앞이 え단이지만...',
+ choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'1グループ（う動詞）',
+ ex:'帰る는 1그룹 예외!',rule:'注意! 帰る・切る・走る・知る・入る・要る 등은 2그룹처럼 생겼지만 1그룹! て형→かえって',grp:'1그룹 주의'},
+
+{f:'group',form:'그룹판별',word:{k:'見る',r:'みる',m:'보다'},
+ q:'「見る（みる）」は何グループの動詞ですか。',
+ kr:'「見る」는 몇 그룹 동사입니까?',
+ hint:'る 앞이 い단 → 대부분 2그룹',
+ choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'2グループ（る動詞）',
+ ex:'み는 い단 → 2그룹',rule:'2그룹: て形→みて / ます形→みます / ない形→みない',grp:'2그룹'},
+
+{f:'group',form:'그룹판별',word:{k:'切る',r:'きる',m:'자르다'},
+ q:'「切る（きる＝자르다）」は何グループの動詞ですか。「着る」と混同しないで！',
+ kr:'「切る（자르다）」는 몇 그룹 동사입니까? 「着る（입다)」와 혼동 주의!',
+ hint:'着る(입다)와 발음 같지만 다른 그룹',
+ choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'1グループ（う動詞）',
+ ex:'切る(자르다)는 1그룹 → きって・きります',rule:'切る(자르다)→1그룹: きって・きります / 着る(입다)→2그룹: きて・きます',grp:'1그룹 주의'},
+
+{f:'group',form:'그룹판별',word:{k:'走る',r:'はしる',m:'달리다'},
+ q:'「走る（はしる）」は何グループの動詞ですか。요주의 동사입니다！',
+ kr:'「走る」는 몇 그룹 동사입니까? 요주의 동사입니다!',
+ hint:'し는 い단이지만...',
+ choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'1グループ（う動詞）',
+ ex:'走る는 1그룹 예외!',rule:'走る는 1그룹: はしって・はしります・はしらない. し가 い단이어도 1그룹인 예외',grp:'1그룹 주의'},
+
+// ──────────── 조사 ────────────
+{f:'particle',form:'조사',word:{k:'助詞',r:'じょし',m:'조사'},
+ q:'図書館___日本語の本を読んでいます。毎日来ます。',blank:true,
+ kr:'도서관___ 일본어 책을 읽고 있습니다. 매일 옵니다.',
+ hint:'동작이 이루어지는 장소',
+ choices:['で','に','を','へ'],ans:'で',
+ ex:'동작 장소 → で',rule:'で: 동작 장소 / に: 존재 위치(います・あります 앞)',grp:'-'},
+
+{f:'particle',form:'조사',word:{k:'助詞',r:'じょし',m:'조사'},
+ q:'駅の前___新しいカフェができました。先週オープンしたそうです。',blank:true,
+ kr:'역 앞___ 새 카페가 생겼습니다. 지난주에 오픈했다고 합니다.',
+ hint:'존재 위치 (あります)',
+ choices:['に','で','を','は'],ans:'に',
+ ex:'존재 위치 → に',rule:'に: 존재 위치(できました・あります・います 앞) / で: 동작 장소',grp:'-'},
+
+{f:'particle',form:'조사',word:{k:'助詞',r:'じょし',m:'조사'},
+ q:'毎朝、駅まで自転車___通っています。健康のためです。',blank:true,
+ kr:'매일 아침 역까지 자전거___ 다니고 있습니다. 건강을 위해서입니다.',
+ hint:'수단・방법',
+ choices:['で','に','を','が'],ans:'で',
+ ex:'수단 → で',rule:'で: 수단・방법 (자전거で、バスで、電車で)',grp:'-'},
+];
+
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let pool=[],poolIdx=0,generating=false,filterF='all';
+let dailyData={},stats={correct:0,wrong:0,bestStreak:0,totalDone:0};
+let currentStreak=0;
+let currentView='home';
+let apiKey='';
+const GOAL=10;
+
+function today(){return new Date().toISOString().split('T')[0]}
+function todayCount(){return dailyData[today()]||0}
+
+// ── Storage ──
+async function loadAll(){
+  try{const r=await window.storage.get('jpq_daily');if(r)dailyData=JSON.parse(r.value);}catch(e){dailyData={};}
+  try{const r=await window.storage.get('jpq_stats');if(r)stats=JSON.parse(r.value);}catch(e){}
+  // API key: try window.storage first, then localStorage fallback
+  try{const r=await window.storage.get('jpq_apikey');if(r&&r.value)apiKey=r.value;}catch(e){}
+  if(!apiKey){try{apiKey=localStorage.getItem('jpq_apikey')||'';}catch(e){}}
+}
+async function saveAll(){
+  try{
+    await window.storage.set('jpq_daily',JSON.stringify(dailyData));
+    await window.storage.set('jpq_stats',JSON.stringify(stats));
+  }catch(e){}
+}
+async function saveApiKey(){
+  const val=document.getElementById('apiKeyInput').value.trim();
+  apiKey=val;
+  try{await window.storage.set('jpq_apikey',val);}catch(e){}
+  try{localStorage.setItem('jpq_apikey',val);}catch(e){}
+  renderSettings();
+  // show confirmation
+  const btn=event.target;
+  btn.textContent='✓ 저장됨';btn.style.background='var(--ok)';
+  setTimeout(()=>{btn.textContent='저장';btn.style.background='var(--ok)';},2000);
+}
+
+function renderSettings(){
+  const st=document.getElementById('apiStatus');
+  const inp=document.getElementById('apiKeyInput');
+  if(apiKey){
+    st.textContent='설정됨 ✓';st.style.background='rgba(39,113,74,.15)';st.style.color='#1f5538';
+    inp.value=apiKey;inp.placeholder='설정됨 (변경하려면 새 키 입력)';
+  } else {
+    st.textContent='미설정';st.style.background='rgba(196,146,40,.15)';st.style.color='#9a6e1a';
+    inp.value='';
+  }
+}
+
+function exportData(){
+  const d={dailyData,stats,exportDate:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`jpquiz_backup_${today()}.json`;a.click();
+}
+function confirmReset(){
+  if(confirm('모든 학습 기록을 초기화하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')){
+    dailyData={};stats={correct:0,wrong:0,bestStreak:0,totalDone:0};
+    saveAll();renderHome();alert('초기화 완료!');
+  }
+}
+
+function calcStreak(){
+  let s=0;
+  const d=new Date();
+  // check today first
+  let dt=new Date(d);
+  if((dailyData[dt.toISOString().split('T')[0]]||0)>=GOAL){
+    s++;
+    dt.setDate(dt.getDate()-1);
+    while(true){
+      const k=dt.toISOString().split('T')[0];
+      if((dailyData[k]||0)>=GOAL){s++;dt.setDate(dt.getDate()-1);}
+      else break;
+    }
+  } else {
+    // check yesterday streak
+    dt.setDate(dt.getDate()-1);
+    while(true){
+      const k=dt.toISOString().split('T')[0];
+      if((dailyData[k]||0)>=GOAL){s++;dt.setDate(dt.getDate()-1);}
+      else break;
+    }
+  }
+  return s;
+}
+
+function weekCount(){
+  let c=0;
+  const d=new Date();
+  for(let i=0;i<7;i++){
+    const dt=new Date(d);dt.setDate(d.getDate()-i);
+    c+=dailyData[dt.toISOString().split('T')[0]]||0;
+  }
+  return c;
+}
+function monthCount(){
+  let c=0;
+  const d=new Date();
+  const m=d.getMonth(),y=d.getFullYear();
+  Object.entries(dailyData).forEach(([k,v])=>{
+    const dd=new Date(k);
+    if(dd.getMonth()===m&&dd.getFullYear()===y) c+=v;
+  });
+  return c;
+}
+
+// ══════════════════════════════════════════
+//  HOME VIEW
+// ══════════════════════════════════════════
+function renderHome(){
+  const now=new Date();
+  const days=['일','월','화','수','목','금','토'];
+  const months=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  document.getElementById('heroDate').textContent=
+    `${now.getFullYear()}년 ${months[now.getMonth()]} ${now.getDate()}일 ${days[now.getDay()]}요일`;
+
+  const tc=todayCount();
+  currentStreak=calcStreak();
+
+  // greeting
+  let greet='',sub='';
+  if(tc>=GOAL){greet='目標達成！오늘 목표 완료 🎌';sub='훌륭합니다! 내일도 계속해봐요.';}
+  else if(tc>=GOAL/2){greet='折り返し！절반을 넘었어요 ⛩️';sub=`목표까지 ${GOAL-tc}문제 남았습니다.`;}
+  else if(tc>0){greet='いいスタート！좋은 시작이에요 🌸';sub=`오늘 ${tc}문제 완료. ${GOAL-tc}문제 더 해봐요!`;}
+  else if(currentStreak>0){greet='连続중！꾸준히 하고 있어요 🔥';sub='오늘 목표 10문제를 시작해봐요!';}
+  else{greet='始めましょう！시작해봐요 🌿';sub='매일 10문제로 일본어 실력이 늘어납니다!';}
+  document.getElementById('heroGreeting').textContent=greet;
+  document.getElementById('heroSub').textContent=sub;
+
+  // Goal dots
+  document.getElementById('gcCount').innerHTML=`${tc}<span>/${GOAL}</span>`;
+  const dotsEl=document.getElementById('dotsRow');
+  dotsEl.innerHTML='';
+  for(let i=0;i<GOAL;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i<tc?' done'+(i===GOAL-1?' gold':''):'');
+    dotsEl.appendChild(d);
+  }
+  const msgs=['오늘도 화이팅! 일단 첫 번째부터 시작!','좋아요, 시작했어요!','잘 하고 있어요!','3문제 완료!','절반이 왔어요!','반을 넘었네요!','7문제, 거의 다 왔어요!','8문제 완료, 후반전!','9문제, 하나만 더!','목표 달성! 오늘도 수고했어요 🎉','목표 초과 달성 중! 더 가봐요!'];
+  document.getElementById('gcMsg').textContent=msgs[Math.min(tc,msgs.length-1)];
+
+  // Stats
+  document.getElementById('stStreak').textContent=currentStreak;
+  document.getElementById('stWeek').textContent=weekCount();
+  document.getElementById('stMonth').textContent=monthCount();
+  document.getElementById('stTotal').textContent=stats.totalDone||0;
+  document.getElementById('navToday').textContent=tc;
+
+  // Calendar (5 weeks = 35 days)
+  renderCalendar();
+}
+
+function renderCalendar(){
+  const grid=document.getElementById('calGrid');
+  grid.innerHTML='';
+  const now=new Date();
+  const todayStr=now.toISOString().split('T')[0];
+
+  // find start of 5-week window, aligned to Sunday
+  const startD=new Date(now);
+  const dow=startD.getDay(); // 0=Sun
+  startD.setDate(startD.getDate()-dow-28); // 5 weeks back, start from Sunday
+
+  for(let i=0;i<35;i++){
+    const d=new Date(startD);d.setDate(startD.getDate()+i);
+    const k=d.toISOString().split('T')[0];
+    const count=dailyData[k]||0;
+    const isFuture=d>now;
+    const isToday=k===todayStr;
+
+    const cell=document.createElement('div');
+    cell.className='cal-day';
+    if(isFuture) cell.classList.add('future');
+    else if(count===0) cell.classList.add('empty');
+    else if(count<5) cell.classList.add('c1');
+    else if(count<10) cell.classList.add('c2');
+    else cell.classList.add('c3');
+    if(isToday) cell.classList.add('today');
+    if(!isFuture) cell.textContent=d.getDate();
+    if(count>0&&!isFuture) cell.title=`${d.getDate()}일: ${count}문제`;
+    grid.appendChild(cell);
+  }
+}
+
+// deploy toggle
+document.getElementById('deployCard').addEventListener('click',()=>{
+  const b=document.getElementById('deployBody');
+  const a=document.getElementById('deployArrow');
+  b.classList.toggle('open');
+  a.textContent=b.classList.contains('open')?'▲':'▼';
+});
+
+function goQuiz(){
+  switchView('quiz');
+}
+
+// ══════════════════════════════════════════
+//  QUIZ VIEW
+// ══════════════════════════════════════════
+const FORM_LABEL={te:'て형',masu:'ます형',nai:'ない형',kano:'가능형',judou:'수동형',
+  shieki:'사역형',iko:'의향형',meirei:'명령형',group:'그룹판별',particle:'조사'};
+const FORM_CLS={te:'ft',masu:'fm',nai:'fn',kano:'fk',judou:'fj',
+  shieki:'fs',iko:'fi',meirei:'fme',group:'fg',particle:'fp'};
+const GRP_CLS={'1그룹':'gt1','1그룹 예외':'gt1','1그룹 주의':'gt1w','2그룹':'gt2','3그룹':'gt3'};
+
+function sfl(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+
+function buildPool(){
+  const src=filterF==='all'?SEED:SEED.filter(q=>q.f===filterF);
+  pool=sfl(src);poolIdx=0;
+}
+
+document.getElementById('formTabs').addEventListener('click',e=>{
+  const btn=e.target.closest('.ftab');if(!btn)return;
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  filterF=btn.dataset.f;
+  buildPool();showQ();
+});
+
+function updateTodayStrip(){
+  const tc=todayCount();
+  document.getElementById('navToday').textContent=tc;
+  const dots=document.getElementById('tsDots');
+  dots.innerHTML='';
+  for(let i=0;i<GOAL;i++){
+    const d=document.createElement('div');
+    d.className='ts-dot'+(i<tc?' done':'');
+    dots.appendChild(d);
+  }
+  document.getElementById('tsLabel').textContent=`오늘 ${tc}/${GOAL}`;
+  document.getElementById('poolInfo').textContent=`문제 ${Math.max(0,pool.length-poolIdx)}개 남음 ∞`;
+}
+
+async function generateMore(){
+  if(generating)return;
+  const isClaudeAI=location.hostname.includes('claude.ai')||location.protocol==='blob:';
+  if(!isClaudeAI&&!apiKey){
+    document.getElementById('poolInfo').textContent='⚙ 설정 탭에서 Google API 키 입력 시 무한생성!';
+    return;
+  }
+  generating=true;
+  document.getElementById('genBar').classList.add('on');
+
+  const fDesc=filterF==='all'
+    ?'て형・ます형・ない형・가능형・수동형・사역형・의향형・명령형・그룹판별을 골고루'
+    :`"${FORM_LABEL[filterF]||filterF}"만`;
+
+  const prompt=`일본어 문법 퀴즈 문제 10개를 JSON 배열로 만들어줘.
+
+조건:
+- N5・N4 수준의 자연스러운 일본어 전체 문장으로 질문 작성 (짧은 변환 질문 금지)
+- ${fDesc} 다루기
+- 1그룹・2그룹・3그룹 동사 골고루 포함
+- q: 일본어 전체 문장 (빈칸 ___ 포함)
+- kr: 한국어 번역 (빈칸 ___ 포함)
+- choices: 4개 (그룹판별은 "1グループ（う動詞）","2グループ（る動詞）","3グループ（不規則）" 고정)
+- ans: 정답이 반드시 choices 안에 포함
+- rule: 한국어로 활용 규칙 설명
+- hint: 동사명 + 활용형 (예: "食べる → て形")
+- grp: 해당 동사의 그룹 (예: "1그룹","2그룹","3그룹","1그룹 주의")
+
+f 값은 te/masu/nai/kano/judou/shieki/iko/meirei/group/particle 중 하나.
+JSON 배열만 반환 (마크다운, 설명 없이):
+[{"f":"te","form":"て형","word":{"k":"食べる","r":"たべる","m":"먹다"},"q":"...___...","kr":"...___...","hint":"食べる → て形","choices":["たべて","たべって","たべにて","たべいて"],"ans":"たべて","ex":"たべる→たべて","rule":"2그룹 て형: る→て","grp":"2그룹"}]`;
+
+  try{
+    let txt='';
+
+    if(isClaudeAI){
+      // ── Claude.ai 환경: Anthropic API (키 불필요) ──
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,
+          messages:[{role:'user',content:prompt}]})
+      });
+      const data=await res.json();
+      if(data.error) throw new Error(data.error.message);
+      txt=data.content.map(i=>i.text||'').join('');
+    } else {
+      // ── 외부 환경: Google Gemini API (무료, 키 필요) ──
+      const res=await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {method:'POST',
+         headers:{'Content-Type':'application/json'},
+         body:JSON.stringify({
+           contents:[{parts:[{text:prompt}]}],
+           generationConfig:{temperature:0.9,maxOutputTokens:3000}
+         })}
+      );
+      const data=await res.json();
+      if(data.error) throw new Error(data.error.message);
+      txt=data.candidates[0].content.parts[0].text;
+    }
+
+    const clean=txt.replace(/```json|```/g,'').trim();
+    const newQs=JSON.parse(clean);
+    if(Array.isArray(newQs)&&newQs.length>0){
+      const add=filterF==='all'?newQs:newQs.filter(q=>q.f===filterF);
+      pool.push(...sfl(add));
+      updateTodayStrip();
+    }
+  }catch(e){
+    console.log('gen err',e);
+    if(e.message&&(e.message.includes('API_KEY')||e.message.includes('key'))){
+      document.getElementById('poolInfo').textContent='⚠ API 키 오류 — 설정 탭에서 확인해주세요';
+    }
+  }
+  generating=false;
+  document.getElementById('genBar').classList.remove('on');
+}
+
+let answered=false;
+
+function showQ(){
+  if(pool.length-poolIdx<5&&!generating) generateMore();
+  if(poolIdx>=pool.length){
+    document.getElementById('cardArea').innerHTML=`<div class="loading-card"><span class="spin">⚙</span><p style="font-family:var(--FP);font-size:11px;color:var(--ink2);margin-top:12px;letter-spacing:1px">새 문제 생성 중...</p></div>`;
+    setTimeout(()=>{if(pool.length>poolIdx)showQ();else showQ();},1500);
+    return;
+  }
+  answered=false;
+  const q=pool[poolIdx];
+  updateTodayStrip();
+  document.getElementById('qNum').textContent=`세션 ${poolIdx+1}번째`;
+
+  // badges
+  const fb=document.getElementById('fBadge');
+  fb.textContent=q.form;
+  fb.className='fbadge '+(FORM_CLS[q.f]||'ft');
+
+  // word bar
+  const noWB=q.word&&q.word.k==='助詞';
+  const wb=noWB?'':
+    `<div class="word-bar">
+      <span class="wb-k">${q.word.k}</span>
+      ${q.word.r!==q.word.k?`<span class="wb-r">${q.word.r}</span>`:''}
+      <span class="wb-m">${q.word.m}</span>
+    </div>`;
+
+  const qHTML=q.blank
+    ?q.q.replace('___','<span class="blank">　　　</span>')
+    :q.q;
+
+  const chs=sfl(q.choices).map((c,i)=>
+    `<button class="ch" data-a="${c}"><span class="cl">${['A','B','C','D'][i]}</span>${c}</button>`
+  ).join('');
+
+  document.getElementById('cardArea').innerHTML=`
+    <div class="card ani" id="card">
+      <div class="q-label">문제 · 問題</div>
+      ${wb}
+      <div class="q-text">${qHTML}</div>
+      <div class="q-hint">${q.hint||''}</div>
+      <div class="choices">${chs}</div>
+      <div class="kr-line">${q.kr||''}</div>
+      <div class="fb" id="fb"></div>
+      <button class="next-btn" id="nBtn">다음 문제 →</button>
+    </div>`;
+
+  document.querySelectorAll('.ch').forEach(b=>b.addEventListener('click',()=>pick(b.dataset.a,b,q)));
+  document.getElementById('nBtn').addEventListener('click',nextQ);
+  document.getElementById('skipBtn').style.visibility='visible';
+}
+
+function grpTag(g){
+  if(!g||g==='-') return '';
+  const cls=GRP_CLS[g]||'gt1';
+  return `<span class="grp-tag ${cls}">${g}</span>`;
+}
+
+function pick(chosen,btn,q){
+  if(answered)return;
+  answered=true;
+  document.getElementById('skipBtn').style.visibility='hidden';
+  document.querySelectorAll('.ch').forEach(b=>b.disabled=true);
+
+  const ok=chosen===q.ans;
+  if(ok){
+    btn.classList.add('ok');
+    stats.correct++;
+  }else{
+    btn.classList.add('ng');
+    stats.wrong++;
+    document.querySelectorAll('.ch').forEach(b=>{if(b.dataset.a===q.ans)b.classList.add('ok');});
+    document.getElementById('card').classList.add('shk');
+    setTimeout(()=>document.getElementById('card').classList.remove('shk'),300);
+  }
+
+  stats.totalDone++;
+  const td=today();
+  dailyData[td]=(dailyData[td]||0)+1;
+  if(stats.totalDone>stats.bestStreak) stats.bestStreak=stats.totalDone;
+  saveAll();
+  updateTodayStrip();
+  document.getElementById('navToday').textContent=todayCount();
+
+  const fb=document.getElementById('fb');
+  fb.className='fb on '+(ok?'ok':'ng');
+  fb.innerHTML=`<strong>${ok?'✓ 正解！정답입니다':'✗ 不正解。정답: '+q.ans}</strong>${q.ex||''}${grpTag(q.grp)}`+
+    (q.rule?`<div class="rule-box"><b>규칙:</b> ${q.rule}</div>`:'');
+  document.getElementById('nBtn').classList.add('on');
+}
+
+document.getElementById('skipBtn').addEventListener('click',()=>{
+  if(answered)return;
+  answered=true;
+  const q=pool[poolIdx];
+  stats.wrong++;
+  stats.totalDone++;
+  const td=today();
+  dailyData[td]=(dailyData[td]||0)+1;
+  saveAll();
+  updateTodayStrip();
+  document.getElementById('skipBtn').style.visibility='hidden';
+  document.querySelectorAll('.ch').forEach(b=>{b.disabled=true;if(b.dataset.a===q.ans)b.classList.add('ok');});
+  const fb=document.getElementById('fb');
+  fb.className='fb on ng';
+  fb.innerHTML=`<strong>→ 건너뜀 · 정답: ${q.ans}</strong>${grpTag(q.grp)}`+
+    (q.rule?`<div class="rule-box"><b>규칙:</b> ${q.rule}</div>`:'');
+  document.getElementById('nBtn').classList.add('on');
+});
+
+function nextQ(){poolIdx++;document.getElementById('skipBtn').style.visibility='visible';showQ();}
+
+// ══════════════════════════════════════════
+//  NAV
+// ══════════════════════════════════════════
+function switchView(v){
+  currentView=v;
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(v+'View').classList.add('on');
+  document.querySelector(`.ntab[data-v="${v}"]`).classList.add('on');
+  if(v==='home') renderHome();
+  if(v==='settings') renderSettings();
+}
+
+document.querySelectorAll('.ntab').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.v)));
+
+// deploy & playstore toggles
+document.getElementById('deployCard').addEventListener('click',e=>{
+  if(e.target.tagName==='A') return;
+  const b=document.getElementById('deployBody'),a=document.getElementById('deployArrow');
+  b.classList.toggle('open');a.textContent=b.classList.contains('open')?'▲':'▼';
+});
+document.getElementById('playStoreCard').addEventListener('click',e=>{
+  if(e.target.tagName==='A') return;
+  const b=document.getElementById('playBody'),a=document.getElementById('playArrow');
+  b.classList.toggle('open');a.textContent=b.classList.contains('open')?'▲':'▼';
+});
+
+// PWA install prompt
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  document.getElementById('installBtnWrap').style.display='block';
+});
+function installPWA(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(r=>{
+    if(r.outcome==='accepted') document.getElementById('installBtnWrap').style.display='none';
+    deferredPrompt=null;
+  });
+}
+window.addEventListener('appinstalled',()=>{
+  document.getElementById('installBtnWrap').style.display='none';
+});
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+async function init(){
+  await loadAll();
+  renderHome();
+  buildPool();
+  generateMore();
+}
+init();
+</script>
+</body>
+</html>
