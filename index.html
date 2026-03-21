@@ -36,9 +36,14 @@ const link=document.createElement('link');link.rel='manifest';link.href=manifest
 body{font-family:var(--FB);background:var(--ink);min-height:100vh;color:var(--paper);overflow-x:hidden;font-size:15px;line-height:1.6}
 
 /* ── FURIGANA ── */
-ruby{display:inline;font-family:var(--FJ)}
-rt{font-size:0.5em;color:rgba(26,26,46,.55);letter-spacing:0.05em;font-family:var(--FB);font-weight:400}
-.q-text ruby rt{color:rgba(26,26,46,.5)}
+ruby{font-family:var(--FJ);ruby-align:center}
+rt{display:block;font-size:0.55em;color:rgba(26,26,46,.5);letter-spacing:0.05em;font-family:var(--FB);font-weight:400;text-align:center;line-height:1.2}
+.q-text{line-height:2.8!important}  /* 후리가나 공간 확보 */
+.q-text ruby rt{color:rgba(26,26,46,.45)}
+/* grammar table furigana */
+.gt-ex ruby rt,.grammar-table ruby rt{color:rgba(26,26,46,.4)}
+/* tips card furigana */
+.tip-text ruby rt{color:rgba(245,240,232,.45)}
 
 /* ── TOAST ── */
 #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink2);color:var(--paper);padding:10px 20px;border-radius:30px;font-family:var(--FP);font-size:11px;letter-spacing:1px;z-index:9999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)}
@@ -255,6 +260,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
 .gt-warn td{color:rgba(144,16,16,.8)}
 .grammar-section{display:none}
 .grammar-section.on{display:block}
+
+/* ── SPEECH BUTTONS ── */
+.speech-btn{border:none;background:rgba(26,26,46,.08);color:rgba(26,26,46,.45);border-radius:6px;padding:4px 8px;font-size:14px;cursor:pointer;transition:all .15s;flex-shrink:0;line-height:1}
+.speech-btn:hover{background:rgba(26,26,46,.15);color:var(--ink)}
+.speech-btn.speaking{background:rgba(196,146,40,.2);color:var(--gold);animation:pulse .8s ease infinite}
+.fb-ans-row{display:flex;align-items:center;gap:8px}
+.speech-btn-fb{border:none;background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);border-radius:6px;padding:4px 8px;font-size:14px;cursor:pointer;transition:all .15s;line-height:1}
+.speech-btn-fb:hover{background:rgba(255,255,255,.25);color:#fff}
+.speech-btn-fb.speaking{animation:pulse .8s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
 /* ── TIPS CARD ── */
 .tips-card{background:linear-gradient(135deg,rgba(39,113,74,.15),rgba(68,119,204,.1));border:1px solid rgba(39,113,74,.3);border-radius:var(--r16);padding:0;margin-bottom:14px;overflow:hidden}
@@ -1300,15 +1315,89 @@ function buildFeedbackPattern(q){
   </div>
   <button class="fb-goto-grammar" onclick="switchView('grammar');showGSection('${q.f}')">📋 전체 문법표 보기 →</button>`;
 }
+// ══════════════════════════════════════════
+// 전역 후리가나 사전 (N5/N4 전체 커버)
+// ══════════════════════════════════════════
+const WORD_FU = {
+  // 동사 (기본형)
+  '食べる':'たべる','飲む':'のむ','書く':'かく','行く':'いく','待つ':'まつ',
+  '乗る':'のる','起きる':'おきる','帰る':'かえる','話す':'はなす',
+  '読む':'よむ','見る':'みる','聞く':'きく','走る':'はしる','切る':'きる',
+  '着る':'きる','泳ぐ':'およぐ','買う':'かう','使う':'つかう','教える':'おしえる',
+  '覚える':'おぼえる','忘れる':'わすれる','入る':'はいる','出る':'でる',
+  '寝る':'ねる','働く':'はたらく','遊ぶ':'あそぶ','呼ぶ':'よぶ','叱る':'しかる',
+  '始める':'はじめる','終わる':'おわる','作る':'つくる','出かける':'でかける',
+  '泊まる':'とまる','渡る':'わたる','降る':'ふる','浴びる':'あびる',
+  '決める':'きめる','集める':'あつめる','調べる':'しらべる','続ける':'つづける',
+  '開ける':'あける','閉める':'しめる','洗う':'あらう','送る':'おくる',
+  '借りる':'かりる','貸す':'かす','返す':'かえす','急ぐ':'いそぐ',
+  '泣く':'なく','笑う':'わらう','驚く':'おどろく','困る':'こまる',
+  // 시간
+  '毎朝':'まいあさ','毎日':'まいにち','毎晩':'まいばん','毎週':'まいしゅう',
+  '今日':'きょう','明日':'あした','昨日':'きのう','今夜':'こんや',
+  '今週':'こんしゅう','来週':'らいしゅう','先週':'せんしゅう',
+  '今月':'こんげつ','今年':'ことし','来年':'らいねん','去年':'きょねん',
+  '午前':'ごぜん','午後':'ごご','朝':'あさ','昼':'ひる','夜':'よる','夕方':'ゆうがた',
+  '六時':'ろくじ','三時':'さんじ','何時':'なんじ',
+  '三十分':'さんじっぷん','六ヶ月':'ろっかげつ','三ヶ月':'さんかげつ','一年':'いちねん',
+  // 장소
+  '学校':'がっこう','会社':'かいしゃ','図書館':'としょかん','病院':'びょういん',
+  '駅':'えき','家':'いえ','部屋':'へや','公園':'こうえん','店':'みせ','銀行':'ぎんこう',
+  // 교통
+  '電車':'でんしゃ','自転車':'じてんしゃ','車':'くるま','飛行機':'ひこうき',
+  '地下鉄':'ちかてつ',
+  // 사람
+  '友達':'ともだち','先生':'せんせい','学生':'がくせい','社員':'しゃいん',
+  '新入社員':'しんにゅうしゃいん','部長':'ぶちょう','子供':'こども',
+  '親':'おや','父':'ちち','母':'はは','兄':'あに','姉':'あね',
+  '弟':'おとうと','妹':'いもうと','家族':'かぞく',
+  // 음식
+  '野菜':'やさい','果物':'くだもの','肉':'にく','魚':'さかな','牛乳':'ぎゅうにゅう',
+  '寿司':'すし','朝ごはん':'あさごはん','晩ごはん':'ばんごはん','夕ごはん':'ゆうごはん',
+  // 학습/업무
+  '勉強':'べんきょう','日本語':'にほんご','漢字':'かんじ','言葉':'ことば',
+  '授業':'じゅぎょう','授業中':'じゅぎょうちゅう','宿題':'しゅくだい',
+  '試験':'しけん','練習':'れんしゅう','復習':'ふくしゅう','予習':'よしゅう',
+  '会議':'かいぎ','会議中':'かいぎちゅう','残業':'ざんぎょう',
+  '仕事':'しごと','書類':'しょるい','受付':'うけつけ',
+  // 일상
+  '電話':'でんわ','名前':'なまえ','住所':'じゅうしょ','健康':'けんこう',
+  '運動':'うんどう','薬':'くすり','病気':'びょうき','心配':'しんぱい',
+  '約束':'やくそく','問題':'もんだい','大丈夫':'だいじょうぶ',
+  '連休':'れんきゅう','誕生日':'たんじょうび',
+  '冷蔵庫':'れいぞうこ','急用':'きゅうよう','大幅':'おおはば',
+  '住所':'じゅうしょ','受付':'うけつけ',
+  // 나라/세계
+  '日本':'にほん','韓国':'かんこく','中国':'ちゅうごく',
+  '世界':'せかい','世界中':'せかいじゅう',
+  // 숫자/인원
+  '一人':'ひとり','二人':'ふたり','三人':'さんにん',
+  '三錠':'さんじょう','毎食後':'まいしょくごう',
+  // 자연
+  '海':'うみ','山':'やま','川':'かわ','雨':'あめ','雪':'ゆき','花':'はな',
+  // 형용사
+  '大事':'だいじ','大切':'たいせつ','新しい':'あたらしい','古い':'ふるい',
+  '高い':'たかい','安い':'やすい','早い':'はやい','遅い':'おそい',
+  '強い':'つよい','弱い':'よわい','遠い':'とおい','近い':'ちかい',
+  '大きい':'おおきい','小さい':'ちいさい','楽しい':'たのしい',
+  '嬉しい':'うれしい','悲しい':'かなしい','甘い':'あまい',
+  // 기타
+  '映画':'えいが','音楽':'おんがく','小説':'しょうせつ','新聞':'しんぶん',
+  '自然':'しぜん','急':'きゅう','横':'よこ','間':'あいだ','頭':'あたま',
+  '体':'からだ','手':'て','足':'あし','目':'め','耳':'みみ',
+  '勉強する':'べんきょうする',
+};
+
 function addFurigana(text, fuMap){
-  if(!fuMap||Object.keys(fuMap).length===0) return text;
-  // Sort by length desc to avoid partial replacement
-  const keys=Object.keys(fuMap).sort((a,b)=>b.length-a.length);
-  let result=text;
+  // 전역 사전 + 문제별 fu 합치기 (문제별이 우선)
+  const combined = Object.assign({}, WORD_FU, fuMap||{});
+  const keys = Object.keys(combined).sort((a,b)=>b.length-a.length);
+  let result = text;
   keys.forEach(k=>{
-    const r=fuMap[k];
-    // Don't apply furigana inside already-replaced ruby tags
-    result=result.replace(new RegExp(k,'g'),`<ruby>${k}<rt>${r}</rt></ruby>`);
+    const r = combined[k];
+    // 이미 ruby 태그 안 텍스트는 다시 처리 안 함
+    if(result.includes(`<ruby>${k}`)) return;
+    result = result.split(k).join(`<ruby>${k}<rt>${r}</rt></ruby>`);
   });
   return result;
 }
@@ -1600,7 +1689,10 @@ function renderCard(q){
         <button id="wbSaveBtn" class="wb-save ${savedClass}" onclick="addToVocab(currentQ.word)"
           ${isInVocab(q.word)?'disabled':''}>${savedText}</button>
       </div>
-      <div class="q-text">${qHtml}</div>
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">
+        <div class="q-text" style="flex:1;margin-bottom:0">${qHtml}</div>
+        <button class="speech-btn" id="qSpeechBtn" onclick="speakQuestion()" title="일본어로 읽기">🔊</button>
+      </div>
       ${krHtml}
       <div class="q-hint">💡 힌트: ${q.hint}</div>
       <div class="choices">${choicesHtml}</div>
@@ -1639,7 +1731,10 @@ function pickChoice(el, chosen){
       <div class="fb-header">
         <span class="fb-icon">✅</span>
         <span class="fb-title">정답!</span>
-        <span class="fb-ans">${q.ans}</span>
+        <div class="fb-ans-row">
+          <span class="fb-ans">${q.ans}</span>
+          <button class="speech-btn-fb" onclick="speakFullSentence()" title="전체 문장 듣기">🔊</button>
+        </div>
       </div>
       <div class="fb-rule-box">
         <div class="ex-line">📝 ${q.ex}</div>
@@ -1655,7 +1750,10 @@ function pickChoice(el, chosen){
       <div class="fb-header">
         <span class="fb-icon">❌</span>
         <span class="fb-title">오답 — 정답을 확인하세요</span>
-        <span class="fb-ans">${q.ans}</span>
+        <div class="fb-ans-row">
+          <span class="fb-ans">${q.ans}</span>
+          <button class="speech-btn-fb" onclick="speakFullSentence()" title="정답 문장 듣기">🔊</button>
+        </div>
       </div>
       <div class="fb-rule-box">
         <div class="ex-line">📝 ${q.ex}</div>
@@ -1818,6 +1916,47 @@ window.addEventListener('beforeinstallprompt',e=>{
 });
 function installPWA(){
   if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;});}
+}
+
+// ══════════════════════════════════════════
+// WEB SPEECH API
+// ══════════════════════════════════════════
+function speak(text, btnEl){
+  if(!window.speechSynthesis) return;
+  // Cancel any ongoing speech
+  window.speechSynthesis.cancel();
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'ja-JP';
+  utter.rate = 0.9;   // 살짝 천천히 — 초보자용
+  utter.pitch = 1.0;
+
+  if(btnEl){
+    btnEl.classList.add('speaking');
+    utter.onend = () => btnEl.classList.remove('speaking');
+    utter.onerror = () => btnEl.classList.remove('speaking');
+  }
+  window.speechSynthesis.speak(utter);
+}
+
+// 1. 질문 읽기 (빈칸 제외 — ___ 를 읽지 않음)
+function speakQuestion(){
+  const q = currentQ;
+  if(!q) return;
+  // 빈칸(___) 부분을 제거하고 읽기
+  const text = q.q.replace(/___/g, '').replace(/。/g, '。 ').trim();
+  const btn = document.getElementById('qSpeechBtn');
+  speak(text, btn);
+}
+
+// 2. 정답 포함 전체 문장 읽기
+function speakFullSentence(){
+  const q = currentQ;
+  if(!q) return;
+  // 빈칸을 정답으로 채운 전체 문장
+  const text = q.q.replace(/___/g, q.ans);
+  const btn = event.target.closest('button');
+  speak(text, btn);
 }
 
 // ── INIT ──
