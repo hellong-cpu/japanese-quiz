@@ -58,8 +58,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
 .ntab{font-family:var(--FP);font-size:10px;letter-spacing:.5px;padding:10px 10px;border:none;background:none;color:rgba(245,240,232,.45);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;margin-top:2px;white-space:nowrap;flex-shrink:0}
 .ntab:hover{color:var(--paper)}
 .ntab.on{color:var(--goldL);border-bottom-color:var(--goldL)}
-.nav-today{font-family:var(--FP);font-size:10px;color:rgba(245,240,232,.4);padding:0 8px;display:flex;align-items:center;gap:4px;margin-left:auto;flex-shrink:0}
+.nav-today{font-family:var(--FP);font-size:10px;color:rgba(245,240,232,.4);padding:0 8px;display:flex;align-items:center;gap:4px;flex-shrink:0}
 .nav-today b{color:var(--goldL)}
+.nav-version{font-family:var(--FP);font-size:9px;color:rgba(245,240,232,.25);padding:2px 6px;border:1px solid rgba(255,255,255,.1);border-radius:4px;flex-shrink:0;margin-left:4px;letter-spacing:.5px}
 .gen-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:200;background:linear-gradient(90deg,transparent 0%,var(--goldL) 50%,transparent 100%);background-size:200%;animation:genSlide 1s linear infinite;display:none}
 .gen-bar.on{display:block}
 @keyframes genSlide{to{background-position:-200% 0}}
@@ -208,58 +209,113 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
 .vocab-clear-btn{width:100%;padding:12px;border:1px solid rgba(191,74,26,.3);border-radius:var(--r8);background:rgba(191,74,26,.08);color:var(--ng);font-family:var(--FP);font-size:10px;letter-spacing:1px;cursor:pointer;margin-top:10px}
 
 /* ── ENHANCED FEEDBACK ── */
-.fb-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.fb-icon{font-size:20px;flex-shrink:0}
-.fb-title{font-family:var(--FJ);font-size:15px;font-weight:700}
-.fb-ans{font-family:var(--FJ);font-size:18px;font-weight:700;margin-left:auto;padding:2px 10px;border-radius:6px}
-.fb.ok .fb-ans{background:rgba(39,113,74,.2);color:var(--ok)}
-.fb.ng .fb-ans{background:rgba(191,74,26,.15);color:var(--ng)}
-.fb-rule-box{background:rgba(26,26,46,.06);border-radius:8px;padding:10px 12px;margin:8px 0;font-size:12px;color:rgba(26,26,46,.65);line-height:1.8}
-.fb-rule-box .ex-line{font-family:var(--FJ);font-size:14px;color:var(--ink);font-weight:700;margin-bottom:4px}
-.fb-rule-box .rule-line{color:rgba(26,26,46,.7)}
-.fb-pattern{margin-top:8px;border-radius:8px;overflow:hidden;border:1px solid rgba(26,26,46,.1)}
-.fp-title{font-family:var(--FP);font-size:9px;letter-spacing:2px;color:rgba(26,26,46,.4);background:rgba(26,26,46,.05);padding:6px 10px;text-transform:uppercase}
-.fp-row{display:grid;grid-template-columns:auto 1fr 1fr;gap:0;border-top:1px solid rgba(26,26,46,.06);font-size:11px}
-.fp-row:first-child{border-top:none}
-.fp-row.highlight{background:rgba(196,146,40,.12)}
-.fp-cell{padding:6px 8px;color:rgba(26,26,46,.6);display:flex;align-items:center}
-.fp-cell:first-child{font-family:var(--FP);font-size:9px;color:rgba(26,26,46,.4);border-right:1px solid rgba(26,26,46,.06);white-space:nowrap;background:rgba(26,26,46,.03)}
-.fp-cell.ch-cell{font-family:var(--FJ);font-size:12px;color:var(--ink)}
-.fp-cell.ex-cell{font-family:var(--FJ);font-size:11px;color:rgba(26,26,46,.5);border-left:1px solid rgba(26,26,46,.06)}
-.fp-row.highlight .fp-cell{color:var(--ink);font-weight:700}
-.fp-row.highlight .fp-cell:first-child{color:var(--gold)}
-.fp-row.highlight .ch-cell{color:var(--ok)}
-.fb-goto-grammar{display:inline-block;margin-top:8px;font-family:var(--FP);font-size:10px;color:var(--blue);cursor:pointer;letter-spacing:1px;text-decoration:underline;background:none;border:none;padding:0}
+.fb{font-size:14px;display:none;border-radius:var(--r12);margin-bottom:12px;overflow:hidden}
+.fb.on{display:block}
+.fb.ok{border:2px solid var(--ok)}
+.fb.ng{border:2px solid var(--ng)}
 
-/* ── GRAMMAR TABLE ── */
+/* 정답/오답 헤더 */
+.fb-banner{display:flex;align-items:center;gap:10px;padding:14px 16px}
+.fb.ok .fb-banner{background:var(--ok)}
+.fb.ng .fb-banner{background:var(--ng)}
+.fb-banner-icon{font-size:24px;flex-shrink:0}
+.fb-banner-title{font-family:var(--FB);font-size:17px;font-weight:700;color:#fff;flex:1}
+.fb-banner-ans{font-family:var(--FJ);font-size:22px;font-weight:800;color:#fff;letter-spacing:.05em}
+.fb-ans-row{display:flex;align-items:center;gap:6px}
+.speech-btn-fb{border:none;background:rgba(255,255,255,.25);color:#fff;border-radius:6px;padding:5px 9px;font-size:15px;cursor:pointer;transition:all .15s;line-height:1}
+.speech-btn-fb:hover{background:rgba(255,255,255,.4)}
+.speech-btn-fb.speaking{animation:pulse .8s ease infinite}
+
+/* 오답일때 내 답 vs 정답 */
+.fb-wrong-compare{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(191,74,26,.06);border-bottom:1px solid rgba(191,74,26,.12);flex-wrap:wrap}
+.fb-wrong-label{font-size:12px;color:rgba(26,26,46,.5);font-family:var(--FB)}
+.fb-wrong-my{font-family:var(--FJ);font-size:17px;color:var(--ng);text-decoration:line-through;opacity:.8}
+.fb-wrong-arrow{font-size:14px;color:rgba(26,26,46,.3)}
+.fb-wrong-correct{font-family:var(--FJ);font-size:19px;color:var(--ok);font-weight:800}
+
+/* 그룹 배지 */
+.fb-grp-row{display:flex;align-items:center;gap:8px;padding:12px 16px 4px}
+.grp-badge{display:inline-block;padding:5px 14px;border-radius:20px;font-size:13px;font-weight:700;font-family:var(--FB)}
+.grp-badge.g1{background:rgba(196,146,40,.15);color:#7a5010;border:1.5px solid rgba(196,146,40,.4)}
+.grp-badge.g1w{background:rgba(200,40,40,.1);color:#901010;border:1.5px solid rgba(200,40,40,.3)}
+.grp-badge.g2{background:rgba(68,119,204,.15);color:#1a3f8a;border:1.5px solid rgba(68,119,204,.3)}
+.grp-badge.g3{background:rgba(140,60,180,.15);color:#6020a0;border:1.5px solid rgba(140,60,180,.3)}
+.fb-grp-desc{font-size:13px;color:rgba(26,26,46,.55);font-family:var(--FB)}
+
+/* 단계별 활용 설명 */
+.conjugation-box{margin:0 14px 10px;background:rgba(26,26,46,.04);border-radius:10px;padding:14px;border:1px solid rgba(26,26,46,.08)}
+.cb-title{font-size:11px;font-family:var(--FB);color:rgba(26,26,46,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.cb-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.cb-step:last-child{margin-bottom:0}
+.cb-num{width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--paper);font-size:12px;font-family:var(--FP);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.cb-content{flex:1}
+.cb-label{font-size:12px;color:rgba(26,26,46,.45);font-family:var(--FB);margin-bottom:3px}
+.cb-val{font-family:var(--FJ);font-size:18px;color:var(--ink);font-weight:700;line-height:1.4}
+.cb-val .dim{color:rgba(26,26,46,.3);font-size:14px;font-weight:400}
+.cb-val .accent{color:var(--acc);font-size:20px}
+.cb-val .final{color:var(--ok);font-size:20px;font-weight:800}
+.cb-kr{font-size:13px;color:rgba(26,26,46,.5);font-family:var(--FB);margin-top:3px}
+
+/* 규칙 요약 */
+.rule-summary{margin:0 14px 12px;background:rgba(196,146,40,.08);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 14px;font-size:14px;color:rgba(26,26,46,.7);line-height:1.7;font-family:var(--FB)}
+.rule-summary b{color:var(--ink)}
+
+/* 미니 패턴표 */
+.mini-pattern{margin:0 14px 12px;border-radius:10px;overflow:hidden;border:1.5px solid rgba(26,26,46,.1)}
+.mp-title{font-size:12px;font-family:var(--FB);font-weight:700;color:rgba(26,26,46,.5);background:rgba(26,26,46,.05);padding:8px 14px;border-bottom:1px solid rgba(26,26,46,.08)}
+.mp-row{display:grid;grid-template-columns:72px 1fr;border-top:1px solid rgba(26,26,46,.07);min-height:48px}
+.mp-row.mp-hl{background:rgba(196,146,40,.1)}
+.mp-grp{padding:10px 10px;font-size:12px;font-weight:700;font-family:var(--FB);display:flex;align-items:center;border-right:1px solid rgba(26,26,46,.07);line-height:1.3}
+.mp-grp.g1{color:#8a6210}
+.mp-grp.g1w{color:#901010}
+.mp-grp.g2{color:#1a3f8a}
+.mp-grp.g3{color:#6020a0}
+.mp-info{padding:8px 12px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.mp-rule{font-size:12px;color:rgba(26,26,46,.5);font-family:var(--FB)}
+.mp-ex{font-family:var(--FJ);font-size:15px;color:var(--ink);font-weight:700}
+.mp-kr{font-size:12px;color:rgba(26,26,46,.45);font-family:var(--FB)}
+.mp-row.mp-hl .mp-rule{color:var(--ok);font-weight:700}
+.mp-row.mp-hl .mp-ex{color:var(--ok)}
+.mp-row.mp-hl .mp-grp{background:rgba(196,146,40,.08)}
+.mp-now{display:inline-block;font-size:9px;background:var(--gold);color:var(--ink);padding:1px 5px;border-radius:3px;margin-left:4px;font-family:var(--FP);vertical-align:middle}
+
+.fb-goto-grammar{display:block;margin:0 14px 14px;font-family:var(--FB);font-size:13px;color:var(--blue);cursor:pointer;background:rgba(34,85,170,.07);border:1.5px solid rgba(34,85,170,.2);border-radius:8px;padding:10px 14px;text-align:center;width:calc(100% - 28px)}
+
+/* ── GRAMMAR TABLE (문법표 탭) ── */
 .grammar-header{padding:8px 0 16px}
-.grammar-title{font-family:var(--FJ);font-size:22px;color:var(--paper);margin-bottom:6px}
-.grammar-sub{font-size:12px;color:rgba(245,240,232,.4)}
-.grammar-nav{display:flex;gap:6px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:none;margin-bottom:4px}
+.grammar-title{font-family:var(--FJ);font-size:22px;color:var(--paper);margin-bottom:4px}
+.grammar-sub{font-size:13px;color:rgba(245,240,232,.45);line-height:1.6}
+.grammar-nav{display:flex;gap:6px;overflow-x:auto;padding:4px 0 14px;scrollbar-width:none}
 .grammar-nav::-webkit-scrollbar{display:none}
-.gnav-btn{font-family:var(--FP);font-size:9px;letter-spacing:1px;padding:5px 10px;border-radius:4px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:rgba(245,240,232,.5);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
-.gnav-btn:hover,.gnav-btn.on{background:var(--gold);border-color:var(--gold);color:var(--ink)}
-.grammar-card{background:var(--paper);border-radius:var(--r16);padding:0;margin-bottom:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.3)}
-.gc-top-band{background:var(--ink);padding:14px 18px;display:flex;align-items:baseline;gap:10px}
-.gct-name{font-family:var(--FJ);font-size:18px;color:var(--goldL);font-weight:700}
-.gct-jp{font-family:var(--FJ);font-size:13px;color:rgba(245,240,232,.5)}
-.gc-usage{padding:12px 18px;font-size:12px;color:rgba(26,26,46,.6);line-height:1.7;background:rgba(26,26,46,.03);border-bottom:1px solid var(--paper3)}
-.grammar-table{width:100%;border-collapse:collapse}
-.grammar-table th{font-family:var(--FP);font-size:9px;letter-spacing:1px;color:rgba(26,26,46,.4);background:rgba(26,26,46,.04);padding:7px 10px;text-align:left;border-bottom:1px solid var(--paper3)}
-.grammar-table td{padding:9px 10px;font-size:12px;color:rgba(26,26,46,.75);border-bottom:1px solid rgba(26,26,46,.06);vertical-align:middle;line-height:1.5}
-.grammar-table tr:last-child td{border-bottom:none}
-.grammar-table tr:hover td{background:rgba(26,26,46,.03)}
-.gt-grp{font-family:var(--FP);font-size:10px;white-space:nowrap}
-.gt-grp.g1{color:#8a6210}
-.gt-grp.g1w{color:#901010}
-.gt-grp.g2{color:#1a3f8a}
-.gt-grp.g3{color:#6020a0}
-.gt-change{font-family:var(--FJ);font-size:13px;color:var(--ink);font-weight:700}
-.gt-ex{font-family:var(--FJ);font-size:11px;color:rgba(26,26,46,.5)}
-.gt-warn{background:rgba(200,40,40,.04)}
-.gt-warn td{color:rgba(144,16,16,.8)}
-.grammar-section{display:none}
-.grammar-section.on{display:block}
+.gnav-btn{font-family:var(--FB);font-size:12px;padding:7px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:rgba(245,240,232,.55);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.gnav-btn:hover,.gnav-btn.on{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:700}
+
+/* 문법표 메인 카드 */
+.grammar-card{background:var(--paper);border-radius:var(--r16);margin-bottom:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.gc-top-band{background:var(--ink);padding:16px 20px}
+.gct-name{font-family:var(--FJ);font-size:22px;color:var(--goldL);font-weight:800;margin-bottom:4px}
+.gct-jp{font-size:12px;color:rgba(245,240,232,.4);font-family:var(--FB)}
+.gct-usage{font-size:14px;color:rgba(245,240,232,.7);line-height:1.7;margin-top:8px;font-family:var(--FB);padding:10px 14px;background:rgba(255,255,255,.05);border-radius:8px}
+
+/* 그룹별 섹션 */
+.grp-section{border-bottom:2px solid var(--paper3)}
+.grp-section:last-child{border-bottom:none}
+.gs-header{display:flex;align-items:center;gap:10px;padding:14px 18px;background:rgba(26,26,46,.04)}
+.gs-badge{font-size:13px;font-weight:800;font-family:var(--FB);padding:5px 14px;border-radius:20px;flex-shrink:0}
+.gs-badge.g1{background:rgba(196,146,40,.2);color:#7a5010}
+.gs-badge.g1w{background:rgba(200,40,40,.12);color:#901010}
+.gs-badge.g2{background:rgba(68,119,204,.2);color:#1a3f8a}
+.gs-badge.g3{background:rgba(140,60,180,.2);color:#6020a0}
+.gs-rule{font-size:14px;color:rgba(26,26,46,.65);font-family:var(--FB);line-height:1.5}
+.gs-body{padding:4px 16px 16px}
+.gs-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(26,26,46,.07)}
+.gs-row:last-child{border-bottom:none;padding-bottom:0}
+.gs-jp{font-family:var(--FJ);font-size:17px;color:var(--ink);font-weight:700;min-width:70px;flex-shrink:0;padding-top:2px}
+.gs-arrow-col{color:rgba(26,26,46,.3);font-size:15px;padding-top:4px;flex-shrink:0}
+.gs-right{flex:1}
+.gs-result{font-family:var(--FJ);font-size:19px;color:var(--ok);font-weight:800;margin-bottom:3px}
+.gs-kr{font-size:14px;color:rgba(26,26,46,.6);font-family:var(--FB);margin-bottom:3px}
+.gs-note{display:inline-block;font-size:12px;color:rgba(191,74,26,.8);background:rgba(191,74,26,.07);padding:3px 8px;border-radius:5px;font-family:var(--FB);margin-top:2px}
 
 /* ── SPEECH BUTTONS ── */
 .speech-btn{border:none;background:rgba(26,26,46,.08);color:rgba(26,26,46,.45);border-radius:6px;padding:4px 8px;font-size:14px;cursor:pointer;transition:all .15s;flex-shrink:0;line-height:1}
@@ -310,6 +366,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
     <button class="ntab" data-v="settings">⚙️ 설정</button>
   </div>
   <div class="nav-today">오늘 <b id="navToday">0</b>/10</div>
+  <div class="nav-version">v6.1</div>
 </nav>
 
 <!-- ════════ HOME VIEW ════════ -->
@@ -1258,75 +1315,279 @@ function showGSection(key, updateNav=true){
       b.classList.toggle('on',b.textContent.trim()===info.name);
     });
   }
+
+  // 그룹별로 rows를 묶기
+  const groups={};
+  info.rows.forEach(r=>{
+    const key2=r.g;
+    if(!groups[key2]) groups[key2]={g:r.g,rows:[]};
+    groups[key2].rows.push(r);
+  });
+
+  const grpLabels={
+    g1:'1그룹 (う동사)', g1w:'⚠️ 1그룹 주의', g2:'2그룹 (る동사)', g3:'3그룹 (불규칙)'
+  };
+  const grpRules={
+    g1:'어미(마지막 글자)를 바꿔서 활용해요',
+    g1w:'る로 끝나지만 사실 1그룹이에요! 조심!',
+    g2:'る를 떼고 뒤에 붙여요',
+    g3:'する・くる — 불규칙, 통째로 외워요!'
+  };
+
+  const sectionsHtml=Object.values(groups).map(grp=>`
+    <div class="grp-section">
+      <div class="gs-header">
+        <span class="gs-badge ${grp.g}">${grpLabels[grp.g]||grp.g}</span>
+        <span class="gs-rule">${grpRules[grp.g]||''}</span>
+      </div>
+      <div class="gs-body">
+        ${grp.rows.map(r=>{
+          const exRaw=r.ex.replace(/<[^>]+>/g,'');
+          const parts=exRaw.split('→');
+          const from=(parts[0]||'').trim();
+          const to=(parts[1]||'').trim();
+          return `<div class="gs-row">
+            <div class="gs-jp">${r.ex.includes('<ruby>')?r.ex.split('→')[0].trim():from}</div>
+            <div class="gs-arrow-col">→</div>
+            <div class="gs-right">
+              <div class="gs-result">${to}</div>
+              <div class="gs-kr">${(r.kr||'').replace(/\(|\)/g,'')}</div>
+              <div class="gs-rule-inline" style="font-size:12px;color:rgba(26,26,46,.5);font-family:var(--FB);margin-top:2px">${r.change.replace(/<b>|<\/b>/g,'')}</div>
+              ${r.note?`<div class="gs-note">⚠️ ${r.note}</div>`:''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
+
   document.getElementById('grammarContent').innerHTML=`
     <div class="grammar-card">
       <div class="gc-top-band">
         <div class="gct-name">${info.name}</div>
         <div class="gct-jp">${info.nameJP}</div>
+        <div class="gct-usage">${info.usage}</div>
       </div>
-      <div class="gc-usage">${info.usage}</div>
-      <table class="grammar-table">
-        <thead>
-          <tr>
-            <th>그룹</th>
-            <th>조건</th>
-            <th>변화</th>
-            <th>예시 + 뜻</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${info.rows.map(r=>`
-            <tr class="${r.g==='g1w'?'gt-warn':''}">
-              <td class="gt-grp ${r.g}">${r.grp}</td>
-              <td style="font-size:12px;color:rgba(26,26,46,.65)">${r.end}</td>
-              <td class="gt-change">${r.change}</td>
-              <td>
-                <div class="gt-ex">${r.ex}</div>
-                <div style="font-size:11px;color:var(--acc);font-weight:600;margin-top:2px">${r.kr||''}</div>
-                ${r.note?`<div style="font-size:10px;color:rgba(191,74,26,.7);margin-top:3px;background:rgba(191,74,26,.06);padding:2px 5px;border-radius:3px;display:inline-block">⚠️ ${r.note}</div>`:''}
-              </td>
-            </tr>`).join('')}
-        </tbody>
-      </table>
+      ${sectionsHtml}
     </div>
-    <div style="text-align:center;padding:8px 0 20px;font-family:var(--FP);font-size:10px;color:rgba(245,240,232,.25)">
-      퀴즈에서 틀린 문제의 문법표가 자동으로 표시됩니다
+    <div style="text-align:center;padding:8px 0 20px;font-size:12px;color:rgba(245,240,232,.25)">
+      퀴즈에서 틀리면 자동으로 해당 문법표가 표시돼요
     </div>
   `;
 }
 
-// ── FEEDBACK PATTERN HELPER ──
-function buildFeedbackPattern(q){
+// ── 그룹 정보 ──
+function getGrpInfo(grp){
+  if(!grp||grp==='-') return {cls:'g1',label:'조사',desc:''};
+  if(grp.includes('주의')||grp.includes('예외')) return {cls:'g1w',label:'1그룹 ⚠️ 주의',desc:'る로 끝나지만 1그룹인 동사!'};
+  if(grp.includes('3그룹')) return {cls:'g3',label:'3그룹 (불규칙)',desc:'する・くる — 통째로 외우는 불규칙 동사'};
+  if(grp.includes('2그룹')) return {cls:'g2',label:'2그룹',desc:'る 앞이 い단/え단 — る를 떼고 활용'};
+  if(grp.includes('1그룹')) return {cls:'g1',label:'1그룹',desc:'어미를 바꿔서 활용 (う동사)'};
+  return {cls:'g1',label:grp,desc:''};
+}
+
+// ── 단계별 활용 설명 생성 ──
+function buildSteps(q){
+  const f=q.f, grp=q.grp||'', w=q.word;
+  const is1=grp.includes('1그룹'), is2=grp.includes('2그룹'), is3=grp.includes('3그룹');
+  const isWarn=grp.includes('주의')||grp.includes('예외');
+
+  const steps=[];
+
+  if(f==='group'||f==='particle'){
+    // 그룹판별/조사는 스텝 생략, 규칙만 표시
+    return [];
+  }
+
+  if(is2){
+    steps.push({label:'원형',val:`${w.k}　<span class="dim">(${w.r})</span>`,kr:`${w.m}`});
+    steps.push({label:'① る를 뗀다',val:`${w.k.replace(/る$/,'')}`+`<span class="accent"> ✂️る</span>`,kr:'어간만 남김'});
+    const suffix=getForm2Suffix(f);
+    steps.push({label:`② ${suffix.label} 붙이기`,val:`${w.k.replace(/る$/,'')}<span class="final">${suffix.val}</span>`,kr:suffix.kr});
+  } else if(is3){
+    steps.push({label:'원형 (불규칙)',val:`${w.k}　<span class="dim">(${w.r})</span>`,kr:`${w.m}`});
+    const s3=getForm3(f, w.r);
+    steps.push({label:'활용형 (통째로 외우기!)',val:`<span class="final">${s3.val}</span>`,kr:s3.kr});
+  } else if(is1||isWarn){
+    steps.push({label:'원형',val:`${w.k}　<span class="dim">(${w.r})</span>`,kr:`${w.m}`});
+    const s1=getForm1Steps(f, q.ans, w, isWarn);
+    s1.forEach(s=>steps.push(s));
+  }
+  return steps;
+}
+
+function getForm2Suffix(f){
+  const map={
+    te:{label:'て',val:'て',kr:'~하고/~해서'},
+    masu:{label:'ます',val:'ます',kr:'~합니다'},
+    nai:{label:'ない',val:'ない',kr:'~하지 않다'},
+    kano:{label:'られる',val:'られる',kr:'~할 수 있다'},
+    judou:{label:'られる',val:'られる',kr:'~당하다/~받다'},
+    shieki:{label:'させる',val:'させる',kr:'~시키다'},
+    iko:{label:'よう',val:'よう',kr:'~하자/~할게'},
+    meirei:{label:'ろ',val:'ろ',kr:'~해라!'},
+  };
+  return map[f]||{label:'',val:'',kr:''};
+}
+
+function getForm3(f, r){
+  const isSuru=r.includes('する')||r==='する';
+  const map={
+    te:   isSuru?{val:'して',kr:'~하고/~해서'}:{val:'きて',kr:'~와서'},
+    masu: isSuru?{val:'します',kr:'~합니다'}:{val:'きます',kr:'~옵니다'},
+    nai:  isSuru?{val:'しない',kr:'~하지 않다'}:{val:'こない',kr:'~오지 않다'},
+    kano: isSuru?{val:'できる',kr:'~할 수 있다 ← 완전히 다른 단어!'}:{val:'こられる',kr:'~올 수 있다'},
+    judou:isSuru?{val:'される',kr:'~당하다'}:{val:'こられる',kr:'~오게 되다'},
+    shieki:isSuru?{val:'させる',kr:'~시키다'}:{val:'こさせる',kr:'~오게 하다'},
+    iko:  isSuru?{val:'しよう',kr:'~하자!'}:{val:'こよう',kr:'~오자!'},
+    meirei:isSuru?{val:'しろ',kr:'~해라!'}:{val:'こい',kr:'~와라!'},
+  };
+  return map[f]||{val:'?',kr:''};
+}
+
+function getForm1Steps(f, ans, w, isWarn){
+  const steps=[];
+  const endChar=w.r.slice(-1);
+  const stem=w.r.slice(0,-1);
+
+  // 어미 변화 규칙
+  const teMap={
+    'く':'いて','ぐ':'いで','む':'んで','ぶ':'んで','ぬ':'んで',
+    'う':'って','つ':'って','る':'って','す':'して','く(いく)':'って'
+  };
+  const masuMap={
+    'く':'き','ぐ':'ぎ','む':'み','ぶ':'び','ぬ':'に',
+    'う':'い','つ':'ち','る':'り','す':'し'
+  };
+  const naiMap={
+    'く':'か','ぐ':'が','む':'ま','ぶ':'ば','ぬ':'な',
+    'う':isWarn?'わ':'わ','つ':'た','る':'ら','す':'さ'
+  };
+  const kanoMap={
+    'く':'け','ぐ':'げ','む':'め','ぶ':'べ','ぬ':'ね',
+    'う':'え','つ':'て','る':'れ','す':'せ'
+  };
+  const ikoMap={
+    'く':'こ','ぐ':'ご','む':'も','ぶ':'ぼ','ぬ':'の',
+    'う':'お','つ':'と','る':'ろ','す':'そ'
+  };
+  const meMap={
+    'く':'け','ぐ':'げ','む':'め','ぶ':'べ','ぬ':'ね',
+    'う':'え','つ':'て','る':'れ','す':'せ'
+  };
+
+  let changed='', suffix='', label='';
+  if(f==='te'){
+    const newEnd = w.r==='いく'?'って':(teMap[endChar]||'');
+    changed=stem+newEnd;
+    label='て형으로 변환';
+    steps.push({label:'원형의 어미 확인',val:`${w.k}　어미: <span class="accent">${endChar}</span>`,kr:`어미(마지막 글자) = ${endChar}`});
+    steps.push({label:`② ${endChar} → ${newEnd} 로 바꾸기`,val:`<span class="final">${changed}</span>`,kr:ans});
+  } else if(f==='masu'){
+    changed=stem+(masuMap[endChar]||'')+'ます';
+    steps.push({label:'어미 확인',val:`어미: <span class="accent">${endChar}</span>`,kr:''});
+    steps.push({label:`② ${endChar} → ${masuMap[endChar]||''}ます`,val:`<span class="final">${changed}</span>`,kr:`${ans} (정중체)`});
+  } else if(f==='nai'){
+    const na=naiMap[endChar]||'';
+    changed=stem+na+'ない';
+    steps.push({label:'어미 확인',val:`어미: <span class="accent">${endChar}</span>`,kr:''});
+    steps.push({label:`② ${endChar} → ${na}ない`,val:`<span class="final">${changed}</span>`,kr:`${ans} (부정형)`});
+  } else if(f==='kano'){
+    const ka=kanoMap[endChar]||'';
+    changed=stem+ka+'る';
+    steps.push({label:'어미 확인',val:`어미: <span class="accent">${endChar}</span>`,kr:''});
+    steps.push({label:`② ${endChar} → ${ka}る`,val:`<span class="final">${changed}</span>`,kr:`${ans} (가능형)`});
+  } else if(f==='judou'){
+    const ja=naiMap[endChar]||'';
+    changed=stem+ja+'れる';
+    steps.push({label:'어미 확인',val:`어미: <span class="accent">${endChar}</span>`,kr:''});
+    steps.push({label:`② ${endChar} → ${ja}れる`,val:`<span class="final">${changed}</span>`,kr:`${ans} (수동형)`});
+  } else if(f==='shieki'){
+    const sa=naiMap[endChar]||'';
+    changed=stem+sa+'せる';
+    steps.push({label:'어미 확인',val:`어미: <span class="accent">${endChar}</span>`,kr:''});
+    steps.push({label:`② ${endChar} → ${sa}せる`,val:`<span class="final">${changed}</span>`,kr:`${ans} (사역형)`});
+  } else if(f==='iko'){
+    const ik=ikoMap[endChar]||'';
+    changed=stem+ik+'う';
+    steps.push({label:'어미 확인',val:`어미: <span class="accent">${endChar}</span>`,kr:''});
+    steps.push({label:`② ${endChar} → ${ik}う`,val:`<span class="final">${changed}</span>`,kr:`${ans} (의향형)`});
+  } else if(f==='meirei'){
+    const me=meMap[endChar]||'';
+    changed=stem+me;
+    steps.push({label:'어미 확인',val:`어미: <span class="accent">${endChar}</span>`,kr:''});
+    steps.push({label:`② ${endChar} → ${me}`,val:`<span class="final">${changed}</span>`,kr:`${ans} (명령형)`});
+  }
+  return steps;
+}
+
+// ── 미니 패턴표 ──
+function buildMiniPattern(q){
   const info=GRAMMAR_INFO[q.f];
-  if(!info||info.rows.length===0) return '';
-  // Find the row that matches this question's group
+  if(!info||!info.rows||q.f==='group'||q.f==='particle') return '';
   const grp=q.grp||'';
   let matchIdx=-1;
   info.rows.forEach((r,i)=>{
-    if(grp.includes('3그룹')&&r.g==='g3'&&r.end.includes(q.word.r==='する'?'する':'くる'))matchIdx=i;
-    else if(grp.includes('2그룹')&&r.g==='g2')matchIdx=i;
-    else if(grp.includes('주의')&&r.g==='g1w')matchIdx=i;
-    else if(grp.includes('예외')&&r.g==='g1w')matchIdx=i;
-    else if(grp.includes('1그룹')&&r.g==='g1'&&matchIdx===-1)matchIdx=i;
+    if(grp.includes('3그룹')&&r.g==='g3'){
+      const isSuru=q.word.r.includes('する');
+      if(isSuru&&r.end.includes('する')) matchIdx=i;
+      else if(!isSuru&&r.end.includes('くる')) matchIdx=i;
+    }
+    else if(grp.includes('2그룹')&&r.g==='g2') matchIdx=i;
+    else if((grp.includes('주의')||grp.includes('예외'))&&r.g==='g1w') matchIdx=i;
+    else if(grp.includes('1그룹')&&r.g==='g1'&&matchIdx===-1) matchIdx=i;
   });
 
-  // Show up to 4 rows, highlight the matched one
-  const showRows=info.rows.slice(0,Math.min(info.rows.length,5));
-  const rowsHtml=showRows.map((r,i)=>`
-    <div class="fp-row ${i===matchIdx?'highlight':''}">
-      <div class="fp-cell">${r.grp.replace(' ⚠️','⚠')}</div>
-      <div class="fp-cell ch-cell">${r.change.replace(/<b>|<\/b>/g,'')}</div>
-      <div class="fp-cell ex-cell" style="flex-direction:column;align-items:flex-start;gap:1px">
-        <span>${r.ex.split('→')[0].trim()} → <b>${(r.ex.split('→')[1]||'').trim()}</b></span>
-        ${r.kr?`<span style="font-size:10px;color:rgba(26,26,46,.4);font-family:var(--FB)">${r.kr.replace(/\(|\)/g,'')}</span>`:''}
+  const rowsHtml=info.rows.map((r,i)=>{
+    const isHL=i===matchIdx;
+    const exParts=r.ex.replace(/<[^>]+>/g,'').split('→');
+    return `<div class="mp-row ${isHL?'mp-hl':''}">
+      <div class="mp-grp ${r.g}">${r.grp.replace(' ⚠️','⚠')}${isHL?'<span class="mp-now">지금</span>':''}</div>
+      <div class="mp-info">
+        <div class="mp-rule">${r.change.replace(/<b>|<\/b>/g,'')}</div>
+        <div class="mp-ex">${(exParts[0]||'').trim()} → <b>${(exParts[1]||'').trim()}</b></div>
+        <div class="mp-kr">${(r.kr||'').replace(/\(|\)/g,'')}</div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
-  return `<div class="fb-pattern">
-    <div class="fp-title">${info.name} · 전체 패턴</div>
+  return `<div class="mini-pattern">
+    <div class="mp-title">📊 ${info.name} — 전체 그룹 패턴</div>
     ${rowsHtml}
-  </div>
-  <button class="fb-goto-grammar" onclick="switchView('grammar');showGSection('${q.f}')">📋 전체 문법표 보기 →</button>`;
+  </div>`;
+}
+
+// ── 피드백 빌드 ──
+function buildFeedbackPattern(q){
+  const grpInfo=getGrpInfo(q.grp||'');
+  const steps=buildSteps(q);
+  const miniPattern=buildMiniPattern(q);
+
+  const stepsHtml=steps.length?`
+    <div class="conjugation-box">
+      <div class="cb-title">📝 활용 방법 (단계별)</div>
+      ${steps.map((s,i)=>`
+        <div class="cb-step">
+          <div class="cb-num">${i+1}</div>
+          <div class="cb-content">
+            <div class="cb-label">${s.label}</div>
+            <div class="cb-val">${s.val}</div>
+            ${s.kr?`<div class="cb-kr">${s.kr}</div>`:''}
+          </div>
+        </div>`).join('')}
+    </div>`:'';
+
+  const ruleHtml=q.rule?`<div class="rule-summary">📖 ${q.rule}</div>`:'';
+
+  return `
+    <div class="fb-grp-row">
+      <span class="grp-badge ${grpInfo.cls}">${grpInfo.label}</span>
+      <span class="fb-grp-desc">${grpInfo.desc}</span>
+    </div>
+    ${stepsHtml}
+    ${ruleHtml}
+    ${miniPattern}
+    <button class="fb-goto-grammar" onclick="switchView('grammar');showGSection('${q.f}')">📋 문법표 전체 보기 →</button>
+  `;
 }
 // ══════════════════════════════════════════
 // 전역 후리가나 사전 (N5/N4 전체 커버)
@@ -1723,8 +1984,6 @@ function pickChoice(el, chosen){
   const q=currentQ;
   if(!q) return;
   const isCorrect=chosen===q.ans;
-
-  // Disable all choices & highlight
   const allCh=el.closest('.choices').querySelectorAll('.ch');
   allCh.forEach(ch=>{
     ch.disabled=true;
@@ -1732,61 +1991,41 @@ function pickChoice(el, chosen){
     if(ans===q.ans) ch.classList.add('ok');
     else if(ans===chosen&&!isCorrect) ch.classList.add('ng');
   });
-
-  // Build rich feedback
   const fb=document.getElementById('fb');
-  const grpClass=getGrpClass(q.grp);
   const patternHtml=buildFeedbackPattern(q);
-
   if(isCorrect){
     fb.className='fb on ok';
     fb.innerHTML=`
-      <div class="fb-header">
-        <span class="fb-icon">✅</span>
-        <span class="fb-title">정답!</span>
+      <div class="fb-banner">
+        <span class="fb-banner-icon">✅</span>
+        <span class="fb-banner-title">정답!</span>
         <div class="fb-ans-row">
-          <span class="fb-ans">${q.ans}</span>
+          <span class="fb-banner-ans">${q.ans}</span>
           <button class="speech-btn-fb" onclick="speakFullSentence()" title="전체 문장 듣기">🔊</button>
-        </div>
-      </div>
-      <div class="fb-rule-box">
-        <div class="ex-line">📝 ${q.ex}</div>
-        <div class="rule-line">📖 ${q.rule}</div>
-        <div style="margin-top:6px">
-          <span class="grp-tag ${grpClass}" style="margin-top:0">${q.grp}</span>
         </div>
       </div>
       ${patternHtml}`;
   } else {
     fb.className='fb on ng';
     fb.innerHTML=`
-      <div class="fb-header">
-        <span class="fb-icon">❌</span>
-        <span class="fb-title">오답 — 정답을 확인하세요</span>
+      <div class="fb-banner">
+        <span class="fb-banner-icon">❌</span>
+        <span class="fb-banner-title">오답!</span>
         <div class="fb-ans-row">
-          <span class="fb-ans">${q.ans}</span>
+          <span class="fb-banner-ans">${q.ans}</span>
           <button class="speech-btn-fb" onclick="speakFullSentence()" title="정답 문장 듣기">🔊</button>
         </div>
       </div>
-      <div class="fb-rule-box">
-        <div class="ex-line">📝 ${q.ex}</div>
-        <div class="rule-line">📖 ${q.rule}</div>
-        <div style="margin-top:4px;font-size:11px;color:rgba(26,26,46,.5)">
-          선택한 답: <span style="color:var(--ng);font-family:var(--FJ)">${chosen}</span>
-          → 정답: <span style="color:var(--ok);font-family:var(--FJ)">${q.ans}</span>
-        </div>
-        <div style="margin-top:6px">
-          <span class="grp-tag ${grpClass}" style="margin-top:0">${q.grp}</span>
-        </div>
+      <div class="fb-wrong-compare">
+        <span class="fb-wrong-label">내 답</span>
+        <span class="fb-wrong-my">${chosen}</span>
+        <span class="fb-wrong-arrow">→</span>
+        <span class="fb-wrong-correct">정답: ${q.ans}</span>
       </div>
       ${patternHtml}`;
   }
-
-  // Show next, hide skip
   document.getElementById('nextBtn').classList.add('on');
   document.getElementById('skipBtn').style.display='none';
-
-  // Stats
   if(isCorrect) stats.correct=(stats.correct||0)+1;
   else stats.wrong=(stats.wrong||0)+1;
   stats.totalDone=(stats.totalDone||0)+1;
@@ -1795,6 +2034,7 @@ function pickChoice(el, chosen){
   saveAll();
   document.getElementById('navToday').textContent=todayCount();
 }
+
 
 function getGrpClass(grp){
   if(!grp||grp==='-') return '';
