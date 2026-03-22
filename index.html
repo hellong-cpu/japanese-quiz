@@ -974,19 +974,32 @@ function todayCount(){ return dailyData[today()]||0; }
 
 // ── Storage ──
 async function loadAll(){
-  try{const r=await window.storage.get('jpq_daily');if(r)dailyData=JSON.parse(r.value);}catch(e){dailyData={};}
-  try{const r=await window.storage.get('jpq_stats');if(r)stats=JSON.parse(r.value);}catch(e){}
+  // localStorage 먼저 로드 (GitHub Pages 기본 저장소)
+  try{const d=localStorage.getItem('jpq_daily');if(d)dailyData=JSON.parse(d);}catch(e){dailyData={};}
+  try{const s=localStorage.getItem('jpq_stats');if(s)stats=JSON.parse(s);}catch(e){}
+  try{apiKey=localStorage.getItem('jpq_apikey')||'';}catch(e){}
+  try{const v=localStorage.getItem('jpq_vocab');if(v)vocabList=JSON.parse(v);}catch(e){vocabList=[];}
+
+  // window.storage (Claude.ai)에 더 최신 데이터 있으면 덮어쓰기
+  try{const r=await window.storage.get('jpq_daily');if(r&&r.value)dailyData=JSON.parse(r.value);}catch(e){}
+  try{const r=await window.storage.get('jpq_stats');if(r&&r.value)stats=JSON.parse(r.value);}catch(e){}
   try{const r=await window.storage.get('jpq_apikey');if(r&&r.value)apiKey=r.value;}catch(e){}
-  if(!apiKey){try{apiKey=localStorage.getItem('jpq_apikey')||'';}catch(e){}}
-  try{const r=await window.storage.get('jpq_vocab');if(r)vocabList=JSON.parse(r.value);}catch(e){}
-  if(!vocabList||!Array.isArray(vocabList)){try{vocabList=JSON.parse(localStorage.getItem('jpq_vocab')||'[]');}catch(e){vocabList=[];}}
+  try{const r=await window.storage.get('jpq_vocab');if(r&&r.value)vocabList=JSON.parse(r.value);}catch(e){}
+
+  if(!Array.isArray(vocabList)) vocabList=[];
 }
 
 async function saveAll(){
-  try{
-    await window.storage.set('jpq_daily',JSON.stringify(dailyData));
-    await window.storage.set('jpq_stats',JSON.stringify(stats));
-  }catch(e){}
+  const dailyStr=JSON.stringify(dailyData);
+  const statsStr=JSON.stringify(stats);
+
+  // localStorage에 저장 (GitHub Pages / PWA 영구 보존)
+  try{localStorage.setItem('jpq_daily',dailyStr);}catch(e){}
+  try{localStorage.setItem('jpq_stats',statsStr);}catch(e){}
+
+  // window.storage에도 저장 (Claude.ai용)
+  try{await window.storage.set('jpq_daily',dailyStr);}catch(e){}
+  try{await window.storage.set('jpq_stats',statsStr);}catch(e){}
 }
 
 async function saveVocab(){
