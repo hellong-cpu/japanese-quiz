@@ -1096,8 +1096,12 @@ function exportData(){
 }
 
 function confirmReset(){
-  if(confirm('모든 학습 기록을 초기화하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')){
+  if(confirm('모든 학습 기록을 초기화하시겠습니까?\n(마스터한 문제, 복습 목록, 학습 기록 전부 초기화)\n이 작업은 되돌릴 수 없습니다.')){
     dailyData={};stats={correct:0,wrong:0,bestStreak:0,totalDone:0};
+    shownIds=new Set(); wrongQs=[]; questionCount=0;
+    try{localStorage.removeItem('jpq_mastered');}catch(e){}
+    try{localStorage.removeItem('jpq_wrongqs');}catch(e){}
+    try{localStorage.removeItem('jpq_qcount');}catch(e){}
     saveAll();renderHome();alert('초기화 완료!');
   }
 }
@@ -2035,8 +2039,45 @@ function shuffle(arr){
   return arr;
 }
 
+let shownIds=new Set();  // 맞춘 문제 (다시 안 나옴)
+let wrongQs=[];          // 틀린 문제 큐 [{q, returnAt}]
+let questionCount=0;     // 총 출제 횟수 (간격 계산용)
+
+function qKey(q){ return q.q.slice(0,30); } // 문제 고유 키
+
 function initPool(){
-  pool=[...SEED];shuffle(pool);poolIdx=0;
+  pool=[...SEED]; shuffle(pool); poolIdx=0;
+  // localStorage에서 맞춘 문제 목록 복원
+  try{
+    const saved=JSON.parse(localStorage.getItem('jpq_mastered')||'[]');
+    shownIds=new Set(saved);
+  }catch(e){ shownIds=new Set(); }
+  try{
+    wrongQs=JSON.parse(localStorage.getItem('jpq_wrongqs')||'[]');
+  }catch(e){ wrongQs=[]; }
+  try{
+    questionCount=parseInt(localStorage.getItem('jpq_qcount')||'0');
+  }catch(e){ questionCount=0; }
+}
+
+function saveMastered(){
+  try{ localStorage.setItem('jpq_mastered', JSON.stringify([...shownIds])); }catch(e){}
+  try{ localStorage.setItem('jpq_wrongqs', JSON.stringify(wrongQs)); }catch(e){}
+  try{ localStorage.setItem('jpq_qcount', String(questionCount)); }catch(e){}
+}
+
+function markCorrect(q){
+  shownIds.add(qKey(q));
+  // 틀린 문제 큐에서도 제거
+  wrongQs=wrongQs.filter(w=>w.key!==qKey(q));
+  saveMastered();
+}
+
+function markWrong(q){
+  // 이미 틀린 문제 큐에 있으면 returnAt 갱신
+  wrongQs=wrongQs.filter(w=>w.key!==qKey(q));
+  wrongQs.push({ key:qKey(q), q:q, returnAt:questionCount+50 });
+  saveMastered();
 }
 
 function getFiltered(){
@@ -2044,19 +2085,61 @@ function getFiltered(){
   return pool.filter(q=>q.f===filterF);
 }
 
+function getNextQ(fp){
+  if(fp.length===0) return null;
+
+  // 1. 틀린 문제 중 50문제 지난 것 우선 복귀
+  const dueWrong=wrongQs.filter(w=>w.returnAt<=questionCount);
+  if(dueWrong.length>0){
+    const pick=dueWrong[Math.floor(Math.random()*dueWrong.length)];
+    return pick.q;
+  }
+
+  // 2. 아직 안 본 새 문제 (맞춘 것 제외)
+  const fresh=fp.filter(q=>!shownIds.has(qKey(q)) && !wrongQs.some(w=>w.key===qKey(q)));
+  if(fresh.length>0){
+    return fresh[Math.floor(Math.random()*fresh.length)];
+  }
+
+  // 3. 전부 맞췄으면 → 새 문제 생성 대기
+  return null;
+}
+
 function showQ(){
   renderQuizStrip();
   const fp=getFiltered();
-  if(fp.length===0){
-    document.getElementById('cardArea').innerHTML=
-      `<div class="loading-card"><div class="spin">⏳</div><div style="margin-top:12px;font-size:13px;color:rgba(26,26,46,.5)">문제 생성 중…</div></div>`;
-    if(!generating) generateQuestions();
+
+  const q=getNextQ(fp);
+
+  if(!q){
+    // 새 문제 생성 중이거나 전부 클리어
+    const masteredCount=shownIds.size;
+    const totalCount=fp.length;
+    if(generating){
+      document.getElementById('cardArea').innerHTML=
+        `<div class="loading-card"><div class="spin">⏳</div>
+        <div style="margin-top:12px;font-size:14px;color:rgba(26,26,46,.6);font-family:var(--FB)">새 문제 생성 중…</div></div>`;
+    } else {
+      document.getElementById('cardArea').innerHTML=
+        `<div class="loading-card">
+          <div style="font-size:36px;margin-bottom:12px">🎉</div>
+          <div style="font-size:16px;font-weight:700;color:var(--ink);font-family:var(--FB);margin-bottom:8px">모든 문제를 마스터했어요!</div>
+          <div style="font-size:13px;color:rgba(26,26,46,.5);font-family:var(--FB);line-height:1.7">
+            맞춘 문제: ${masteredCount}개<br>새 문제를 생성하고 있어요.
+          </div>
+        </div>`;
+      generateQuestions();
+    }
     return;
   }
-  const q=fp[poolIdx % fp.length];
-  poolIdx=(poolIdx+1)%Math.max(fp.length,1);
+
+  questionCount++;
+  saveMastered();
   renderCard(q);
-  if(fp.length<5&&!generating) generateQuestions();
+  poolIdx++;
+
+  // pool이 30개 미만이면 미리 생성
+  if(pool.length<30&&!generating) generateQuestions();
 }
 
 function renderQuizStrip(){
@@ -2069,8 +2152,23 @@ function renderQuizStrip(){
     dots.appendChild(d);
   }
   document.getElementById('tsLabel').textContent=`${tc}/${GOAL}`;
+  renderPoolInfo();
+}
+
+function renderPoolInfo(){
   const fp=getFiltered();
-  document.getElementById('poolInfo').textContent=`문제 ${fp.length}개`;
+  const total=fp.length;
+  const mastered=fp.filter(q=>shownIds.has(qKey(q))).length;
+  const wrong=wrongQs.filter(w=>filterF==='all'||fp.some(q=>qKey(q)===w.key)).length;
+  const dueWrong=wrongQs.filter(w=>(filterF==='all'||fp.some(q=>qKey(q)===w.key))&&w.returnAt<=questionCount).length;
+  const remaining=total-mastered;
+
+  let infoText=`전체 ${total}개`;
+  if(mastered>0) infoText+=` · ✅ 마스터 ${mastered}개`;
+  if(wrong>0)    infoText+=` · 🔄 복습예정 ${wrong}개`;
+  if(dueWrong>0) infoText+=` (${dueWrong}개 대기중)`;
+
+  document.getElementById('poolInfo').textContent=infoText;
 }
 
 const FORM_COLORS={te:'ft',masu:'fm',nai:'fn',kano:'fk',judou:'fj',shieki:'fs',iko:'fi',meirei:'fme',group:'fg',particle:'fp'};
@@ -2175,13 +2273,19 @@ function pickChoice(el, chosen){
   }
   document.getElementById('nextBtn').classList.add('on');
   document.getElementById('skipBtn').style.display='none';
-  if(isCorrect) stats.correct=(stats.correct||0)+1;
-  else stats.wrong=(stats.wrong||0)+1;
+  if(isCorrect){
+    stats.correct=(stats.correct||0)+1;
+    markCorrect(q); // ✅ 맞추면 다시 안 나옴
+  } else {
+    stats.wrong=(stats.wrong||0)+1;
+    markWrong(q);   // ❌ 틀리면 50문제 후 재출제
+  }
   stats.totalDone=(stats.totalDone||0)+1;
   const td=today();
   dailyData[td]=(dailyData[td]||0)+1;
   saveAll();
   document.getElementById('navToday').textContent=todayCount();
+  renderPoolInfo(); // 문제 현황 업데이트
 }
 
 
@@ -2203,7 +2307,7 @@ document.getElementById('formTabs').addEventListener('click',e=>{
   filterF=t.dataset.f;
   document.querySelectorAll('.ftab').forEach(x=>x.classList.remove('on'));
   t.classList.add('on');
-  poolIdx=0;showQ();
+  poolIdx=0; showQ();
 });
 
 // Skip - doesn't count toward daily goal
