@@ -366,7 +366,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
     <button class="ntab" data-v="settings">⚙️ 설정</button>
   </div>
   <div class="nav-today">오늘 <b id="navToday">0</b>/10</div>
-  <div class="nav-version">v6.1</div>
+  <div class="nav-version">v6.2</div>
 </nav>
 
 <!-- ════════ HOME VIEW ════════ -->
@@ -2381,7 +2381,7 @@ async function generateAnthropic(){
 }
 
 async function generateGemini(){
-  const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
   const resp=await fetch(url,{
     method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({contents:[{parts:[{text:GEN_PROMPT}]}]})
@@ -2406,7 +2406,7 @@ async function testApiKey(){
   btn.disabled=true;
   result.textContent='';
   try{
-    const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
     const resp=await fetch(url,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({contents:[{parts:[{text:'안녕하세요. 테스트입니다. "작동중"이라고만 답해주세요.'}]}]})
