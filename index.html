@@ -528,6 +528,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
       <button onclick="saveApiKey()"
         style="padding:10px 16px;border:none;border-radius:var(--r8);background:var(--ok);color:#fff;font-family:var(--FP);font-size:11px;cursor:pointer;white-space:nowrap">저장</button>
     </div>
+    <button id="testApiBtn" onclick="testApiKey()"
+      style="width:100%;padding:10px;border:1.5px solid rgba(68,119,204,.3);border-radius:var(--r8);background:rgba(68,119,204,.08);color:var(--blue);font-family:var(--FB);font-size:13px;cursor:pointer;margin-bottom:8px">
+      🔍 API 키 테스트 (작동하는지 확인)
+    </button>
+    <div id="testApiResult" style="font-size:13px;font-family:var(--FB);line-height:1.6;padding:4px 0;min-height:20px"></div>
     <div style="font-size:11px;color:rgba(26,26,46,.4);line-height:1.6">
       💡 Claude.ai에서 사용할 때는 키 없이도 자동생성됩니다.
     </div>
@@ -2160,15 +2165,20 @@ function renderPoolInfo(){
   const total=fp.length;
   const mastered=fp.filter(q=>shownIds.has(qKey(q))).length;
   const wrong=wrongQs.filter(w=>filterF==='all'||fp.some(q=>qKey(q)===w.key)).length;
-  const dueWrong=wrongQs.filter(w=>(filterF==='all'||fp.some(q=>qKey(q)===w.key))&&w.returnAt<=questionCount).length;
-  const remaining=total-mastered;
+  const remaining=total-mastered-wrong;
 
-  let infoText=`전체 ${total}개`;
-  if(mastered>0) infoText+=` · ✅ 마스터 ${mastered}개`;
-  if(wrong>0)    infoText+=` · 🔄 복습예정 ${wrong}개`;
-  if(dueWrong>0) infoText+=` (${dueWrong}개 대기중)`;
+  const todayAdded=parseInt(localStorage.getItem('jpq_today_added')||'0');
+  const lastAddedDate=localStorage.getItem('jpq_today_added_date')||'';
+  const todayCount2=today();
+  const todayNew= lastAddedDate===todayCount2 ? todayAdded : 0;
 
-  document.getElementById('poolInfo').textContent=infoText;
+  const parts=[];
+  parts.push(`남은 ${Math.max(0,remaining)}개`);
+  if(mastered>0) parts.push(`✅ 완료 ${mastered}개`);
+  if(wrong>0)    parts.push(`🔄 복습 ${wrong}개`);
+  if(todayNew>0) parts.push(`🆕 오늘 +${todayNew}개`);
+
+  document.getElementById('poolInfo').textContent=parts.join('  ');
 }
 
 const FORM_COLORS={te:'ft',masu:'fm',nai:'fn',kano:'fk',judou:'fj',shieki:'fs',iko:'fi',meirei:'fme',group:'fg',particle:'fp'};
@@ -2186,11 +2196,11 @@ function renderCard(q){
   // Korean translation
   const krHtml=q.kr?`<div class="kr-line">${q.kr.replace('___','<span style="color:var(--acc)">___</span>')}</div>`:'';
 
-  // Choices
+  // 선택지 순서 항상 섞기 (정답이 항상 같은 위치에 오지 않도록)
   const labels=['A','B','C','D'];
   let choicesHtml='';
   const shuffledChoices=[...q.choices];
-  // Don't re-shuffle – keep original order for consistency
+  shuffle(shuffledChoices); // 반드시 섞기!
   shuffledChoices.forEach((c,i)=>{
     choicesHtml+=`<button class="ch" onclick="pickChoice(this,'${escQ(c)}')" data-ans="${escQ(c)}">
       <span class="cl">${labels[i]}</span>${c}
@@ -2345,7 +2355,11 @@ async function generateQuestions(){
   try{
     if(isClaudeAI) await generateAnthropic();
     else if(apiKey) await generateGemini();
-  }catch(e){console.error('Gen error:',e);}
+    else showToast('⚠️ Gemini API 키를 설정에서 입력해주세요!');
+  }catch(e){
+    console.error('Gen error:',e);
+    showToast('⚠️ 문제 생성 실패: '+e.message);
+  }
   generating=false;
   document.getElementById('genBar').classList.remove('on');
   renderQuizStrip();
@@ -2361,6 +2375,7 @@ async function generateAnthropic(){
     })
   });
   const data=await resp.json();
+  if(data.error) throw new Error(data.error.message||'Anthropic error');
   const text=data.content.map(c=>c.text||'').join('');
   parseAndAdd(text);
 }
@@ -2372,8 +2387,45 @@ async function generateGemini(){
     body:JSON.stringify({contents:[{parts:[{text:GEN_PROMPT}]}]})
   });
   const data=await resp.json();
+  if(data.error) throw new Error(data.error.message||'Gemini error');
   const text=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
+  if(!text) throw new Error('응답이 비어있어요');
   parseAndAdd(text);
+}
+
+// API 키 테스트
+async function testApiKey(){
+  const btn=document.getElementById('testApiBtn');
+  const result=document.getElementById('testApiResult');
+  if(!apiKey){
+    result.textContent='❌ API 키가 없어요! 먼저 키를 입력하고 저장해주세요.';
+    result.style.color='var(--ng)';
+    return;
+  }
+  btn.textContent='테스트 중...';
+  btn.disabled=true;
+  result.textContent='';
+  try{
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const resp=await fetch(url,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:'안녕하세요. 테스트입니다. "작동중"이라고만 답해주세요.'}]}]})
+    });
+    const data=await resp.json();
+    if(data.error){
+      result.textContent='❌ 오류: '+data.error.message;
+      result.style.color='var(--ng)';
+    } else {
+      const text=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
+      result.textContent='✅ API 키 정상 작동 중! 응답: '+text.slice(0,30);
+      result.style.color='var(--ok)';
+    }
+  }catch(e){
+    result.textContent='❌ 연결 실패: '+e.message;
+    result.style.color='var(--ng)';
+  }
+  btn.textContent='🔍 API 키 테스트';
+  btn.disabled=false;
 }
 
 function parseAndAdd(text){
@@ -2382,7 +2434,25 @@ function parseAndAdd(text){
     const match=clean.match(/\[[\s\S]*\]/);
     if(!match) return;
     const qs=JSON.parse(match[0]);
-    if(Array.isArray(qs)){pool.push(...qs);renderQuizStrip();}
+    if(!Array.isArray(qs)) return;
+
+    // 중복 제거
+    const existingKeys=new Set(pool.map(q=>q.q.slice(0,30)));
+    const newQs=qs.filter(q=>q.q && !existingKeys.has(q.q.slice(0,30)));
+
+    if(newQs.length>0){
+      pool.push(...newQs);
+
+      // 오늘 추가된 문제 수 누적
+      const todayStr=today();
+      const lastDate=localStorage.getItem('jpq_today_added_date')||'';
+      const prev=lastDate===todayStr?parseInt(localStorage.getItem('jpq_today_added')||'0'):0;
+      localStorage.setItem('jpq_today_added', String(prev+newQs.length));
+      localStorage.setItem('jpq_today_added_date', todayStr);
+
+      showToast(`✨ 새 문제 ${newQs.length}개 추가됐어요!`);
+      renderQuizStrip();
+    }
   }catch(e){console.error('Parse error:',e);}
 }
 
