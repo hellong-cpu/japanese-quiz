@@ -366,7 +366,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
     <button class="ntab" data-v="settings">⚙️ 설정</button>
   </div>
   <div class="nav-today">오늘 <b id="navToday">0</b>/10</div>
-  <div class="nav-version">v6.4</div>
+  <div class="nav-version">v6.5</div>
 </nav>
 
 <!-- ════════ HOME VIEW ════════ -->
@@ -2076,23 +2076,30 @@ function showQ(){
   const q=getNextQ(fp);
 
   if(!q){
-    // 새 문제 생성 중이거나 전부 클리어
     const masteredCount=shownIds.size;
-    const totalCount=fp.length;
     if(generating){
-      document.getElementById('cardArea').innerHTML=
-        `<div class="loading-card"><div class="spin">⏳</div>
-        <div style="margin-top:12px;font-size:14px;color:rgba(26,26,46,.6);font-family:var(--FB)">새 문제 생성 중…</div></div>`;
-    } else {
+      // 이미 생성 중 — 3초 후 자동 재시도
       document.getElementById('cardArea').innerHTML=
         `<div class="loading-card">
-          <div style="font-size:36px;margin-bottom:12px">🎉</div>
-          <div style="font-size:16px;font-weight:700;color:var(--ink);font-family:var(--FB);margin-bottom:8px">모든 문제를 마스터했어요!</div>
-          <div style="font-size:13px;color:rgba(26,26,46,.5);font-family:var(--FB);line-height:1.7">
-            맞춘 문제: ${masteredCount}개<br>새 문제를 생성하고 있어요.
-          </div>
+          <div class="spin" style="font-size:28px">✨</div>
+          <div style="margin-top:12px;font-size:15px;font-weight:700;color:var(--ink);font-family:var(--FB)">새 문제 만드는 중...</div>
+          <div style="margin-top:6px;font-size:13px;color:rgba(26,26,46,.45);font-family:var(--FB)">잠깐만요! 곧 나와요 😊</div>
         </div>`;
-      generateQuestions();
+      setTimeout(()=>{ if(currentView==='quiz') showQ(); }, 3000);
+    } else {
+      // 생성 시작 + 즉시 시작 화면 표시
+      document.getElementById('cardArea').innerHTML=
+        `<div class="loading-card">
+          <div style="font-size:36px;margin-bottom:10px">🎉</div>
+          <div style="font-size:16px;font-weight:700;color:var(--ink);font-family:var(--FB);margin-bottom:6px">전부 마스터! 대단해요!</div>
+          <div style="font-size:13px;color:rgba(26,26,46,.5);font-family:var(--FB);line-height:1.7;margin-bottom:14px">
+            맞춘 문제: ${masteredCount}개 ✅<br>새 문제를 생성하고 있어요...
+          </div>
+          <div class="spin" style="font-size:22px">⏳</div>
+        </div>`;
+      generateQuestions().then(()=>{
+        if(currentView==='quiz') showQ();
+      });
     }
     return;
   }
@@ -2102,8 +2109,10 @@ function showQ(){
   renderCard(q);
   poolIdx++;
 
-  // pool이 30개 미만이면 미리 생성
-  if(pool.length<30&&!generating) generateQuestions();
+  // 남은 문제 10개 미만이면 미리 생성 시작 (로딩 대기 없도록)
+  const fp2=getFiltered();
+  const remainingUnseen=fp2.filter(q2=>!shownIds.has(qKey(q2))&&!wrongQs.some(w=>w.key===qKey(q2))).length;
+  if(remainingUnseen<10&&!generating) generateQuestions();
 }
 
 function renderQuizStrip(){
