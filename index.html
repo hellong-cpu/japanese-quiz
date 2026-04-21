@@ -280,7 +280,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
   </div>
   <div class="nav-right">
     <div class="nav-today">오늘 <b id="navToday">0</b>/10</div>
-    <div class="nav-version">v7.5</div>
+    <div class="nav-version">v7.6</div>
   </div>
 </nav>
 
@@ -1023,18 +1023,9 @@ function renderCard(q){
     <div class="passage-box">${q.passage}</div>`;
   }
 
-  // Word bar (어휘/한자 문제) — 뜻은 숨김
-  const showWordBar=q.word&&q.t!=='reading';
-  let wordBarHtml='';
-  if(showWordBar){
-    const isSaved=vocabList.some(v=>v.k===q.word.k);
-    wordBarHtml=`<div class="word-bar">
-      <span class="wb-k">${q.word.k}</span>
-      <span class="wb-r">${q.word.r}</span>
-      <span class="wb-m" id="wbMeaning">= ${q.word.m}</span>
-      <button class="wb-save ${isSaved?'saved':''}" id="wbSaveBtn" onclick="addToVocab(currentQ.word)" ${isSaved?'disabled':''}>${isSaved?'📚 저장됨':'📚 저장'}</button>
-    </div>`;
-  }
+  // Word bar — 답 고르기 전엔 숨김 (정답 노출 방지)
+  // 답 후에 fb-exp에서 보여줌
+  const wordBarHtml = '';  // 항상 숨김
 
   const qText=q.q.replace(/___/g,'<span class="blank">＿＿</span>');
 
@@ -1094,15 +1085,28 @@ function pickChoice(el,chosen){
   });
 
   const fb=document.getElementById('fb');
+
+  // 답 후에 단어 정보 표시 (정답 노출 방지를 위해 여기서만 보여줌)
+  let wordInfoHtml='';
+  if(q.word&&q.word.k&&q.t!=='reading'){
+    const isSaved=vocabList.some(v=>v.k===q.word.k);
+    wordInfoHtml=`<div style="display:flex;align-items:center;gap:10px;padding:10px 15px;background:rgba(26,26,46,.04);border-bottom:1px solid rgba(26,26,46,.08);flex-wrap:wrap">
+      <span style="font-family:var(--FJ);font-size:20px;font-weight:700;color:var(--ink)">${q.word.k}</span>
+      <span style="font-family:var(--FJ);font-size:14px;color:var(--ink2)">${q.word.r}</span>
+      <span style="font-size:13px;color:var(--teal);font-weight:700">= ${q.word.m}</span>
+      <button class="wb-save${isSaved?' saved':''}" id="wbSaveBtn" onclick="addToVocab(currentQ.word)" ${isSaved?'disabled':''} style="margin-left:auto">${isSaved?'📚 저장됨':'📚 저장'}</button>
+    </div>`;
+  }
+
   const expHtml=q.exp?`<div class="fb-exp">${q.exp.replace(/\n/g,'<br>')}</div>`:'';
 
   if(isCorrect){
     fb.className='fb on ok';
-    fb.innerHTML=`<div class="fb-banner"><span class="fb-banner-icon">✅</span><span class="fb-banner-title">정답!</span><div style="display:flex;align-items:center;gap:6px"><span class="fb-banner-ans">${q.ans}</span><button class="speech-btn-fb" onclick="speakText('${escC(q.ans)}')" title="발음 듣기">🔊</button></div></div>${expHtml}`;
+    fb.innerHTML=`<div class="fb-banner"><span class="fb-banner-icon">✅</span><span class="fb-banner-title">정답!</span><div style="display:flex;align-items:center;gap:6px"><span class="fb-banner-ans">${q.ans}</span><button class="speech-btn-fb" onclick="speakText('${escC(q.ans)}')" title="발음 듣기">🔊</button></div></div>${wordInfoHtml}${expHtml}`;
     masteredKeys.add(qKey(q));wrongQs=wrongQs.filter(w=>w.key!==qKey(q));
   }else{
     fb.className='fb on ng';
-    fb.innerHTML=`<div class="fb-banner"><span class="fb-banner-icon">❌</span><span class="fb-banner-title">오답!</span><div style="display:flex;align-items:center;gap:6px"><span class="fb-banner-ans">${q.ans}</span><button class="speech-btn-fb" onclick="speakText('${escC(q.ans)}')" title="발음 듣기">🔊</button></div></div><div class="fb-wrong-bar"><span style="font-size:12px;color:rgba(26,26,46,.5)">내 답</span><span class="fb-wrong-my">${chosen}</span><span class="fb-wrong-arrow">→</span><span class="fb-wrong-correct">정답: ${q.ans}</span></div>${expHtml}`;
+    fb.innerHTML=`<div class="fb-banner"><span class="fb-banner-icon">❌</span><span class="fb-banner-title">오답!</span><div style="display:flex;align-items:center;gap:6px"><span class="fb-banner-ans">${q.ans}</span><button class="speech-btn-fb" onclick="speakText('${escC(q.ans)}')" title="발음 듣기">🔊</button></div></div><div class="fb-wrong-bar"><span style="font-size:12px;color:rgba(26,26,46,.5)">내 답</span><span class="fb-wrong-my">${chosen}</span><span class="fb-wrong-arrow">→</span><span class="fb-wrong-correct">정답: ${q.ans}</span></div>${wordInfoHtml}${expHtml}`;
     wrongQs=wrongQs.filter(w=>w.key!==qKey(q));
     wrongQs.push({key:qKey(q),q:q,returnAt:queueCount+50});
   }
