@@ -3,20 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>日本語 文法クイズ</title>
-<meta name="description" content="일본어 동사 활용 퀴즈 앱 - N5/N4 문법">
+<title>JLPT N5 퀴즈</title>
 <meta name="theme-color" content="#16162a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="日本語クイズ">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2316162a'/><text y='68' x='50' text-anchor='middle' font-size='60' font-family='serif'>日</text></svg>">
-<script>
-const manifestData={name:'日本語 文法クイズ',short_name:'日本語クイズ',description:'일본어 동사 활용 퀴즈',start_url:'.',display:'standalone',background_color:'#16162a',theme_color:'#16162a',orientation:'portrait',icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='38' fill='%2316162a'/><text y='140' x='96' text-anchor='middle' font-size='120' font-family='serif' fill='%23e8b840'>日</text></svg>",sizes:'192x192',type:'image/svg+xml'},{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%2316162a'/><text y='380' x='256' text-anchor='middle' font-size='340' font-family='serif' fill='%23e8b840'>日</text></svg>",sizes:'512x512',type:'image/svg+xml'}]};
-const blob=new Blob([JSON.stringify(manifestData)],{type:'application/json'});
-const manifestURL=URL.createObjectURL(blob);
-const link=document.createElement('link');link.rel='manifest';link.href=manifestURL;document.currentScript.after(link);
-</script>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Noto+Sans+JP:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -28,137 +18,136 @@ const link=document.createElement('link');link.rel='manifest';link.href=manifest
 --ok:#27714a;--okL:#3a9e68;
 --ng:#bf4a1a;
 --blue:#2255aa;--blueL:#4477cc;
+--purple:#6a3fa0;--purpleL:#9b6dd6;
+--teal:#1a8080;--tealL:#2ab8b8;
 --FP:'Space Mono',monospace;
 --FJ:'M PLUS Rounded 1c','Noto Sans JP',sans-serif;
 --FB:'Noto Sans JP',sans-serif;
 --r8:8px;--r12:12px;--r16:16px;
 }
 body{font-family:var(--FB);background:var(--ink);min-height:100vh;color:var(--paper);overflow-x:hidden;font-size:15px;line-height:1.6}
-
-/* ── FURIGANA ── */
 ruby{font-family:var(--FJ);ruby-align:center}
-rt{display:block;font-size:0.55em;color:rgba(26,26,46,.5);letter-spacing:0.05em;font-family:var(--FB);font-weight:400;text-align:center;line-height:1.2}
-.q-text{line-height:2.8!important}  /* 후리가나 공간 확보 */
-.q-text ruby rt{color:rgba(26,26,46,.45)}
-/* grammar table furigana */
-.gt-ex ruby rt,.grammar-table ruby rt{color:rgba(26,26,46,.4)}
-/* tips card furigana */
-.tip-text ruby rt{color:rgba(245,240,232,.45)}
-
-/* ── TOAST ── */
-#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink2);color:var(--paper);padding:10px 20px;border-radius:30px;font-family:var(--FP);font-size:11px;letter-spacing:1px;z-index:9999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+rt{display:block;font-size:0.52em;color:rgba(26,26,46,.5);font-family:var(--FB);font-weight:400;text-align:center;line-height:1.2}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink2);color:var(--paper);padding:10px 20px;border-radius:30px;font-family:var(--FP);font-size:11px;z-index:9999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)}
 #toast.show{opacity:1}
-
-/* ── NAV ── */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:stretch;padding:0 12px}
-.nav-logo{font-family:var(--FJ);font-size:15px;color:var(--paper);letter-spacing:3px;padding:14px 12px 14px 0;margin-right:6px;border-right:1px solid rgba(255,255,255,.1);flex-shrink:0}
-.nav-logo span{color:var(--accL)}
+.nav-logo{font-family:var(--FJ);font-size:14px;color:var(--paper);letter-spacing:2px;padding:13px 12px 13px 0;margin-right:6px;border-right:1px solid rgba(255,255,255,.1);flex-shrink:0}
+.nav-logo span{color:var(--goldL)}
 .nav-tabs{display:flex;gap:0;align-items:center;flex:1;overflow-x:auto;scrollbar-width:none}
 .nav-tabs::-webkit-scrollbar{display:none}
 .ntab{font-family:var(--FP);font-size:10px;letter-spacing:.5px;padding:10px 10px;border:none;background:none;color:rgba(245,240,232,.45);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;margin-top:2px;white-space:nowrap;flex-shrink:0}
 .ntab:hover{color:var(--paper)}
 .ntab.on{color:var(--goldL);border-bottom-color:var(--goldL)}
-.nav-today{font-family:var(--FP);font-size:10px;color:rgba(245,240,232,.4);padding:0 8px;display:flex;align-items:center;gap:4px;flex-shrink:0}
+.nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0;padding-left:8px}
+.nav-today{font-family:var(--FP);font-size:10px;color:rgba(245,240,232,.4);display:flex;align-items:center;gap:4px}
 .nav-today b{color:var(--goldL)}
-.nav-version{font-family:var(--FP);font-size:9px;color:rgba(245,240,232,.25);padding:2px 6px;border:1px solid rgba(255,255,255,.1);border-radius:4px;flex-shrink:0;margin-left:4px;letter-spacing:.5px}
-.gen-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:200;background:linear-gradient(90deg,transparent 0%,var(--goldL) 50%,transparent 100%);background-size:200%;animation:genSlide 1s linear infinite;display:none}
+.nav-version{font-family:var(--FP);font-size:9px;color:rgba(245,240,232,.2);padding:2px 5px;border:1px solid rgba(255,255,255,.08);border-radius:3px}
+.gen-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:200;background:linear-gradient(90deg,transparent,var(--goldL),transparent);background-size:200%;animation:genSlide 1s linear infinite;display:none}
 .gen-bar.on{display:block}
 @keyframes genSlide{to{background-position:-200% 0}}
-
-/* ── VIEWS ── */
-.view{display:none;padding:70px 16px 40px;max-width:560px;margin:0 auto}
+.view{display:none;padding:68px 16px 40px;max-width:560px;margin:0 auto}
 .view.on{display:block}
 
-/* ══════════════ HOME ══════════════ */
-.home-hero{text-align:center;padding:16px 0 24px}
-.hero-date{font-family:var(--FP);font-size:10px;letter-spacing:2px;color:rgba(245,240,232,.35);margin-bottom:8px}
-.hero-greeting{font-family:var(--FJ);font-size:26px;color:var(--paper);margin-bottom:4px}
+/* ── HOME ── */
+.home-hero{text-align:center;padding:16px 0 20px}
+.hero-date{font-family:var(--FP);font-size:10px;letter-spacing:2px;color:rgba(245,240,232,.3);margin-bottom:8px}
+.hero-greeting{font-family:var(--FJ);font-size:24px;color:var(--paper);margin-bottom:4px}
 .hero-sub{font-size:13px;color:rgba(245,240,232,.5)}
-.goal-card{background:var(--paper);border-radius:var(--r16);padding:20px 22px;margin-bottom:14px;position:relative;overflow:hidden}
+.goal-card{background:var(--paper);border-radius:var(--r16);padding:18px 20px;margin-bottom:12px;position:relative;overflow:hidden}
 .goal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc),var(--gold))}
-.gc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.gc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .gc-label{font-family:var(--FP);font-size:10px;letter-spacing:2px;color:rgba(26,26,46,.4);text-transform:uppercase}
 .gc-count{font-family:var(--FP);font-size:20px;font-weight:700;color:var(--ink)}
 .gc-count span{font-size:13px;color:rgba(26,26,46,.4);font-weight:400}
-.dots-row{display:flex;gap:5px;margin-bottom:12px}
-.dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--paper3);background:transparent;transition:all .3s;flex-shrink:0}
+.dots-row{display:flex;gap:5px;margin-bottom:10px}
+.dot{width:21px;height:21px;border-radius:50%;border:2px solid var(--paper3);background:transparent;transition:all .3s;flex-shrink:0}
 .dot.done{background:var(--ok);border-color:var(--ok)}
-.dot.done.gold{background:var(--gold);border-color:var(--gold)}
 .gc-msg{font-size:12px;color:rgba(26,26,46,.5);font-style:italic}
-.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:12px}
 .stat-box{background:var(--paper);border-radius:var(--r12);padding:12px 10px;text-align:center}
-.stat-num{font-family:var(--FP);font-size:22px;font-weight:700;color:var(--ink);line-height:1}
+.stat-num{font-family:var(--FP);font-size:20px;font-weight:700;color:var(--ink);line-height:1}
 .stat-num.fire{color:var(--acc)}
-.stat-lbl{font-size:10px;color:rgba(26,26,46,.45);margin-top:3px;letter-spacing:.5px}
-.cal-card{background:var(--paper);border-radius:var(--r16);padding:18px 20px;margin-bottom:14px}
-.cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.stat-lbl{font-size:10px;color:rgba(26,26,46,.45);margin-top:3px}
+.cal-card{background:var(--paper);border-radius:var(--r16);padding:16px 18px;margin-bottom:12px}
+.cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .cal-title{font-family:var(--FP);font-size:10px;letter-spacing:2px;color:rgba(26,26,46,.4);text-transform:uppercase}
 .cal-legend{display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(26,26,46,.35)}
 .cal-legend .swatch{width:10px;height:10px;border-radius:2px;display:inline-block}
-.dow-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.dow-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:5px}
 .dow{font-family:var(--FP);font-size:9px;color:rgba(26,26,46,.3);text-align:center;padding:2px 0}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cal-day{aspect-ratio:1;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--FP);font-size:9px;cursor:default;position:relative;transition:transform .15s}
-.cal-day:hover{transform:scale(1.15)}
+.cal-day{aspect-ratio:1;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--FP);font-size:9px}
 .cal-day.empty{background:rgba(26,26,46,.06);color:rgba(26,26,46,.2)}
 .cal-day.c1{background:rgba(39,113,74,.2);color:rgba(39,113,74,.8)}
 .cal-day.c2{background:rgba(39,113,74,.45);color:#1f5538}
 .cal-day.c3{background:var(--ok);color:#fff}
 .cal-day.today{box-shadow:0 0 0 2px var(--gold)}
-.cal-day.future{background:transparent;color:rgba(26,26,46,.12);cursor:default}
-.deploy-card{background:rgba(34,85,170,.12);border:1px solid rgba(68,119,204,.3);border-radius:var(--r12);padding:16px 18px;margin-bottom:14px;cursor:pointer}
-.deploy-title{font-family:var(--FP);font-size:11px;letter-spacing:1px;color:var(--blueL);display:flex;justify-content:space-between;align-items:center}
-.deploy-body{display:none;margin-top:14px}
-.deploy-body.open{display:block}
-.deploy-step{display:flex;gap:10px;margin-bottom:12px;font-size:13px;color:rgba(26,26,46,.8)}
-.step-num{font-family:var(--FP);font-size:11px;background:var(--blue);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.deploy-step a{color:var(--blueL);text-decoration:underline}
-.deploy-step code{background:rgba(26,26,46,.08);padding:1px 5px;border-radius:3px;font-family:var(--FP);font-size:11px}
-.start-btn{width:100%;padding:16px;border:none;border-radius:var(--r12);background:linear-gradient(135deg,var(--acc),var(--gold));color:#fff;font-family:var(--FP);font-size:13px;letter-spacing:2px;cursor:pointer;transition:all .2s;margin-bottom:8px}
-.start-btn:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,146,40,.3)}
+.cal-day.future{background:transparent;color:rgba(26,26,46,.1)}
+.tips-card{background:linear-gradient(135deg,rgba(39,113,74,.15),rgba(68,119,204,.1));border:1px solid rgba(39,113,74,.3);border-radius:var(--r16);padding:0;margin-bottom:12px;overflow:hidden}
+.tips-header{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;cursor:pointer}
+.tips-title{color:var(--paper);font-size:13px;font-family:var(--FB);font-weight:700}
+.tips-body{padding:4px 16px 14px}
+.tip-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(245,240,232,.08)}
+.tip-item:last-child{border-bottom:none}
+.tip-icon{font-family:var(--FP);font-size:13px;color:var(--goldL);font-weight:700;flex-shrink:0;width:20px;text-align:center;padding-top:2px}
+.tip-text{font-size:13px;color:rgba(245,240,232,.85);line-height:1.7;font-family:var(--FB)}
+.tip-text b{color:var(--paper)}
+.tip-kr{display:block;margin-top:2px;font-size:12px;color:var(--goldL);opacity:.85}
+.start-btn{width:100%;padding:15px;border:none;border-radius:var(--r12);background:linear-gradient(135deg,var(--acc),var(--gold));color:#fff;font-family:var(--FP);font-size:13px;letter-spacing:2px;cursor:pointer;transition:all .2s;margin-bottom:8px}
+.start-btn:hover{opacity:.9;transform:translateY(-1px)}
 
-/* ══════════════ QUIZ ══════════════ */
-.form-tabs{display:flex;gap:4px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;margin-bottom:4px}
-.form-tabs::-webkit-scrollbar{display:none}
-.ftab{font-family:var(--FP);font-size:10px;letter-spacing:1px;padding:5px 10px;border-radius:4px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:rgba(245,240,232,.5);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
-.ftab:hover{color:var(--paper);background:rgba(255,255,255,.1)}
-.ftab.on{background:var(--gold);border-color:var(--gold);color:var(--ink)}
-.today-strip{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+/* ── QUIZ ── */
+.section-tabs{display:flex;gap:5px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;margin-bottom:4px}
+.section-tabs::-webkit-scrollbar{display:none}
+.stab{font-family:var(--FB);font-size:11px;font-weight:700;padding:7px 13px;border-radius:20px;border:1.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(245,240,232,.5);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.stab:hover{color:var(--paper)}
+.stab.on.all{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.stab.on.vocab{background:#1a8080;border-color:#2ab8b8;color:#fff}
+.stab.on.grammar{background:var(--blue);border-color:var(--blueL);color:#fff}
+.stab.on.reading{background:var(--purple);border-color:var(--purpleL);color:#fff}
+.pool-strip{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .ts-dots{display:flex;gap:3px}
-.ts-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);background:transparent}
+.ts-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);background:transparent}
 .ts-dot.done{background:var(--gold);border-color:var(--gold)}
 .ts-label{font-family:var(--FP);font-size:10px;color:rgba(245,240,232,.4)}
-.pool-info{font-family:var(--FP);font-size:9px;color:rgba(245,240,232,.3)}
-.badge-row{display:flex;align-items:center;gap:7px;margin-bottom:12px;flex-wrap:wrap}
-.fbadge{font-family:var(--FP);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:3px}
-.ft{background:rgba(196,146,40,.2);color:var(--gold);border:1px solid rgba(196,146,40,.4)}
-.fm{background:rgba(68,119,204,.2);color:#7eb8f7;border:1px solid rgba(68,119,204,.4)}
-.fn{background:rgba(191,74,26,.2);color:var(--accL);border:1px solid rgba(191,74,26,.4)}
-.fk{background:rgba(39,113,74,.2);color:#5bc88a;border:1px solid rgba(39,113,74,.4)}
-.fj{background:rgba(140,60,180,.2);color:#c87bf7;border:1px solid rgba(140,60,180,.4)}
-.fs{background:rgba(200,120,40,.2);color:#f0a050;border:1px solid rgba(200,120,40,.4)}
-.fi{background:rgba(40,160,200,.2);color:#60d0f0;border:1px solid rgba(40,160,200,.4)}
-.fme{background:rgba(200,40,60,.2);color:#f07090;border:1px solid rgba(200,40,60,.4)}
-.fg{background:rgba(140,200,40,.2);color:#b0e870;border:1px solid rgba(140,200,40,.4)}
-.fp{background:rgba(200,160,40,.2);color:#f0d060;border:1px solid rgba(200,160,40,.4)}
-.card{background:var(--paper);border-radius:var(--r16);padding:22px 24px 20px;box-shadow:0 20px 60px rgba(0,0,0,.5);position:relative;overflow:hidden}
+.pool-info{font-family:var(--FP);font-size:9px;color:rgba(245,240,232,.3);text-align:right;line-height:1.5}
+/* Section badge */
+.sbadge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;font-family:var(--FB);margin-bottom:12px}
+.sbadge.vocab{background:rgba(26,128,128,.2);color:#2ab8b8;border:1px solid rgba(26,128,128,.4)}
+.sbadge.grammar{background:rgba(34,85,170,.2);color:#7eb8f7;border:1px solid rgba(34,85,170,.4)}
+.sbadge.reading{background:rgba(106,63,160,.2);color:#c87bf7;border:1px solid rgba(106,63,160,.4)}
+/* Type label */
+.type-lbl{font-size:11px;color:rgba(245,240,232,.4);font-family:var(--FP);margin-bottom:10px;letter-spacing:.5px}
+/* Card */
+.card{background:var(--paper);border-radius:var(--r16);padding:20px 22px 18px;box-shadow:0 16px 50px rgba(0,0,0,.45);position:relative;overflow:hidden}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc),var(--gold))}
-.q-label{font-family:var(--FP);font-size:9px;letter-spacing:2px;color:rgba(26,26,46,.32);text-transform:uppercase;margin-bottom:8px}
-.word-bar{background:rgba(26,26,46,.06);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:7px 12px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.wb-k{font-family:var(--FJ);font-size:20px;color:var(--ink);font-weight:700}
-.wb-r{font-family:var(--FJ);font-size:12px;color:var(--ink2)}
-.wb-m{font-size:12px;color:var(--acc);font-weight:600}
-
-/* Save word button in word-bar */
-.wb-save{margin-left:auto;border:none;background:rgba(196,146,40,.15);color:var(--gold);border-radius:5px;padding:4px 9px;font-family:var(--FP);font-size:10px;cursor:pointer;transition:all .15s;flex-shrink:0}
-.wb-save:hover{background:rgba(196,146,40,.3)}
-.wb-save.saved{background:rgba(39,113,74,.15);color:var(--ok);border:1px solid rgba(39,113,74,.3);cursor:default}
-
-.q-text{font-family:var(--FJ);font-size:20px;color:var(--ink);line-height:2.2;margin-bottom:8px;letter-spacing:0.02em}
-.blank{display:inline-block;border-bottom:3px solid var(--acc);min-width:60px;text-align:center;color:var(--acc);font-weight:800;padding:0 6px;font-family:var(--FJ)}
-.q-hint{font-family:var(--FB);font-size:12px;color:rgba(26,26,46,.55);margin-bottom:14px;padding:6px 10px;background:rgba(196,146,40,.07);border-radius:6px;border-left:2px solid rgba(196,146,40,.5)}
-.choices{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
-.ch{background:var(--paper2);border:2px solid transparent;border-radius:var(--r8);padding:12px 14px;font-family:var(--FJ);font-size:17px;color:var(--ink);cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:center;gap:8px;min-height:50px;font-weight:700;letter-spacing:0.02em}
+.card.vocab-card::before{background:linear-gradient(90deg,#1a8080,#2ab8b8)}
+.card.grammar-card::before{background:linear-gradient(90deg,var(--blue),var(--blueL))}
+.card.reading-card::before{background:linear-gradient(90deg,var(--purple),var(--purpleL))}
+/* Passage (독해) */
+.passage-box{background:rgba(26,26,46,.06);border-radius:10px;padding:14px 16px;margin-bottom:14px;font-family:var(--FJ);font-size:15px;color:var(--ink);line-height:2.2}
+.passage-label{font-family:var(--FP);font-size:9px;letter-spacing:2px;color:rgba(26,26,46,.35);text-transform:uppercase;margin-bottom:8px}
+/* Question */
+.q-wrap{margin-bottom:10px}
+.q-num{font-family:var(--FP);font-size:10px;color:rgba(26,26,46,.35);letter-spacing:1px;margin-bottom:6px}
+.q-text{font-family:var(--FJ);font-size:19px;color:var(--ink);line-height:2.2;margin-bottom:4px}
+.q-text .blank{display:inline-block;border-bottom:3px solid var(--acc);min-width:55px;text-align:center;color:var(--acc);font-weight:800;padding:0 5px}
+.kr-box{font-size:14px;color:rgba(26,26,46,.6);line-height:1.7;padding:9px 13px;background:rgba(196,146,40,.07);border-radius:8px;margin-bottom:12px;font-family:var(--FB);border-left:3px solid rgba(196,146,40,.5);display:none}
+.kr-box.show{display:block}
+/* 번역 버튼 */
+.kr-toggle-btn{display:inline-flex;align-items:center;gap:6px;border:1.5px solid rgba(196,146,40,.35);background:rgba(196,146,40,.07);color:rgba(26,26,46,.55);border-radius:20px;padding:5px 13px;font-size:12px;font-family:var(--FB);cursor:pointer;margin-bottom:12px;transition:all .15s}
+.kr-toggle-btn:hover{background:rgba(196,146,40,.15);color:var(--ink)}
+.kr-toggle-btn.revealed{background:rgba(196,146,40,.12);color:rgba(26,26,46,.7);border-color:rgba(196,146,40,.5)}
+/* word bar — 뜻 숨김 */
+.wb-m{font-size:13px;color:var(--teal);font-weight:700;display:none}
+.wb-m.show{display:inline}
+.q-hint{font-size:12px;color:rgba(26,26,46,.5);margin-bottom:14px;padding:5px 10px;background:rgba(26,26,46,.05);border-radius:6px;border-left:2px solid rgba(196,146,40,.4)}
+/* Choices */
+.choices{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.choices.two-col{display:grid;grid-template-columns:1fr 1fr}
+.ch{background:var(--paper2);border:2px solid transparent;border-radius:10px;padding:12px 14px;font-family:var(--FJ);font-size:17px;color:var(--ink);cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:center;gap:9px;min-height:50px;font-weight:700}
+/* vocab 1열: PC에서 너무 넓지 않도록 */
+.choices:not(.two-col) .ch{max-width:380px}
 .ch:hover:not(:disabled){background:var(--paper3);border-color:rgba(26,26,46,.2);transform:translateY(-1px)}
 .ch.ok{background:rgba(39,113,74,.15);border-color:var(--ok);color:var(--ok)}
 .ch.ok .cl{background:var(--ok);color:#fff}
@@ -166,189 +155,113 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
 .ch.ng .cl{background:var(--ng);color:#fff}
 .ch:disabled{cursor:default}
 .cl{font-family:var(--FP);font-size:9px;min-width:20px;height:20px;border-radius:4px;background:rgba(26,26,46,.1);color:rgba(26,26,46,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.kr-line{font-size:14px;color:rgba(26,26,46,.65);line-height:1.75;padding:10px 14px;background:rgba(196,146,40,.08);border-radius:8px;margin-bottom:12px;font-family:var(--FB);border-left:3px solid rgba(196,146,40,.55)}
-.fb{font-size:13px;display:none;padding:12px 14px;border-radius:var(--r8);margin-bottom:10px}
+/* Feedback */
+.fb{display:none;border-radius:var(--r12);margin-bottom:12px;overflow:hidden}
 .fb.on{display:block}
-.fb.ok{background:rgba(39,113,74,.1);color:#1f5538;border:1px solid rgba(39,113,74,.3)}
-.fb.ng{background:rgba(191,74,26,.08);color:#8a2f0e;border:1px solid rgba(191,74,26,.25)}
-.fb strong{display:block;font-size:14px;margin-bottom:4px;font-family:var(--FJ)}
-.rule-box{margin-top:8px;padding:8px 10px;background:rgba(26,26,46,.06);border-radius:6px;font-size:12px;color:rgba(26,26,46,.6);line-height:1.7}
-.rule-box b{color:var(--ink)}
-.grp-tag{display:inline-block;margin-top:6px;font-family:var(--FP);font-size:10px;padding:2px 7px;border-radius:3px}
-.gt1{background:rgba(196,146,40,.15);color:#8a6210}
-.gt1w{background:rgba(200,40,40,.12);color:#901010}
-.gt2{background:rgba(68,119,204,.15);color:#1a3f8a}
-.gt3{background:rgba(140,60,180,.15);color:#6020a0}
-.next-btn{width:100%;padding:12px;border:none;border-radius:var(--r8);background:var(--ink);color:var(--paper);font-family:var(--FP);font-size:11px;letter-spacing:2px;cursor:pointer;transition:all .2s;display:none}
+.fb.ok{border:2px solid var(--ok)}
+.fb.ng{border:2px solid var(--ng)}
+.fb-banner{display:flex;align-items:center;gap:10px;padding:13px 16px}
+.fb.ok .fb-banner{background:var(--ok)}
+.fb.ng .fb-banner{background:var(--ng)}
+.fb-banner-icon{font-size:22px}
+.fb-banner-title{font-family:var(--FB);font-size:16px;font-weight:700;color:#fff;flex:1}
+.fb-banner-ans{font-family:var(--FJ);font-size:20px;font-weight:800;color:#fff}
+.fb-wrong-bar{display:flex;align-items:center;gap:8px;padding:9px 15px;background:rgba(191,74,26,.06);border-bottom:1px solid rgba(191,74,26,.1);flex-wrap:wrap;font-size:13px}
+.fb-wrong-my{font-family:var(--FJ);font-size:16px;color:var(--ng);text-decoration:line-through;opacity:.75}
+.fb-wrong-arrow{color:rgba(26,26,46,.3)}
+.fb-wrong-correct{font-family:var(--FJ);font-size:18px;color:var(--ok);font-weight:800}
+.fb-exp{padding:13px 16px;font-size:14px;color:rgba(26,26,46,.72);line-height:1.75;font-family:var(--FB);background:rgba(26,26,46,.03)}
+.fb-exp b{color:var(--ink);font-size:15px}
+/* Next btn */
+.next-btn{width:100%;padding:13px;border:none;border-radius:var(--r8);background:var(--ink);color:var(--paper);font-family:var(--FP);font-size:11px;letter-spacing:2px;cursor:pointer;transition:all .2s;display:none}
 .next-btn.on{display:block}
 .next-btn:hover{background:var(--ink2);transform:translateY(-1px)}
 .action-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
-.skip{font-family:var(--FP);font-size:10px;letter-spacing:1px;color:rgba(245,240,232,.28);background:none;border:none;cursor:pointer;padding:6px 0;transition:color .2s}
-.skip:hover{color:rgba(245,240,232,.6)}
-.qnum{font-family:var(--FP);font-size:10px;color:rgba(245,240,232,.28)}
-.loading-card{background:var(--paper);border-radius:var(--r16);padding:36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.skip-btn{font-family:var(--FP);font-size:10px;letter-spacing:1px;color:rgba(245,240,232,.28);background:none;border:none;cursor:pointer;padding:6px 0;transition:color .2s}
+.skip-btn:hover{color:rgba(245,240,232,.6)}
+.qnum{font-family:var(--FP);font-size:10px;color:rgba(245,240,232,.25)}
+/* speech */
+.speech-btn{border:none;background:rgba(26,26,46,.08);color:rgba(26,26,46,.4);border-radius:6px;padding:4px 8px;font-size:14px;cursor:pointer;transition:all .15s;line-height:1}
+.speech-btn:hover{background:rgba(26,26,46,.15)}
+.speech-btn.speaking{background:rgba(196,146,40,.2);color:var(--gold);animation:pulse .8s ease infinite}
+.speech-btn-fb{border:none;background:rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:4px 8px;font-size:14px;cursor:pointer;line-height:1}
+.speech-btn-fb.speaking{animation:pulse .8s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+/* Loading */
+.loading-card{background:var(--paper);border-radius:var(--r16);padding:36px;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,.45)}
 .spin{font-size:28px;animation:sp 1s linear infinite;display:inline-block}
 @keyframes sp{to{transform:rotate(360deg)}}
+/* vocab/word bar */
+.word-bar{background:rgba(26,26,46,.06);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:8px 13px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wb-k{font-family:var(--FJ);font-size:22px;color:var(--ink);font-weight:700}
+.wb-r{font-family:var(--FJ);font-size:13px;color:var(--ink2)}
+.wb-m{font-size:13px;color:var(--teal);font-weight:700}
+.wb-save{margin-left:auto;border:none;background:rgba(196,146,40,.15);color:var(--gold);border-radius:5px;padding:4px 9px;font-family:var(--FP);font-size:10px;cursor:pointer;transition:all .15s;flex-shrink:0}
+.wb-save:hover{background:rgba(196,146,40,.3)}
+.wb-save.saved{background:rgba(39,113,74,.15);color:var(--ok);cursor:default}
+/* N5 level badge */
+.n5-badge{display:inline-block;background:rgba(191,74,26,.15);color:var(--acc);border:1px solid rgba(191,74,26,.3);border-radius:4px;padding:2px 7px;font-family:var(--FP);font-size:9px;letter-spacing:1px;margin-right:6px}
 
-/* ══════════════ VOCAB ══════════════ */
-.vocab-header{padding:8px 0 20px}
-.vocab-hero-title{font-family:var(--FJ);font-size:22px;color:var(--paper);margin-bottom:6px}
+/* ── VOCAB TAB ── */
+.vocab-header{padding:6px 0 18px}
+.vocab-hero-title{font-family:var(--FJ);font-size:22px;color:var(--paper);margin-bottom:4px}
 .vocab-count{font-size:12px;color:rgba(245,240,232,.4)}
 .vocab-empty{text-align:center;padding:50px 20px;color:rgba(245,240,232,.3)}
 .vocab-empty .ve-icon{font-size:40px;margin-bottom:12px}
 .vocab-empty .ve-msg{font-size:13px;line-height:1.8}
-.vocab-card{background:var(--paper);border-radius:var(--r12);padding:16px 18px;margin-bottom:10px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 16px rgba(0,0,0,.25);position:relative;overflow:hidden}
+.vocab-card{background:var(--paper);border-radius:var(--r12);padding:15px 17px;margin-bottom:10px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 16px rgba(0,0,0,.25);position:relative;overflow:hidden}
 .vocab-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
 .vc-main{flex:1}
-.vc-k{font-family:var(--FJ);font-size:22px;color:var(--ink);font-weight:700;line-height:1.2}
+.vc-k{font-family:var(--FJ);font-size:21px;color:var(--ink);font-weight:700;line-height:1.2}
 .vc-r{font-family:var(--FJ);font-size:13px;color:var(--ink2);margin-top:2px}
 .vc-m{font-size:13px;color:var(--acc);font-weight:600;margin-top:3px}
-.vc-date{font-size:10px;color:rgba(26,26,46,.3);font-family:var(--FP);margin-top:5px}
-.vc-del{border:none;background:rgba(191,74,26,.1);color:var(--ng);border-radius:6px;padding:7px 11px;font-size:13px;cursor:pointer;transition:all .15s;flex-shrink:0}
-.vc-del:hover{background:rgba(191,74,26,.2)}
-.vocab-clear-btn{width:100%;padding:12px;border:1px solid rgba(191,74,26,.3);border-radius:var(--r8);background:rgba(191,74,26,.08);color:var(--ng);font-family:var(--FP);font-size:10px;letter-spacing:1px;cursor:pointer;margin-top:10px}
+.vc-date{font-size:10px;color:rgba(26,26,46,.3);font-family:var(--FP);margin-top:4px}
+.vc-del{border:none;background:rgba(191,74,26,.1);color:var(--ng);border-radius:6px;padding:7px 10px;font-size:13px;cursor:pointer;transition:all .15s;flex-shrink:0}
+.vocab-clear-btn{width:100%;padding:11px;border:1px solid rgba(191,74,26,.3);border-radius:var(--r8);background:rgba(191,74,26,.08);color:var(--ng);font-family:var(--FP);font-size:10px;cursor:pointer;margin-top:10px}
 
-/* ── ENHANCED FEEDBACK ── */
-.fb{font-size:14px;display:none;border-radius:var(--r12);margin-bottom:12px;overflow:hidden}
-.fb.on{display:block}
-.fb.ok{border:2px solid var(--ok)}
-.fb.ng{border:2px solid var(--ng)}
-
-/* 정답/오답 헤더 */
-.fb-banner{display:flex;align-items:center;gap:10px;padding:14px 16px}
-.fb.ok .fb-banner{background:var(--ok)}
-.fb.ng .fb-banner{background:var(--ng)}
-.fb-banner-icon{font-size:24px;flex-shrink:0}
-.fb-banner-title{font-family:var(--FB);font-size:17px;font-weight:700;color:#fff;flex:1}
-.fb-banner-ans{font-family:var(--FJ);font-size:22px;font-weight:800;color:#fff;letter-spacing:.05em}
-.fb-ans-row{display:flex;align-items:center;gap:6px}
-.speech-btn-fb{border:none;background:rgba(255,255,255,.25);color:#fff;border-radius:6px;padding:5px 9px;font-size:15px;cursor:pointer;transition:all .15s;line-height:1}
-.speech-btn-fb:hover{background:rgba(255,255,255,.4)}
-.speech-btn-fb.speaking{animation:pulse .8s ease infinite}
-
-/* 오답일때 내 답 vs 정답 */
-.fb-wrong-compare{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(191,74,26,.06);border-bottom:1px solid rgba(191,74,26,.12);flex-wrap:wrap}
-.fb-wrong-label{font-size:12px;color:rgba(26,26,46,.5);font-family:var(--FB)}
-.fb-wrong-my{font-family:var(--FJ);font-size:17px;color:var(--ng);text-decoration:line-through;opacity:.8}
-.fb-wrong-arrow{font-size:14px;color:rgba(26,26,46,.3)}
-.fb-wrong-correct{font-family:var(--FJ);font-size:19px;color:var(--ok);font-weight:800}
-
-/* 그룹 배지 */
-.fb-grp-row{display:flex;align-items:center;gap:8px;padding:12px 16px 4px}
-.grp-badge{display:inline-block;padding:5px 14px;border-radius:20px;font-size:13px;font-weight:700;font-family:var(--FB)}
-.grp-badge.g1{background:rgba(196,146,40,.15);color:#7a5010;border:1.5px solid rgba(196,146,40,.4)}
-.grp-badge.g1w{background:rgba(200,40,40,.1);color:#901010;border:1.5px solid rgba(200,40,40,.3)}
-.grp-badge.g2{background:rgba(68,119,204,.15);color:#1a3f8a;border:1.5px solid rgba(68,119,204,.3)}
-.grp-badge.g3{background:rgba(140,60,180,.15);color:#6020a0;border:1.5px solid rgba(140,60,180,.3)}
-.fb-grp-desc{font-size:13px;color:rgba(26,26,46,.55);font-family:var(--FB)}
-
-/* 단계별 활용 설명 */
-.conjugation-box{margin:0 14px 10px;background:rgba(26,26,46,.04);border-radius:10px;padding:14px;border:1px solid rgba(26,26,46,.08)}
-.cb-title{font-size:11px;font-family:var(--FB);color:rgba(26,26,46,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
-.cb-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
-.cb-step:last-child{margin-bottom:0}
-.cb-num{width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--paper);font-size:12px;font-family:var(--FP);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
-.cb-content{flex:1}
-.cb-label{font-size:12px;color:rgba(26,26,46,.45);font-family:var(--FB);margin-bottom:3px}
-.cb-val{font-family:var(--FJ);font-size:18px;color:var(--ink);font-weight:700;line-height:1.4}
-.cb-val .dim{color:rgba(26,26,46,.3);font-size:14px;font-weight:400}
-.cb-val .accent{color:var(--acc);font-size:20px}
-.cb-val .final{color:var(--ok);font-size:20px;font-weight:800}
-.cb-kr{font-size:13px;color:rgba(26,26,46,.5);font-family:var(--FB);margin-top:3px}
-
-/* 규칙 요약 */
-.rule-summary{margin:0 14px 12px;background:rgba(196,146,40,.08);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 14px;font-size:14px;color:rgba(26,26,46,.7);line-height:1.7;font-family:var(--FB)}
-.rule-summary b{color:var(--ink)}
-
-/* 미니 패턴표 */
-.mini-pattern{margin:0 14px 12px;border-radius:10px;overflow:hidden;border:1.5px solid rgba(26,26,46,.1)}
-.mp-title{font-size:12px;font-family:var(--FB);font-weight:700;color:rgba(26,26,46,.5);background:rgba(26,26,46,.05);padding:8px 14px;border-bottom:1px solid rgba(26,26,46,.08)}
-.mp-row{display:grid;grid-template-columns:72px 1fr;border-top:1px solid rgba(26,26,46,.07);min-height:48px}
-.mp-row.mp-hl{background:rgba(196,146,40,.1)}
-.mp-grp{padding:10px 10px;font-size:12px;font-weight:700;font-family:var(--FB);display:flex;align-items:center;border-right:1px solid rgba(26,26,46,.07);line-height:1.3}
-.mp-grp.g1{color:#8a6210}
-.mp-grp.g1w{color:#901010}
-.mp-grp.g2{color:#1a3f8a}
-.mp-grp.g3{color:#6020a0}
-.mp-info{padding:8px 12px;display:flex;flex-direction:column;justify-content:center;gap:2px}
-.mp-rule{font-size:12px;color:rgba(26,26,46,.5);font-family:var(--FB)}
-.mp-ex{font-family:var(--FJ);font-size:15px;color:var(--ink);font-weight:700}
-.mp-kr{font-size:12px;color:rgba(26,26,46,.45);font-family:var(--FB)}
-.mp-row.mp-hl .mp-rule{color:var(--ok);font-weight:700}
-.mp-row.mp-hl .mp-ex{color:var(--ok)}
-.mp-row.mp-hl .mp-grp{background:rgba(196,146,40,.08)}
-.mp-now{display:inline-block;font-size:9px;background:var(--gold);color:var(--ink);padding:1px 5px;border-radius:3px;margin-left:4px;font-family:var(--FP);vertical-align:middle}
-
-.fb-goto-grammar{display:block;margin:0 14px 14px;font-family:var(--FB);font-size:13px;color:var(--blue);cursor:pointer;background:rgba(34,85,170,.07);border:1.5px solid rgba(34,85,170,.2);border-radius:8px;padding:10px 14px;text-align:center;width:calc(100% - 28px)}
-
-/* ── GRAMMAR TABLE (문법표 탭) ── */
-.grammar-header{padding:8px 0 16px}
+/* ── GRAMMAR TABLE ── */
+.grammar-header{padding:6px 0 14px}
 .grammar-title{font-family:var(--FJ);font-size:22px;color:var(--paper);margin-bottom:4px}
-.grammar-sub{font-size:13px;color:rgba(245,240,232,.45);line-height:1.6}
-.grammar-nav{display:flex;gap:6px;overflow-x:auto;padding:4px 0 14px;scrollbar-width:none}
+.grammar-sub{font-size:13px;color:rgba(245,240,232,.4);line-height:1.6}
+.grammar-nav{display:flex;gap:6px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
 .grammar-nav::-webkit-scrollbar{display:none}
-.gnav-btn{font-family:var(--FB);font-size:12px;padding:7px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:rgba(245,240,232,.55);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.gnav-btn{font-family:var(--FB);font-size:11px;padding:6px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(245,240,232,.5);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
 .gnav-btn:hover,.gnav-btn.on{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:700}
-
-/* 문법표 메인 카드 */
-.grammar-card{background:var(--paper);border-radius:var(--r16);margin-bottom:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.3)}
-.gc-top-band{background:var(--ink);padding:16px 20px}
-.gct-name{font-family:var(--FJ);font-size:22px;color:var(--goldL);font-weight:800;margin-bottom:4px}
+.grammar-card-wrap{background:var(--paper);border-radius:var(--r16);margin-bottom:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.gc-top-band{background:var(--ink);padding:15px 18px}
+.gct-name{font-family:var(--FJ);font-size:20px;color:var(--goldL);font-weight:800;margin-bottom:2px}
 .gct-jp{font-size:12px;color:rgba(245,240,232,.4);font-family:var(--FB)}
-.gct-usage{font-size:14px;color:rgba(245,240,232,.7);line-height:1.7;margin-top:8px;font-family:var(--FB);padding:10px 14px;background:rgba(255,255,255,.05);border-radius:8px}
-
-/* 그룹별 섹션 */
+.gct-usage{font-size:14px;color:rgba(245,240,232,.68);line-height:1.7;margin-top:8px;font-family:var(--FB);padding:10px 13px;background:rgba(255,255,255,.05);border-radius:8px}
 .grp-section{border-bottom:2px solid var(--paper3)}
 .grp-section:last-child{border-bottom:none}
-.gs-header{display:flex;align-items:center;gap:10px;padding:14px 18px;background:rgba(26,26,46,.04)}
-.gs-badge{font-size:13px;font-weight:800;font-family:var(--FB);padding:5px 14px;border-radius:20px;flex-shrink:0}
+.gs-header{display:flex;align-items:center;gap:10px;padding:13px 17px;background:rgba(26,26,46,.04)}
+.gs-badge{font-size:12px;font-weight:800;font-family:var(--FB);padding:4px 12px;border-radius:20px;flex-shrink:0}
 .gs-badge.g1{background:rgba(196,146,40,.2);color:#7a5010}
 .gs-badge.g1w{background:rgba(200,40,40,.12);color:#901010}
 .gs-badge.g2{background:rgba(68,119,204,.2);color:#1a3f8a}
 .gs-badge.g3{background:rgba(140,60,180,.2);color:#6020a0}
-.gs-rule{font-size:14px;color:rgba(26,26,46,.65);font-family:var(--FB);line-height:1.5}
-.gs-body{padding:4px 16px 16px}
-.gs-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(26,26,46,.07)}
+.gs-rule-txt{font-size:14px;color:rgba(26,26,46,.65);font-family:var(--FB);line-height:1.5}
+.gs-body{padding:4px 16px 14px}
+.gs-row{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid rgba(26,26,46,.07)}
 .gs-row:last-child{border-bottom:none;padding-bottom:0}
-.gs-jp{font-family:var(--FJ);font-size:17px;color:var(--ink);font-weight:700;min-width:70px;flex-shrink:0;padding-top:2px}
-.gs-arrow-col{color:rgba(26,26,46,.3);font-size:15px;padding-top:4px;flex-shrink:0}
+.gs-jp{font-family:var(--FJ);font-size:16px;color:var(--ink);font-weight:700;min-width:65px;flex-shrink:0;padding-top:2px}
+.gs-arrow-col{color:rgba(26,26,46,.3);font-size:14px;padding-top:4px;flex-shrink:0}
 .gs-right{flex:1}
-.gs-result{font-family:var(--FJ);font-size:19px;color:var(--ok);font-weight:800;margin-bottom:3px}
-.gs-kr{font-size:14px;color:rgba(26,26,46,.6);font-family:var(--FB);margin-bottom:3px}
-.gs-note{display:inline-block;font-size:12px;color:rgba(191,74,26,.8);background:rgba(191,74,26,.07);padding:3px 8px;border-radius:5px;font-family:var(--FB);margin-top:2px}
+.gs-result{font-family:var(--FJ);font-size:18px;color:var(--ok);font-weight:800;margin-bottom:3px}
+.gs-kr{font-size:14px;color:rgba(26,26,46,.6);font-family:var(--FB);margin-bottom:2px}
+.gs-note{display:inline-block;font-size:12px;color:rgba(191,74,26,.8);background:rgba(191,74,26,.07);padding:2px 7px;border-radius:4px;font-family:var(--FB);margin-top:2px}
 
-/* ── SPEECH BUTTONS ── */
-.speech-btn{border:none;background:rgba(26,26,46,.08);color:rgba(26,26,46,.45);border-radius:6px;padding:4px 8px;font-size:14px;cursor:pointer;transition:all .15s;flex-shrink:0;line-height:1}
-.speech-btn:hover{background:rgba(26,26,46,.15);color:var(--ink)}
-.speech-btn.speaking{background:rgba(196,146,40,.2);color:var(--gold);animation:pulse .8s ease infinite}
-.fb-ans-row{display:flex;align-items:center;gap:8px}
-.speech-btn-fb{border:none;background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);border-radius:6px;padding:4px 8px;font-size:14px;cursor:pointer;transition:all .15s;line-height:1}
-.speech-btn-fb:hover{background:rgba(255,255,255,.25);color:#fff}
-.speech-btn-fb.speaking{animation:pulse .8s ease infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+/* ── SETTINGS ── */
+.settings-section{background:var(--paper);border-radius:var(--r16);padding:18px 20px;margin-bottom:12px;position:relative;overflow:hidden}
+.settings-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc),var(--gold))}
+.settings-title{font-family:var(--FJ);font-size:22px;color:var(--paper);margin-bottom:6px;padding:6px 0 16px}
+.settings-sub{font-size:12px;color:rgba(245,240,232,.4)}
 
-/* ── TIPS CARD ── */
-.tips-card{background:linear-gradient(135deg,rgba(39,113,74,.15),rgba(68,119,204,.1));border:1px solid rgba(39,113,74,.3);border-radius:var(--r16);padding:0;margin-bottom:14px;overflow:hidden}
-.tips-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;cursor:pointer;font-family:var(--FP);font-size:11px;letter-spacing:.5px}
-.tips-title{color:var(--paper);font-size:13px;font-family:var(--FB);font-weight:700}
-#tipsArrow{color:rgba(245,240,232,.5);font-size:11px}
-.tips-body{padding:4px 16px 16px}
-.tip-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(245,240,232,.08);margin-bottom:4px}
-.tip-icon{font-family:var(--FP);font-size:14px;color:var(--goldL);font-weight:700;flex-shrink:0;width:22px;text-align:center;padding-top:2px}
-.tip-text{font-size:13px;color:rgba(245,240,232,.85);line-height:1.7;font-family:var(--FB)}
-.tip-text b{color:var(--paper)}
-.tip-kr{display:block;margin-top:3px;font-size:12px;color:var(--goldL);opacity:.9}
-.tip-text ruby rt{color:rgba(245,240,232,.5)}
-
-/* Animations */
-@keyframes sIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes shk{0%,100%{transform:translateX(0)}25%,75%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
-.card.ani{animation:sIn .25s ease}
-.card.shk{animation:shk .3s ease}
-
+@keyframes sIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card.ani{animation:sIn .22s ease}
 @media(max-width:400px){
-.choices{grid-template-columns:1fr}
-.stats-row{grid-template-columns:1fr 1fr}
+  .choices.two-col{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -357,7 +270,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
 <div class="gen-bar" id="genBar"></div>
 
 <nav>
-  <div class="nav-logo">日本語 <span>文法</span></div>
+  <div class="nav-logo">N5 <span>クイズ</span></div>
   <div class="nav-tabs">
     <button class="ntab on" data-v="home">🏠 홈</button>
     <button class="ntab" data-v="quiz">✏️ 퀴즈</button>
@@ -365,11 +278,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
     <button class="ntab" data-v="grammar">📋 문법표</button>
     <button class="ntab" data-v="settings">⚙️ 설정</button>
   </div>
-  <div class="nav-today">오늘 <b id="navToday">0</b>/10</div>
-  <div class="nav-version">v6.6</div>
+  <div class="nav-right">
+    <div class="nav-today">오늘 <b id="navToday">0</b>/10</div>
+    <div class="nav-version">v7.5</div>
+  </div>
 </nav>
 
-<!-- ════════ HOME VIEW ════════ -->
+<!-- HOME -->
 <div class="view on" id="homeView">
   <div class="home-hero">
     <div class="hero-date" id="heroDate"></div>
@@ -390,42 +305,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
     <div class="stat-box"><div class="stat-num" id="stMonth">0</div><div class="stat-lbl">이번 달</div></div>
     <div class="stat-box"><div class="stat-num" id="stTotal">0</div><div class="stat-lbl">총 누적</div></div>
   </div>
-
-  <!-- 🇰🇷↔🇯🇵 Tips Card -->
-  <div class="tips-card" id="tipsCard">
+  <div class="tips-card">
     <div class="tips-header" onclick="toggleTips()">
-      <div class="tips-title">🇰🇷 한국인이라 유리한 점 4가지!</div>
+      <div class="tips-title">🇰🇷 한국인이라 유리한 점!</div>
       <span id="tipsArrow">▼</span>
     </div>
     <div class="tips-body" id="tipsBody" style="display:none">
-      <div class="tip-item">
-        <div class="tip-icon">①</div>
-        <div class="tip-text"><b>어순이 똑같아요!</b><br>
-        "나는 밥을 먹었다" = 「わたしは ごはんを <ruby>食<rt>た</rt></ruby>べた」<br>
-        <span class="tip-kr">주어→목적어→동사 순서가 한국어와 완전히 같아요!</span></div>
-      </div>
-      <div class="tip-item">
-        <div class="tip-icon">②</div>
-        <div class="tip-text"><b>조사(은/는/을/를)가 있어요!</b><br>
-        은/는=は · 을/를=を · 이/가=が · 에서=で · 에=に<br>
-        <span class="tip-kr">조사 개념 자체는 한국어에서 이미 배웠으니 반 이상은 아는 거예요!</span></div>
-      </div>
-      <div class="tip-item">
-        <div class="tip-icon">③</div>
-        <div class="tip-text"><b>한자어 발음이 비슷해요!</b><br>
-        <ruby>学校<rt>がっこう</rt></ruby>(학교) · <ruby>電話<rt>でんわ</rt></ruby>(전화) · <ruby>家族<rt>かぞく</rt></ruby>(가족)<br>
-        <span class="tip-kr">한자어를 많이 알수록 어휘가 쉽게 늘어나요!</span></div>
-      </div>
-      <div class="tip-item" style="margin-bottom:0;padding-bottom:0;border-bottom:none">
-        <div class="tip-icon">④</div>
-        <div class="tip-text"><b>동사 활용 개념이 같아요!</b><br>
-        먹다→먹어서→먹지 않다 처럼,<br>
-        일본어도 동사 뒤를 바꿔서 뜻을 달리 해요.<br>
-        <span class="tip-kr">이 앱으로 그 패턴만 익히면 돼요. 어렵지 않아요! 💪</span></div>
-      </div>
+      <div class="tip-item"><div class="tip-icon">①</div><div class="tip-text"><b>어순이 똑같아요!</b><br>"나는 밥을 먹었다" = 「わたしは ごはんを たべた」<span class="tip-kr">주어→목적어→동사 순서가 완전히 같아요!</span></div></div>
+      <div class="tip-item"><div class="tip-icon">②</div><div class="tip-text"><b>조사 개념이 같아요!</b><br>은/는=は · 을/를=を · 이/가=が · 에서=で · 에=に<span class="tip-kr">한국어에서 이미 배운 개념이에요!</span></div></div>
+      <div class="tip-item"><div class="tip-icon">③</div><div class="tip-text"><b>한자어 발음이 비슷해요!</b><br><ruby>学校<rt>がっこう</rt></ruby>(학교) · <ruby>電話<rt>でんわ</rt></ruby>(전화) · <ruby>家族<rt>かぞく</rt></ruby>(가족)<span class="tip-kr">한자어를 알수록 어휘가 빠르게 늘어요!</span></div></div>
+      <div class="tip-item" style="border-bottom:none"><div class="tip-icon">④</div><div class="tip-text"><b>N5는 한국인에게 쉬운 편!</b><br>히라가나 + 기초 한자 약 100개 + 기본 문법<span class="tip-kr">꾸준히 하면 3개월 안에 합격 가능해요 💪</span></div></div>
     </div>
   </div>
-
   <div class="cal-card">
     <div class="cal-header">
       <div class="cal-title">학습 캘린더</div>
@@ -435,58 +326,40 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
         <span class="swatch" style="background:var(--ok)"></span>10+
       </div>
     </div>
-    <div class="dow-row">
-      <div class="dow">일</div><div class="dow">월</div><div class="dow">화</div>
-      <div class="dow">수</div><div class="dow">목</div><div class="dow">금</div><div class="dow">토</div>
-    </div>
+    <div class="dow-row"><div class="dow">일</div><div class="dow">월</div><div class="dow">화</div><div class="dow">수</div><div class="dow">목</div><div class="dow">금</div><div class="dow">토</div></div>
     <div class="cal-grid" id="calGrid"></div>
   </div>
-  <div class="deploy-card" id="deployCard">
-    <div class="deploy-title">🌐 웹사이트로 만드는 방법 (Netlify, 무료, 2분)<span id="deployArrow">▼</span></div>
-    <div class="deploy-body" id="deployBody">
-      <div class="deploy-step"><div class="step-num">1</div><div>이 파일을 다운로드합니다.</div></div>
-      <div class="deploy-step"><div class="step-num">2</div><div><a href="https://app.netlify.com/drop" target="_blank">app.netlify.com/drop</a> 에 접속합니다. 회원가입 불필요.</div></div>
-      <div class="deploy-step"><div class="step-num">3</div><div>HTML 파일을 <b>그대로 드래그 &amp; 드롭</b>합니다.</div></div>
-      <div class="deploy-step"><div class="step-num">4</div><div>즉시 URL이 생성됩니다. 북마크하거나 공유하세요!</div></div>
-      <div style="font-size:11px;color:rgba(26,26,46,.45);padding:8px 12px;background:rgba(26,26,46,.05);border-radius:6px;margin-top:4px">⚠️ 외부 배포 시 Gemini API 키 필요. Claude.ai에서는 키 없이 자동생성됩니다.</div>
-    </div>
-  </div>
-  <button class="start-btn" onclick="goQuiz()">오늘 학습 시작 → 今日も頑張ろう！</button>
+  <button class="start-btn" onclick="switchView('quiz')">오늘 학습 시작 → 今日も頑張ろう！</button>
 </div>
 
-<!-- ════════ QUIZ VIEW ════════ -->
+<!-- QUIZ -->
 <div class="view" id="quizView">
-  <div class="form-tabs" id="formTabs">
-    <button class="ftab on" data-f="all">전체</button>
-    <button class="ftab" data-f="te">て형</button>
-    <button class="ftab" data-f="masu">ます형</button>
-    <button class="ftab" data-f="nai">ない형</button>
-    <button class="ftab" data-f="kano">가능형</button>
-    <button class="ftab" data-f="judou">수동형</button>
-    <button class="ftab" data-f="shieki">사역형</button>
-    <button class="ftab" data-f="iko">의향형</button>
-    <button class="ftab" data-f="meirei">명령형</button>
-    <button class="ftab" data-f="group">그룹판별</button>
-    <button class="ftab" data-f="particle">조사</button>
+  <div class="section-tabs" id="sectionTabs">
+    <button class="stab on all" data-s="all">전체</button>
+    <button class="stab vocab" data-s="vocab">📖 문자·어휘</button>
+    <button class="stab grammar" data-s="grammar">✏️ 문법</button>
+    <button class="stab reading" data-s="reading">📄 독해</button>
   </div>
-  <div class="today-strip">
+  <div class="pool-strip">
     <div style="display:flex;align-items:center;gap:8px">
       <div class="ts-dots" id="tsDots"></div>
       <div class="ts-label" id="tsLabel"></div>
     </div>
     <div class="pool-info" id="poolInfo"></div>
   </div>
-  <div class="badge-row">
-    <span class="fbadge" id="fBadge"></span>
-  </div>
   <div id="cardArea"></div>
   <div class="action-row">
-    <button class="skip" id="skipBtn">잘 모르겠어요 (건너뛰기)</button>
+    <button class="skip-btn" id="skipBtn">잘 모르겠어요 (건너뛰기)</button>
     <div class="qnum" id="qNum"></div>
   </div>
 </div>
 
-<!-- ════════ GRAMMAR VIEW ════════ -->
+<!-- VOCAB -->
+<div class="view" id="vocabView">
+  <div id="vocabContent"></div>
+</div>
+
+<!-- GRAMMAR TABLE -->
 <div class="view" id="grammarView">
   <div class="grammar-header">
     <div class="grammar-title">📋 문법 정리표</div>
@@ -496,543 +369,507 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
   <div id="grammarContent"></div>
 </div>
 
-<!-- ════════ VOCAB VIEW ════════ -->
-<div class="view" id="vocabView">
-  <div id="vocabContent"></div>
-</div>
-
-<!-- ════════ SETTINGS VIEW ════════ -->
+<!-- SETTINGS -->
 <div class="view" id="settingsView">
-  <div style="padding:8px 0 20px">
-    <div style="font-family:var(--FJ);font-size:22px;color:var(--paper);margin-bottom:6px">設定 · 설정</div>
-    <div style="font-size:12px;color:rgba(245,240,232,.4)">API 키 설정 및 앱 설치 안내</div>
-  </div>
-  <div class="goal-card" style="margin-bottom:14px">
-    <div class="gc-top" style="margin-bottom:12px">
-      <div class="gc-label">🆓 Google Gemini API 키 (완전 무료)</div>
+  <div class="settings-title">⚙️ 설정</div>
+  <div class="settings-section">
+    <div class="gc-top" style="margin-bottom:10px">
+      <div class="gc-label">🆓 Gemini API 키 (무료)</div>
       <div id="apiStatus" style="font-family:var(--FP);font-size:10px;padding:3px 8px;border-radius:3px;background:rgba(196,146,40,.15);color:#9a6e1a">미설정</div>
     </div>
-    <div style="font-size:12px;color:rgba(26,26,46,.55);margin-bottom:12px;line-height:1.7">
-      구글 계정만 있으면 <b style="color:var(--ink)">완전 무료</b>로 무한 자동생성됩니다.<br>
-      신용카드 등록 불필요 · 하루 2,500문제까지 무료
-    </div>
-    <div style="background:rgba(34,85,170,.08);border-radius:var(--r8);padding:10px 12px;margin-bottom:12px;font-size:12px;color:rgba(26,26,46,.65);line-height:1.9">
-      <b style="color:var(--ink)">발급 방법 (2분)</b><br>
+    <div style="font-size:13px;color:rgba(26,26,46,.55);margin-bottom:10px;line-height:1.7">
+      구글 계정만 있으면 <b style="color:var(--ink)">완전 무료</b>로 문제 자동 생성됩니다.<br>
       1. <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--blue)">aistudio.google.com/apikey</a> 접속<br>
-      2. 구글 계정 로그인 → "Create API Key" 클릭<br>
-      3. 키 복사 후 아래 입력 → 저장
+      2. "Create API Key" 클릭 → 복사
     </div>
     <div style="display:flex;gap:8px;margin-bottom:8px">
-      <input type="password" id="apiKeyInput" placeholder="AIzaSy..."
-        style="flex:1;padding:10px 12px;border-radius:var(--r8);border:1.5px solid var(--paper3);background:var(--paper2);font-family:var(--FP);font-size:11px;color:var(--ink);outline:none">
-      <button onclick="saveApiKey()"
-        style="padding:10px 16px;border:none;border-radius:var(--r8);background:var(--ok);color:#fff;font-family:var(--FP);font-size:11px;cursor:pointer;white-space:nowrap">저장</button>
+      <input type="password" id="apiKeyInput" placeholder="AIzaSy..." style="flex:1;padding:10px 12px;border-radius:var(--r8);border:1.5px solid var(--paper3);background:var(--paper2);font-family:var(--FP);font-size:11px;color:var(--ink);outline:none">
+      <button onclick="saveApiKey()" style="padding:10px 15px;border:none;border-radius:var(--r8);background:var(--ok);color:#fff;font-family:var(--FP);font-size:11px;cursor:pointer">저장</button>
     </div>
-    <button id="testApiBtn" onclick="testApiKey()"
-      style="width:100%;padding:10px;border:1.5px solid rgba(68,119,204,.3);border-radius:var(--r8);background:rgba(68,119,204,.08);color:var(--blue);font-family:var(--FB);font-size:13px;cursor:pointer;margin-bottom:8px">
-      🔍 API 키 테스트 (작동하는지 확인)
-    </button>
-    <div id="testApiResult" style="font-size:13px;font-family:var(--FB);line-height:1.6;padding:4px 0;min-height:20px"></div>
-    <div style="font-size:11px;color:rgba(26,26,46,.4);line-height:1.6">
-      💡 Claude.ai에서 사용할 때는 키 없이도 자동생성됩니다.
-    </div>
+    <button id="testApiBtn" onclick="testApiKey()" style="width:100%;padding:10px;border:1.5px solid rgba(68,119,204,.3);border-radius:var(--r8);background:rgba(68,119,204,.08);color:var(--blue);font-family:var(--FB);font-size:13px;cursor:pointer;margin-bottom:8px">🔍 API 키 테스트</button>
+    <div id="testApiResult" style="font-size:13px;font-family:var(--FB);line-height:1.6;min-height:18px"></div>
   </div>
-  <div class="goal-card" style="margin-bottom:14px">
-    <div class="gc-top" style="margin-bottom:12px">
-      <div class="gc-label">📱 홈 화면에 앱 추가 (PWA)</div>
-    </div>
-    <div style="background:rgba(26,26,46,.06);border-radius:var(--r8);padding:12px 14px">
-      <div style="font-size:12px;color:rgba(26,26,46,.7);line-height:2">
-        <b>🤖 안드로이드 (Chrome):</b> 주소창 오른쪽 ⋮ 메뉴 → <b>"홈 화면에 추가"</b><br>
-        <b>🍎 아이폰 (Safari):</b> 하단 공유 버튼 □↑ → <b>"홈 화면에 추가"</b><br>
-        <b>💻 PC (Chrome):</b> 주소창 오른쪽 ⊕ 아이콘 → <b>"설치"</b>
-      </div>
-    </div>
-    <div id="installBtnWrap" style="margin-top:12px;display:none">
-      <button id="installBtn" onclick="installPWA()"
-        style="width:100%;padding:12px;border:none;border-radius:var(--r8);background:linear-gradient(135deg,var(--blue),var(--blueL));color:#fff;font-family:var(--FP);font-size:12px;letter-spacing:1px;cursor:pointer">
-        📲 이 기기에 앱 설치하기
-      </button>
-    </div>
-  </div>
-  <div class="deploy-card" id="playStoreCard" style="margin-bottom:14px">
-    <div class="deploy-title">🏪 Google Play Store 등록 방법<span id="playArrow">▼</span></div>
-    <div class="deploy-body" id="playBody">
-      <div class="deploy-step"><div class="step-num">1</div><div>먼저 Netlify에 배포 → URL 확보 (홈 탭 참고)</div></div>
-      <div class="deploy-step"><div class="step-num">2</div><div><a href="https://play.google.com/console" target="_blank">play.google.com/console</a> → 개발자 계정 등록 ($25 일회성)</div></div>
-      <div class="deploy-step"><div class="step-num">3</div><div><a href="https://www.pwabuilder.com" target="_blank">pwabuilder.com</a> 에서 URL 입력 → Android 패키지 자동 생성</div></div>
-      <div class="deploy-step"><div class="step-num">4</div><div>생성된 AAB 파일을 Play Console에 업로드 → 검토 (1~3일)</div></div>
-    </div>
-  </div>
-  <div class="goal-card" style="margin-bottom:14px">
+  <div class="settings-section">
     <div class="gc-label" style="margin-bottom:12px">데이터 관리</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <button onclick="exportData()" style="padding:10px;border:1px solid var(--paper3);border-radius:var(--r8);background:var(--paper2);color:var(--ink2);font-family:var(--FP);font-size:10px;letter-spacing:1px;cursor:pointer">📤 데이터 내보내기</button>
-      <button onclick="confirmReset()" style="padding:10px;border:1px solid rgba(191,74,26,.3);border-radius:var(--r8);background:rgba(191,74,26,.08);color:var(--ng);font-family:var(--FP);font-size:10px;letter-spacing:1px;cursor:pointer">🗑 기록 초기화</button>
+      <button onclick="exportData()" style="padding:10px;border:1px solid var(--paper3);border-radius:var(--r8);background:var(--paper2);color:var(--ink2);font-family:var(--FP);font-size:10px;cursor:pointer">📤 데이터 내보내기</button>
+      <button onclick="confirmReset()" style="padding:10px;border:1px solid rgba(191,74,26,.3);border-radius:var(--r8);background:rgba(191,74,26,.08);color:var(--ng);font-family:var(--FP);font-size:10px;cursor:pointer">🗑 기록 초기화</button>
     </div>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════
-// QUESTION BANK (fu = furigana map)
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// N5 QUESTION BANK — 100+ hardcoded questions
+// s: section (vocab/grammar/reading)
+// t: type (kanji_read/kanji_write/vocab_ctx/grammar_fill/reading)
+// ═══════════════════════════════════════════════════════════
 const SEED = [
-// ──── て형 ────
-{f:'te',form:'て형',word:{k:'食べる',r:'たべる',m:'먹다'},
- q:'毎朝、ごはんを___から、学校に行きます。',
- kr:'매일 아침, 밥을 ___ 학교에 갑니다.',
- hint:'食べる → て形',
- choices:['たべて','たべって','たべない','たべます'],ans:'たべて',
- ex:'たべる → たべ＋て',rule:'2그룹 て형: る를 빼고 +て',grp:'2그룹',
- fu:{'毎朝':'まいあさ','学校':'がっこう','行':'い'}},
 
-{f:'te',form:'て형',word:{k:'飲む',r:'のむ',m:'마시다'},
- q:'薬を___から、ゆっくり横になってください。',
- kr:'약을 ___ 천천히 누우세요.',
- hint:'飲む → て形',
- choices:['のんで','のめて','のまれて','のみて'],ans:'のんで',
- ex:'のむ → のん＋で',rule:'1그룹 む→んで',grp:'1그룹',
- fu:{'薬':'くすり','横':'よこ'}},
+// ═══════════════════════════════════════════════════════
+// 問題1 — 漢字読み (한자읽기)
+// 밑줄 한자의 히라가나 읽기 선택 (유사 발음으로 헷갈리게)
+// ═══════════════════════════════════════════════════════
 
-{f:'te',form:'て형',word:{k:'書く',r:'かく',m:'쓰다'},
- q:'住所と名前を___から、受付に出してください。',
- kr:'주소와 이름을 ___ 접수처에 제출해 주세요.',
- hint:'書く → て形',
- choices:['かいて','かいで','かきます','かけて'],ans:'かいて',
- ex:'かく → かい＋て',rule:'1그룹 く→いて',grp:'1그룹',
- fu:{'住所':'じゅうしょ','名前':'なまえ','受付':'うけつけ'}},
+{s:'vocab',t:'kanji_read',
+ q:'あの <u><b>山</b></u> に ゆきが あります。',
+ kr:'저 산에 눈이 있습니다.',
+ word:{k:'山',r:'やま',m:'산'},
+ choices:['やま','さん','やみ','かな'],ans:'やま',
+ exp:'山(やま)=산. 「さん」은 山の音読み(산기슭 같은 합성어)로 쓰여요. やみ(闇=어둠)・かな는 전혀 다른 단어!'},
 
-{f:'te',form:'て형',word:{k:'行く',r:'いく',m:'가다'},
- q:'コンビニに___、牛乳とパンを買ってきました。',
- kr:'편의점에 ___ 우유와 빵을 사왔습니다.',
- hint:'行く → て形 ※예외!',
- choices:['いって','いいて','いきて','いかせて'],ans:'いって',
- ex:'いく → いって (유일한 예외!)',rule:'いく만 예외: →いって',grp:'1그룹 예외',
- fu:{'牛乳':'ぎゅうにゅう'}},
+{s:'vocab',t:'kanji_read',
+ q:'まいにち 六 <u><b>時</b></u> に おきます。',
+ kr:'매일 6시에 일어납니다.',
+ word:{k:'時',r:'じ',m:'시(시간)'},
+ choices:['じ','とき','し','ち'],ans:'じ',
+ exp:'六時(ろくじ)의 「時」는 じ. 「とき」는 "때"라는 뜻의 명사로 쓸 때. 「三時(さんじ)・何時(なんじ)」도 같아요.'},
 
-{f:'te',form:'て형',word:{k:'待つ',r:'まつ',m:'기다리다'},
- q:'バス停で友達を___いたら、急に雨が降ってきました。',
- kr:'버스 정류장에서 친구를 기다리고 있으니 갑자기 비가 내리기 시작했습니다.',
- hint:'待つ → て形',
- choices:['まって','まちて','またれて','まてる'],ans:'まって',
- ex:'まつ → まっ＋て',rule:'1그룹 つ→って',grp:'1그룹',
- fu:{'友達':'ともだち','急':'きゅう','雨':'あめ'}},
+{s:'vocab',t:'kanji_read',
+ q:'ここは <u><b>駅</b></u> から とおいですか。',
+ kr:'여기는 역에서 멉니까?',
+ word:{k:'駅',r:'えき',m:'역'},
+ choices:['えき','やく','えいき','けき'],ans:'えき',
+ exp:'駅(えき)=역. やく(役=역할/약), えいき는 없는 단어. 전철 관련 단어는 駅(えき)만 기억!'},
 
-{f:'te',form:'て형',word:{k:'乗る',r:'のる',m:'타다'},
- q:'電車に___から、だいたい三十分で駅に着きます。',
- kr:'전철을 ___ 약 30분이면 역에 도착합니다.',
- hint:'乗る → て形 (1그룹 주의!)',
- choices:['のって','のれて','のられて','のりて'],ans:'のって',
- ex:'のる → のっ＋て',rule:'乗る는 1그룹! る→って',grp:'1그룹',
- fu:{'電車':'でんしゃ','三十分':'さんじっぷん','駅':'えき','着':'つ'}},
+{s:'vocab',t:'kanji_read',
+ q:'<u><b>先生</b></u> は やさしい ひとです。',
+ kr:'선생님은 친절한 사람입니다.',
+ word:{k:'先生',r:'せんせい',m:'선생님'},
+ choices:['せんせい','さきせい','せんせ','さんせい'],ans:'せんせい',
+ exp:'先生(せんせい)=선생님. 「さきせい」「せんせ」는 없는 단어. 「賛成(さんせい)」=찬성은 전혀 다른 단어!'},
 
-{f:'te',form:'て형',word:{k:'起きる',r:'おきる',m:'일어나다'},
- q:'毎朝六時に___から、シャワーを浴びて出かけます。',
- kr:'매일 아침 6시에 ___ 샤워를 하고 외출합니다.',
- hint:'起きる → て形',
- choices:['おきて','おきれて','おいて','おきって'],ans:'おきて',
- ex:'おきる → おき＋て',rule:'2그룹 て형: る→て',grp:'2그룹',
- fu:{'毎朝':'まいあさ','六時':'ろくじ'}},
+{s:'vocab',t:'kanji_read',
+ q:'この <u><b>川</b></u> は きれいですね。',
+ kr:'이 강은 깨끗하네요.',
+ word:{k:'川',r:'かわ',m:'강'},
+ choices:['かわ','がわ','かは','こ'],ans:'かわ',
+ exp:'川(かわ)=강. 「がわ」는 濁点(탁점)이 붙은 것으로 「右川(みぎがわ)=오른쪽」같이 뒤에 붙을 때. 「かは」는 고어 표기!'},
 
-{f:'te',form:'て형',word:{k:'する',r:'する',m:'하다'},
- q:'宿題を全部___から、ゲームをしてもいいですよ。',
- kr:'숙제를 전부 ___ 게임을 해도 됩니다.',
- hint:'する → て形',
- choices:['して','されて','させて','しよう'],ans:'して',
- ex:'する → して (불규칙)',rule:'3그룹 する 불규칙',grp:'3그룹',
- fu:{'宿題':'しゅくだい','全部':'ぜんぶ'}},
+{s:'vocab',t:'kanji_read',
+ q:'<u><b>右</b></u> に まがって ください。',
+ kr:'오른쪽으로 돌아주세요.',
+ word:{k:'右',r:'みぎ',m:'오른쪽'},
+ choices:['みぎ','ひだり','みき','うぎ'],ans:'みぎ',
+ exp:'右(みぎ)=오른쪽. 「左(ひだり)」=왼쪽은 반대 방향. 「みき」「うぎ」는 없는 단어. 右(う/ゆう)는 음독이에요.'},
 
-{f:'te',form:'て형',word:{k:'来る',r:'くる',m:'오다'},
- q:'友達が家に___から、一緒に晩ご飯を食べました。',
- kr:'친구가 집에 ___ 함께 저녁밥을 먹었습니다.',
- hint:'来る → て形',
- choices:['きて','こられて','こさせて','こよう'],ans:'きて',
- ex:'くる → きて (불규칙)',rule:'3그룹 くる 불규칙',grp:'3그룹',
- fu:{'友達':'ともだち','家':'いえ','一緒':'いっしょ','晩':'ばん','飯':'はん'}},
+{s:'vocab',t:'kanji_read',
+ q:'まいにち <u><b>電車</b></u> で がっこうへ いきます。',
+ kr:'매일 전철로 학교에 갑니다.',
+ word:{k:'電車',r:'でんしゃ',m:'전철'},
+ choices:['でんしゃ','てんしゃ','でんじゃ','でんき'],ans:'でんしゃ',
+ exp:'電車(でんしゃ). 「電気(でんき)」=전기, 「天井(てんじょう)」=천장. 電(でん)+車(しゃ)=전철!'},
 
-{f:'te',form:'て형',word:{k:'帰る',r:'かえる',m:'돌아가다'},
- q:'会社から___から、すぐに夕ご飯を作り始めました。',
- kr:'회사에서 ___ 바로 저녁밥을 만들기 시작했습니다.',
- hint:'帰る → て形 (1그룹 주의!)',
- choices:['かえって','かえれて','かえられて','かえて'],ans:'かえって',
- ex:'かえる → かえっ＋て',rule:'帰る는 1그룹! → かえって',grp:'1그룹 주의',
- fu:{'会社':'かいしゃ','夕':'ゆう','飯':'はん','作':'つく'}},
+{s:'vocab',t:'kanji_read',
+ q:'きょうは <u><b>父</b></u> の たんじょうびです。',
+ kr:'오늘은 아버지의 생일입니다.',
+ word:{k:'父',r:'ちち',m:'아버지(내 아버지)'},
+ choices:['ちち','はは','おとうさん','ふ'],ans:'ちち',
+ exp:'父(ちち)=（내）아버지. 「はは(母)」=어머니. 「おとうさん」=아버지(존댓말). 「ふ」는 음독이에요.'},
 
-// ──── ます형 ────
-{f:'masu',form:'ます형',word:{k:'起きる',r:'おきる',m:'일어나다'},
- q:'私は毎朝六時に___。週末でも遅くまで寝ません。',
- kr:'저는 매일 아침 6시에 일어납니다. 주말에도 늦게까지 자지 않습니다.',
- hint:'起きる → ます形',
- choices:['おきます','おけます','おきられます','おきって'],ans:'おきます',
- ex:'おきる → おき＋ます',rule:'2그룹 ます형: る→ます',grp:'2그룹',
- fu:{'毎朝':'まいあさ','六時':'ろくじ','週末':'しゅうまつ'}},
+{s:'vocab',t:'kanji_read',
+ q:'この <u><b>本</b></u> は おもしろいですか。',
+ kr:'이 책은 재미있습니까?',
+ word:{k:'本',r:'ほん',m:'책'},
+ choices:['ほん','もと','ぼん','はん'],ans:'ほん',
+ exp:'本(ほん)=책. 「元(もと)」=근원/원래, 「盆(ぼん)」=쟁반, 「判(はん)」=판정. 本は「ほん」と覚えよう!'},
 
-{f:'masu',form:'ます형',word:{k:'飲む',r:'のむ',m:'마시다'},
- q:'お医者さんに、毎食後に薬を三錠___と言われました。',
- kr:'의사 선생님께 매 식후에 약을 3알 마시라고 들었습니다.',
- hint:'飲む → ます形',
- choices:['のみます','のまます','のめます','のんます'],ans:'のみます',
- ex:'のむ → のみ＋ます',rule:'1그룹 ます형: u단→i단+ます',grp:'1그룹',
- fu:{'毎食後':'まいしょくご','薬':'くすり','三錠':'さんじょう'}},
+{s:'vocab',t:'kanji_read',
+ q:'きょうは <u><b>学校</b></u> が やすみです。',
+ kr:'오늘은 학교가 쉽니다.',
+ word:{k:'学校',r:'がっこう',m:'학교'},
+ choices:['がっこう','がくこう','がっこ','かっこう'],ans:'がっこう',
+ exp:'学校(がっこう). 「がくこう」「がっこ」는 없는 읽기. 「カッコウ」=뻐꾸기(새)는 전혀 다른 단어!'},
 
-{f:'masu',form:'ます형',word:{k:'食べる',r:'たべる',m:'먹다'},
- q:'私は朝ごはんにいつもパンとコーヒーを___。',
- kr:'저는 아침밥으로 항상 빵과 커피를 먹습니다.',
- hint:'食べる → ます形',
- choices:['たべます','たべります','たべられます','たべって'],ans:'たべます',
- ex:'たべる → たべ＋ます',rule:'2그룹: る→+ます',grp:'2그룹',
- fu:{'朝':'あさ'}},
+// ═══════════════════════════════════════════════════════
+// 問題2 — 표기 (ひらがな → 漢字/ひらがな)
+// 밑줄 친 히라가나를 올바른 한자로 선택
+// ═══════════════════════════════════════════════════════
 
-{f:'masu',form:'ます형',word:{k:'話す',r:'はなす',m:'말하다'},
- q:'週に一度、日本語の先生と電話で三十分___。',
- kr:'주 1회 일본어 선생님과 전화로 30분 이야기합니다.',
- hint:'話す → ます形',
- choices:['はなします','はなせます','はなされます','はなされます'],ans:'はなします',
- ex:'はなす → はなし＋ます',rule:'1그룹 す→し+ます',grp:'1그룹',
- fu:{'週':'しゅう','先生':'せんせい','電話':'でんわ','三十分':'さんじっぷん','日本語':'にほんご'}},
+{s:'vocab',t:'kanji_write',
+ q:'あの <u>やま</u> に ゆきが あります。',
+ kr:'저 산에 눈이 있습니다.',
+ word:{k:'山',r:'やま',m:'산'},
+ choices:['山','川','林','谷'],ans:'山',
+ exp:'やま = 山. 「川(かわ)」=강, 「林(はやし)」=숲, 「谷(たに)」=골짜기. 形が似ていますが意味が全然違う!'},
 
-{f:'masu',form:'ます형',word:{k:'来る',r:'くる',m:'오다'},
- q:'明日の午後三時に、友達が家に___。楽しみです。',
- kr:'내일 오후 3시에 친구가 집에 옵니다. 기대됩니다.',
- hint:'来る → ます形',
- choices:['きます','こられます','こさせます','こます'],ans:'きます',
- ex:'くる → きます (불규칙)',rule:'くる→きます (불규칙)',grp:'3그룹',
- fu:{'明日':'あした','午後':'ごご','三時':'さんじ','友達':'ともだち','家':'いえ','楽':'たの'}},
+{s:'vocab',t:'kanji_write',
+ q:'ここから <u>えき</u> まで あるいて いきます。',
+ kr:'여기서 역까지 걸어서 갑니다.',
+ word:{k:'駅',r:'えき',m:'역'},
+ choices:['駅','役','益','液'],ans:'駅',
+ exp:'えき = 駅(えき). 「役(やく)」=역할, 「益(えき)」=이익, 「液(えき)」=액체. 발음은 같지만 한자가 달라요!'},
 
-{f:'masu',form:'ます형',word:{k:'する',r:'する',m:'하다'},
- q:'毎晩寝る前に、その日の日本語の勉強を復習___。',
- kr:'매일 밤 자기 전에 그날의 일본어 공부를 복습합니다.',
- hint:'する → ます形',
- choices:['します','されます','させます','できます'],ans:'します',
- ex:'する → します (불규칙)',rule:'する→します (불규칙)',grp:'3그룹',
- fu:{'毎晩':'まいばん','日本語':'にほんご','勉強':'べんきょう','復習':'ふくしゅう'}},
+{s:'vocab',t:'kanji_write',
+ q:'まいにち <u>みず</u> を のみます。',
+ kr:'매일 물을 마십니다.',
+ word:{k:'水',r:'みず',m:'물'},
+ choices:['水','氷','池','海'],ans:'水',
+ exp:'みず = 水(みず). 「氷(こおり)」=얼음, 「池(いけ)」=연못, 「海(うみ)」=바다. 물 관련 한자가 많으니 주의!'},
 
-// ──── ない형 ────
-{f:'nai',form:'ない형',word:{k:'行く',r:'いく',m:'가다'},
- q:'今日は頭が痛いので、学校に___つもりです。',
- kr:'오늘은 머리가 아파서 학교에 가지 않을 예정입니다.',
- hint:'行く → ない形',
- choices:['いかない','いけない','いかれない','いきない'],ans:'いかない',
- ex:'いく → いか＋ない',rule:'1그룹 ない형: u단→a단+ない',grp:'1그룹',
- fu:{'今日':'きょう','頭':'あたま','学校':'がっこう'}},
+{s:'vocab',t:'kanji_write',
+ q:'きょうは <u>かぜ</u> が つよいですね。',
+ kr:'오늘은 바람이 강하네요.',
+ word:{k:'風',r:'かぜ',m:'바람'},
+ choices:['風','雨','雪','雲'],ans:'風',
+ exp:'かぜ = 風(かぜ). 「雨(あめ)」=비, 「雪(ゆき)」=눈, 「雲(くも)」=구름. 날씨 한자 セットで覚えよう!'},
 
-{f:'nai',form:'ない형',word:{k:'食べる',r:'たべる',m:'먹다'},
- q:'ダイエット中なので、夜は甘いものを___ようにしています。',
- kr:'다이어트 중이라 밤에는 단 것을 먹지 않으려 하고 있습니다.',
- hint:'食べる → ない形',
- choices:['たべない','たべられない','たべさせない','たべなかった'],ans:'たべない',
- ex:'たべる → たべ＋ない',rule:'2그룹 ない형: る→+ない',grp:'2그룹',
- fu:{'夜':'よる','甘':'あま'}},
+{s:'vocab',t:'kanji_write',
+ q:'きのう <u>ほん</u> を よみました。',
+ kr:'어제 책을 읽었습니다.',
+ word:{k:'本',r:'ほん',m:'책'},
+ choices:['本','文','木','目'],ans:'本',
+ exp:'ほん = 本(ほん)=책. 「文(ぶん)」=문장, 「木(き)」=나무, 「目(め)」=눈(目). 形が似ているので注意!'},
 
-{f:'nai',form:'ない형',word:{k:'来る',r:'くる',m:'오다'},
- q:'田中さんは急用ができて、今日の会議に___そうです。',
- kr:'다나카 씨는 급한 일이 생겨서 오늘 회의에 오지 않는다고 합니다.',
- hint:'来る → ない形',
- choices:['こない','きない','こられない','くない'],ans:'こない',
- ex:'くる → こない (불규칙)',rule:'くる→こない (불규칙)',grp:'3그룹',
- fu:{'田中':'たなか','急用':'きゅうよう','今日':'きょう','会議':'かいぎ'}},
+{s:'vocab',t:'kanji_write',
+ q:'わたしの <u>ちち</u> は かいしゃいんです。',
+ kr:'나의 아버지는 회사원입니다.',
+ word:{k:'父',r:'ちち',m:'아버지'},
+ choices:['父','母','兄','姉'],ans:'父',
+ exp:'ちち = 父(ちち)=아버지. 「母(はは)」=어머니, 「兄(あに)」=형/오빠, 「姉(あね)」=누나/언니. 가족 한자!'},
 
-{f:'nai',form:'ない형',word:{k:'する',r:'する',m:'하다'},
- q:'明日は大事な試験があるので、今夜はゲームを___と決めました。',
- kr:'내일 중요한 시험이 있어서 오늘 밤은 게임을 하지 않기로 결심했습니다.',
- hint:'する → ない形',
- choices:['しない','されない','させない','できない'],ans:'しない',
- ex:'する → しない (불규칙)',rule:'する→しない (불규칙)',grp:'3그룹',
- fu:{'明日':'あした','大事':'だいじ','試験':'しけん','今夜':'こんや'}},
+{s:'vocab',t:'kanji_write',
+ q:'そとは <u>あめ</u> が ふっています。',
+ kr:'밖에는 비가 내리고 있습니다.',
+ word:{k:'雨',r:'あめ',m:'비'},
+ choices:['雨','雪','風','空'],ans:'雨',
+ exp:'あめ = 雨(あめ). 「雪(ゆき)」=눈, 「風(かぜ)」=바람, 「空(そら)」=하늘. 일기 예보 관련 한자!'},
 
-{f:'nai',form:'ない형',word:{k:'飲む',r:'のむ',m:'마시다'},
- q:'お酒に弱いので、パーティーでもあまり___ようにしています。',
- kr:'술에 약해서 파티에서도 별로 마시지 않으려 하고 있습니다.',
- hint:'飲む → ない形',
- choices:['のまない','のめない','のまれない','のみない'],ans:'のまない',
- ex:'のむ → のま＋ない',rule:'1그룹 む→ま+ない',grp:'1그룹',
- fu:{'弱':'よわ'}},
+{s:'vocab',t:'kanji_write',
+ q:'この <u>みち</u> は せまいですね。',
+ kr:'이 길은 좁네요.',
+ word:{k:'道',r:'みち',m:'길'},
+ choices:['道','通','路','町'],ans:'道',
+ exp:'みち = 道(みち)=길. 「通(とお)る」=지나다, 「路(ろ)」=길(복합어), 「町(まち)」=마을. みち=道が正解!'},
 
-{f:'nai',form:'ない형',word:{k:'帰る',r:'かえる',m:'돌아가다'},
- q:'今夜は仕事が忙しくて、早く家に___かもしれません。',
- kr:'오늘 밤은 일이 바빠서 일찍 집에 돌아가지 못할지도 모릅니다.',
- hint:'帰る → ない形 (1그룹!)',
- choices:['かえらない','かえない','かえれない','かえられない'],ans:'かえらない',
- ex:'かえる → かえら＋ない',rule:'帰る는 1그룹! → かえらない',grp:'1그룹 주의',
- fu:{'今夜':'こんや','仕事':'しごと','早':'はや','家':'いえ'}},
+// ═══════════════════════════════════════════════════════
+// 問題3 — 문맥규정 (빈칸에 맞는 어휘)
+// 문장을 읽고 ( ) 에 알맞은 말을 고르세요
+// ═══════════════════════════════════════════════════════
 
-// ──── 가능형 ────
-{f:'kano',form:'가능형',word:{k:'話す',r:'はなす',m:'말하다'},
- q:'日本に来てから六ヶ月で、もっと自然に日本語が___ようになりました。',
- kr:'일본에 온 지 6개월 만에 더 자연스럽게 일본어를 말할 수 있게 됐습니다.',
- hint:'話す → 可能形',
- choices:['はなせる','はなされる','はなさせる','はなします'],ans:'はなせる',
- ex:'はなす → はなせ＋る',rule:'1그룹 가능형: u단→e단+る',grp:'1그룹',
- fu:{'日本':'にほん','六ヶ月':'ろっかげつ','自然':'しぜん','日本語':'にほんご'}},
+{s:'vocab',t:'vocab_ctx',
+ q:'まいあさ シャワーを （　　） から、ごはんを たべます。',
+ kr:'매일 아침 샤워를 ___ 나서 밥을 먹습니다.',
+ word:{k:'浴びて',r:'あびて',m:'(샤워를) 하고'},
+ choices:['あびて','きて','のんで','みて'],ans:'あびて',
+ exp:'シャワーを「あびる(浴びる)」=샤워하다. 「きる」=입다, 「のむ」=마시다, 「みる」=보다. シャワーには「あびる」!'},
 
-{f:'kano',form:'가능형',word:{k:'食べる',r:'たべる',m:'먹다'},
- q:'最初は辛かったけど、練習してからは、辛い食べ物も___ようになりました。',
- kr:'처음엔 매웠지만 연습 후에는 매운 음식도 먹을 수 있게 됐습니다.',
- hint:'食べる → 可能形',
- choices:['たべられる','たべれる','たべさせられる','たべさせる'],ans:'たべられる',
- ex:'たべる → たべ＋られる',rule:'2그룹 가능형: る→られる',grp:'2그룹',
- fu:{'最初':'さいしょ','練習':'れんしゅう','食':'た','物':'もの'}},
+{s:'vocab',t:'vocab_ctx',
+ q:'のどが （　　） ので、みずを のみました。',
+ kr:'목이 ___ 물을 마셨습니다.',
+ word:{k:'かわいた',r:'かわいた',m:'말랐다'},
+ choices:['かわいた','いたかった','つかれた','ねむかった'],ans:'かわいた',
+ exp:'のどが「かわく(乾く)」=목이 마르다. 「いたい」=아프다, 「つかれる」=피곤하다, 「ねむい」=졸리다. のどに自然なのは「かわく」!'},
 
-{f:'kano',form:'가능형',word:{k:'する',r:'する',m:'하다'},
- q:'この難しい仕事は、あの人なら一人で___と思いますよ。',
- kr:'이 어려운 일은 저 사람이라면 혼자 할 수 있다고 생각합니다.',
- hint:'する → 可能形 (특수!)',
- choices:['できる','される','させられる','しられる'],ans:'できる',
- ex:'する → できる (완전히 다른 단어!)',rule:'する의 가능형은 できる. 따로 암기!',grp:'3그룹',
- fu:{'難':'むずか','仕事':'しごと','一人':'ひとり'}},
+{s:'vocab',t:'vocab_ctx',
+ q:'このみせは あさ 9じから よる 10じまで （　　）います。',
+ kr:'이 가게는 아침 9시부터 밤 10시까지 ___ 있습니다.',
+ word:{k:'あいて',r:'あいて',m:'열려'},
+ choices:['あいて','しまって','やすんで','とまって'],ans:'あいて',
+ exp:'みせが「あく(開く)」=가게가 열다. 「しまる」=닫히다, 「やすむ」=쉬다, 「とまる」=멈추다. 영업 중=「あいている」!'},
 
-{f:'kano',form:'가능형',word:{k:'読む',r:'よむ',m:'읽다'},
- q:'もっと練習して、新聞の難しい漢字も___ようになりたいです。',
- kr:'더 연습해서 신문의 어려운 한자도 읽을 수 있게 되고 싶습니다.',
- hint:'読む → 可能形',
- choices:['よめる','よまれる','よませる','よまれます'],ans:'よめる',
- ex:'よむ → よめ＋る',rule:'1그룹 む→め+る',grp:'1그룹',
- fu:{'練習':'れんしゅう','新聞':'しんぶん','難':'むずか','漢字':'かんじ'}},
+{s:'vocab',t:'vocab_ctx',
+ q:'すみません、ここに なまえを （　　） ください。',
+ kr:'실례지만, 여기에 이름을 ___ 주세요.',
+ word:{k:'かいて',r:'かいて',m:'써'},
+ choices:['かいて','よんで','みて','きいて'],ans:'かいて',
+ exp:'なまえを「かく(書く)」=이름을 쓰다. 「よむ」=읽다, 「みる」=보다, 「きく」=듣다. なまえ→「かく」が自然!'},
 
-{f:'kano',form:'가능형',word:{k:'来る',r:'くる',m:'오다'},
- q:'来週の誕生日パーティーに___かどうか、まだはっきりしません。',
- kr:'다음 주 생일 파티에 올 수 있을지 아직 확실하지 않습니다.',
- hint:'来る → 可能形',
- choices:['こられる','こさせられる','こさせる','きます'],ans:'こられる',
- ex:'くる → こられる (불규칙)',rule:'くる→こられる (불규칙)',grp:'3그룹',
- fu:{'来週':'らいしゅう','誕生日':'たんじょうび'}},
+{s:'vocab',t:'vocab_ctx',
+ q:'でんしゃが （　　） ので、がっこうに おくれました。',
+ kr:'전철이 ___ 학교에 늦었습니다.',
+ word:{k:'おくれた',r:'おくれた',m:'늦었(다)'},
+ choices:['おくれた','こわれた','たおれた','やすんだ'],ans:'おくれた',
+ exp:'でんしゃが「おくれる(遅れる)」=전철이 지연되다. 「こわれる」=고장나다(これも◎だが), 「たおれる」=쓰러지다. でんしゃには「おくれる」が最自然!'},
 
-// ──── 수동형 ────
-{f:'judou',form:'수동형',word:{k:'読む',r:'よむ',m:'읽다'},
- q:'この小説は世界中の人に___ていて、映画にもなりました。',
- kr:'이 소설은 전 세계 사람들에게 읽히고 있으며 영화도 됐습니다.',
- hint:'読む → 受身形',
- choices:['よまれて','よめて','よまされて','よまれます'],ans:'よまれて',
- ex:'よむ → よまれ＋て',rule:'1그룹 수동형: u단→a단+れる',grp:'1그룹',
- fu:{'小説':'しょうせつ','世界中':'せかいじゅう','映画':'えいが'}},
+{s:'vocab',t:'vocab_ctx',
+ q:'あたまが （　　） から、きょうは はやく ねます。',
+ kr:'머리가 ___ 오늘은 일찍 잡니다.',
+ word:{k:'いたい',r:'いたい',m:'아프다'},
+ choices:['いたい','おかしい','わるい','ひどい'],ans:'いたい',
+ exp:'あたまが「いたい(痛い)」=머리가 아프다. 「おかしい」=이상하다, 「わるい」=나쁘다. あたまが痛い→체적 통증에는「いたい」!'},
 
-{f:'judou',form:'수동형',word:{k:'叱る',r:'しかる',m:'꾸짖다'},
- q:'授業中に友達と話してしまって、先生に___しまいました。',
- kr:'수업 중에 친구와 이야기해서 선생님께 혼나 버렸습니다.',
- hint:'叱る → 受身形',
- choices:['しかられて','しかせられて','しかれて','しかされて'],ans:'しかられて',
- ex:'しかる → しかられ＋て',rule:'1그룹 る→ら+れる',grp:'1그룹',
- fu:{'授業中':'じゅぎょうちゅう','友達':'ともだち','先生':'せんせい'}},
+{s:'vocab',t:'vocab_ctx',
+ q:'きょうは とても （　　） ですね。セーターを きて きました。',
+ kr:'오늘은 매우 ___ 네요. 스웨터를 입고 왔습니다.',
+ word:{k:'さむい',r:'さむい',m:'춥다'},
+ choices:['さむい','あつい','すずしい','あたたかい'],ans:'さむい',
+ exp:'セーター를 입었다 → 추운 날씨. 「さむい(寒い)」=춥다. 「あつい」=덥다(반대), 「すずしい」=시원하다, 「あたたかい」=따뜻하다.'},
 
-{f:'judou',form:'수동형',word:{k:'食べる',r:'たべる',m:'먹다'},
- q:'冷蔵庫に入れておいたケーキが、弟に___てしまっていました。',
- kr:'냉장고에 넣어 두었던 케이크를 남동생이 먹어 버린 것이었습니다.',
- hint:'食べる → 受身形',
- choices:['たべられて','たべさせられて','たべれて','たべさせて'],ans:'たべられて',
- ex:'たべる → たべられ＋て',rule:'2그룹 수동형: る→られる',grp:'2그룹',
- fu:{'冷蔵庫':'れいぞうこ','弟':'おとうと'}},
+{s:'vocab',t:'vocab_ctx',
+ q:'この りょうりは （　　） から、もっと たべたいです。',
+ kr:'이 요리는 ___ 더 먹고 싶습니다.',
+ word:{k:'おいしい',r:'おいしい',m:'맛있다'},
+ choices:['おいしい','まずい','からい','あまい'],ans:'おいしい',
+ exp:'もっと食べたい→맛있는 것. 「おいしい」=맛있다. 「まずい」=맛없다(反対), 「からい」=맵다, 「あまい」=달다.'},
 
-{f:'judou',form:'수동형',word:{k:'呼ぶ',r:'よぶ',m:'부르다'},
- q:'会議中に急に名前を___て、とても驚きました。',
- kr:'회의 중에 갑자기 이름이 불려서 매우 깜짝 놀랐습니다.',
- hint:'呼ぶ → 受身形',
- choices:['よばれて','よばせて','よべて','よばされて'],ans:'よばれて',
- ex:'よぶ → よばれ＋て',rule:'1그룹 ぶ→ば+れる',grp:'1그룹',
- fu:{'会議中':'かいぎちゅう','急':'きゅう','名前':'なまえ','驚':'おどろ'}},
+// ═══════════════════════════════════════════════════════
+// 問題4 — 유의표현 (밑줄 단어와 가장 비슷한 의미 선택)
+// ═══════════════════════════════════════════════════════
 
-{f:'judou',form:'수동형',word:{k:'する',r:'する',m:'하다'},
- q:'新しい学校でも、先生にたくさん心配___ました。',
- kr:'새 학교에서도 선생님께 많이 걱정받았습니다.',
- hint:'する → 受身形',
- choices:['されました','させられました','できました','しました'],ans:'されました',
- ex:'する → されました (불규칙)',rule:'する→される (불규칙)',grp:'3그룹',
- fu:{'新':'あたら','学校':'がっこう','先生':'せんせい','心配':'しんぱい'}},
+{s:'vocab',t:'vocab_syn',
+ q:'この えいがは とても <u>たのしい</u> です。',
+ kr:'이 영화는 매우 즐겁습니다.',
+ word:{k:'たのしい',r:'たのしい',m:'즐겁다'},
+ choices:['おもしろい','やさしい','あかるい','うれしい'],ans:'おもしろい',
+ exp:'「たのしい(楽しい)」≒「おもしろい(面白い)」 둘 다 "재미있다/즐겁다". 「やさしい」=쉽다/친절하다, 「あかるい」=밝다, 「うれしい」=기쁘다.'},
 
-// ──── 사역형 ────
-{f:'shieki',form:'사역형',word:{k:'食べる',r:'たべる',m:'먹다'},
- q:'お母さんは、毎晩子供に野菜をたくさん___ます。',
- kr:'엄마는 매일 밤 아이에게 야채를 많이 먹입니다.',
- hint:'食べる → 使役形',
- choices:['たべさせ','たべられ','たべさせられ','たべられます'],ans:'たべさせ',
- ex:'たべる → たべさせ＋ます',rule:'2그룹 사역형: る→させる',grp:'2그룹',
- fu:{'毎晩':'まいばん','子供':'こども','野菜':'やさい'}},
+{s:'vocab',t:'vocab_syn',
+ q:'もう少し <u>ゆっくり</u> はなして ください。',
+ kr:'조금 더 천천히 말해 주세요.',
+ word:{k:'ゆっくり',r:'ゆっくり',m:'천천히'},
+ choices:['おそく','はやく','おおきく','しずかに'],ans:'おそく',
+ exp:'「ゆっくり(話す)」≒「おそく(遅く)話す」 = 천천히 말하다. 「はやく」=빨리(반대), 「おおきく」=크게, 「しずかに」=조용히.'},
 
-{f:'shieki',form:'사역형',word:{k:'待つ',r:'まつ',m:'기다리다'},
- q:'約束の時間に大幅に遅れて、友達を長い間___しまいました。',
- kr:'약속 시간에 많이 늦어서 친구를 오래 기다리게 해 버렸습니다.',
- hint:'待つ → 使役形',
- choices:['またせて','またれて','まてせて','またされて'],ans:'またせて',
- ex:'まつ → またせ＋て',rule:'1그룹 つ→た+せる',grp:'1그룹',
- fu:{'約束':'やくそく','時間':'じかん','大幅':'おおはば','友達':'ともだち','間':'あいだ'}},
+{s:'vocab',t:'vocab_syn',
+ q:'この もんだいは とても <u>むずかしい</u> です。',
+ kr:'이 문제는 매우 어렵습니다.',
+ word:{k:'むずかしい',r:'むずかしい',m:'어렵다'},
+ choices:['かんたんではない','つまらない','わからない','できない'],ans:'かんたんではない',
+ exp:'「むずかしい」=어렵다 ≒「かんたんではない(簡単ではない)」=쉽지 않다. 「つまらない」=지루하다, 「わからない」=모른다는 비슷하지만 정확히는 다른 의미.'},
 
-{f:'shieki',form:'사역형',word:{k:'する',r:'する',m:'하다'},
- q:'部長は新入社員に、毎日残業を___ましたが、それは問題です。',
- kr:'부장은 신입사원에게 매일 야근을 시켰습니다만 그것은 문제입니다.',
- hint:'する → 使役形',
- choices:['させました','されました','させられました','しました'],ans:'させました',
- ex:'する → させ＋ました',rule:'する→させる (불규칙)',grp:'3그룹',
- fu:{'部長':'ぶちょう','新入社員':'しんにゅうしゃいん','毎日':'まいにち','残業':'ざんぎょう','問題':'もんだい'}},
+{s:'vocab',t:'vocab_syn',
+ q:'わたしは にほんごが <u>すこし</u> わかります。',
+ kr:'나는 일본어를 조금 압니다.',
+ word:{k:'すこし',r:'すこし',m:'조금'},
+ choices:['ちょっと','あまり','たくさん','ぜんぜん'],ans:'ちょっと',
+ exp:'「すこし(少し)」≒「ちょっと」 둘 다 "조금". 「あまり」=별로(부정에 쓰임), 「たくさん」=많이(반대), 「ぜんぜん」=전혀.'},
 
-{f:'shieki',form:'사역형',word:{k:'行く',r:'いく',m:'가다'},
- q:'親は子供を一人で遠い学校まで___のはかわいそうだと思いました。',
- kr:'부모는 아이를 혼자 먼 학교까지 가게 하는 것은 불쌍하다고 생각했습니다.',
- hint:'行く → 使役形',
- choices:['いかせる','いかれる','いかせられる','いけさせる'],ans:'いかせる',
- ex:'いく → いかせ＋る',rule:'1그룹 く→か+せる',grp:'1그룹',
- fu:{'親':'おや','子供':'こども','一人':'ひとり','遠':'とお','学校':'がっこう'}},
+{s:'vocab',t:'vocab_syn',
+ q:'きのう ともだちに プレゼントを <u>もらいました</u>。',
+ kr:'어제 친구에게 선물을 받았습니다.',
+ word:{k:'もらいました',r:'もらいました',m:'받았습니다'},
+ choices:['いただきました','あげました','くれました','おくりました'],ans:'いただきました',
+ exp:'「もらいました」≒「いただきました」 둘 다 "받았습니다"(いただく가 더 정중). 「あげました」=줬습니다(반대), 「くれました」=줬습니다(상대가 나에게).'},
 
-// ──── 의향형 ────
-{f:'iko',form:'의향형',word:{k:'食べる',r:'たべる',m:'먹다'},
- q:'今夜は久しぶりに、みんなでお寿司を___と思っています。',
- kr:'오늘 밤은 오랜만에 다 같이 스시를 먹을까 생각하고 있습니다.',
- hint:'Food べる → 意向形',
- choices:['たべよう','たべましょう','たべられよう','たべよ'],ans:'たべよう',
- ex:'たべる → たべよう',rule:'2그룹 의향형: る→よう',grp:'2그룹',
- fu:{'今夜':'こんや','久':'ひさ','寿司':'すし'}},
+{s:'vocab',t:'vocab_syn',
+ q:'あしたの かいぎに <u>でる</u> ことができません。',
+ kr:'내일 회의에 나갈 수 없습니다.',
+ word:{k:'でる',r:'でる',m:'나가다/참석하다'},
+ choices:['さんかする','やすむ','おくれる','くる'],ans:'さんかする',
+ exp:'「（かいぎに）でる」≒「さんかする(参加する)」=참가하다. 「やすむ」=쉬다, 「おくれる」=늦다, 「くる」=오다.'},
 
-{f:'iko',form:'의향형',word:{k:'行く',r:'いく',m:'가다'},
- q:'来週の連休に、みんなで一緒に海に___か！楽しそう！',
- kr:'다음 주 연휴에 다 같이 바다에 갈까요! 재미있을 것 같아요!',
- hint:'行く → 意向形',
- choices:['いこう','いきましょう','いけよう','いかせよう'],ans:'いこう',
- ex:'いく → いこう',rule:'1그룹 의향형: u단→o단+う',grp:'1그룹',
- fu:{'来週':'らいしゅう','連休':'れんきゅう','一緒':'いっしょ','海':'うみ','楽':'たの'}},
+// ═══════════════════════════════════════════════════════
+// 문법 - 조사
+// ═══════════════════════════════════════════════════════
 
-{f:'iko',form:'의향형',word:{k:'する',r:'する',m:'하다'},
- q:'新しい年になったので、毎日三十分は運動___と強く決めました。',
- kr:'새 해가 됐으니 매일 30분은 운동하기로 굳게 결심했습니다.',
- hint:'する → 意向形',
- choices:['しよう','させよう','されよう','しましょう'],ans:'しよう',
- ex:'する → しよう (불규칙)',rule:'する→しよう (불규칙)',grp:'3그룹',
- fu:{'新':'あたら','年':'とし','毎日':'まいにち','三十分':'さんじっぷん','運動':'うんどう'}},
+{s:'grammar',t:'grammar_fill',
+ q:'図書館（　　）本を読みます。',
+ kr:'도서관___ 책을 읽습니다.',
+ word:{k:'で',r:'で',m:'에서 (동작 장소)'},
+ choices:['で','に','を','が'],ans:'で',
+ exp:'「で」= 동작이 일어나는 장소. 「図書館で読む」. 「に」는 있는 장소(います・あります) 또는 방향에 써요.'},
 
-{f:'iko',form:'의향형',word:{k:'来る',r:'くる',m:'오다'},
- q:'せっかくだから、みんなで一緒に___！一人より楽しいよ！',
- kr:'모처럼이니 다 같이 오자! 혼자보다 즐거울 거야!',
- hint:'来る → 意向形',
- choices:['こよう','こられよう','こさせよう','きましょう'],ans:'こよう',
- ex:'くる → こよう (불규칙)',rule:'くる→こよう (불규칙)',grp:'3그룹',
- fu:{'一緒':'いっしょ','一人':'ひとり','楽':'たの'}},
+{s:'grammar',t:'grammar_fill',
+ q:'東京（　　）大阪まで、新幹線で二時間です。',
+ kr:'도쿄___ 오사카까지 신칸센으로 두 시간입니다.',
+ word:{k:'から',r:'から',m:'에서/부터 (출발점)'},
+ choices:['から','まで','に','へ'],ans:'から',
+ exp:'「から〜まで」= ~부터 ~까지. 出発点=から, 到着点=まで. セットで覚えよう!'},
 
-// ──── 명령형 ────
-{f:'meirei',form:'명령형',word:{k:'来る',r:'くる',m:'오다'},
- q:'（お父さんが子供に）早く___！もう電車が来るよ！急いで！',
- kr:'(아버지가 아이에게) 빨리 와! 이제 전철 온다고! 서둘러!',
- hint:'来る → 命令形',
- choices:['こい','こよ','きろ','こられ'],ans:'こい',
- ex:'くる → こい (불규칙)',rule:'くる 명령형→こい (불규칙)',grp:'3그룹',
- fu:{'父':'とうさん','子供':'こども','早':'はや','電車':'でんしゃ'}},
+{s:'grammar',t:'grammar_fill',
+ q:'りんご（　　）みかんを　かいました。',
+ kr:'사과___ 귤을 샀습니다.',
+ word:{k:'と',r:'と',m:'와/과 (전부 나열)'},
+ choices:['と','や','か','も'],ans:'と',
+ exp:'「と」= 전부 열거. 「や」= 일부 열거(~등). 「りんごとみかんだけ」사고 다른 건 안 샀을 때는「と」!'},
 
-{f:'meirei',form:'명령형',word:{k:'食べる',r:'たべる',m:'먹다'},
- q:'（お母さんが子供に）ちゃんと野菜も___！体に悪いよ！',
- kr:'(엄마가 아이에게) 제대로 야채도 먹어! 몸에 나쁘다고!',
- hint:'食べる → 命令形',
- choices:['たべろ','たべよ','たべれ','たべさせ'],ans:'たべろ',
- ex:'たべる → たべろ',rule:'2그룹 명령형: る→ろ',grp:'2그룹',
- fu:{'母':'かあさん','子供':'こども','野菜':'やさい','体':'からだ'}},
+{s:'grammar',t:'grammar_fill',
+ q:'３じ（　　）ともだちに あいます。',
+ kr:'3시___ 친구를 만납니다.',
+ word:{k:'に',r:'に',m:'에 (시간)'},
+ choices:['に','で','は','が'],ans:'に',
+ exp:'時間+「に」= ~에. 「３時に、月曜日に」. 曜日・時刻に「に」を使う. ただし「まいにち・あした」など一部は「に」不要!'},
 
-{f:'meirei',form:'명령형',word:{k:'読む',r:'よむ',m:'읽다'},
- q:'この大事な書類をよく___。間違いがあったら困るから。',
- kr:'이 중요한 서류를 잘 읽어. 실수가 있으면 곤란하니까.',
- hint:'読む → 命令形',
- choices:['よめ','よもう','よまれ','よませ'],ans:'よめ',
- ex:'よむ → よめ',rule:'1그룹 명령형: u단→e단',grp:'1그룹',
- fu:{'大事':'だいじ','書類':'しょるい','間違':'まちが'}},
+{s:'grammar',t:'grammar_fill',
+ q:'バスで えきの まえ（　　）おります。',
+ kr:'버스로 역 앞___ 내립니다.',
+ word:{k:'で',r:'で',m:'에서 (동작 장소)'},
+ choices:['で','に','を','から'],ans:'で',
+ exp:'降りる(おりる)의 장소 → 「で」. 「バス停でおりる」. 「に」는 이동의 도착점(乗る・つく 앞). おりる場所=「で」!'},
 
-// ──── 그룹 판별 ────
-{f:'group',form:'그룹판별',word:{k:'書く',r:'かく',m:'쓰다'},
- q:'「書く（かく）」は何グループの動詞ですか。て形・ます形を考えてみましょう。',
- kr:'「書く」는 몇 그룹 동사입니까? て형・ます형을 생각해봅시다.',
- hint:'어미를 확인하세요',
- choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'1グループ（う動詞）',
- ex:'く로 끝남 → 1그룹 확정',rule:'1그룹: て形→かいて / ます形→かきます',grp:'1그룹',
- fu:{}},
+{s:'grammar',t:'grammar_fill',
+ q:'かばんの なか（　　）なにが ありますか。',
+ kr:'가방 안___ 무엇이 있습니까?',
+ word:{k:'に',r:'に',m:'에 (존재 위치)'},
+ choices:['に','で','を','は'],ans:'に',
+ exp:'存在(あります・います)の場所 = 「に」. 「かばんの中にあります」. 동작 장소는「で」, 존재 위치는「に」!'},
 
-{f:'group',form:'그룹판별',word:{k:'食べる',r:'たべる',m:'먹다'},
- q:'「食べる（たべる）」は何グループの動詞ですか。る前の文字に注目！',
- kr:'「食べる」는 몇 그룹 동사입니까? る 앞 글자에 주목하세요!',
- hint:'る 앞이 え단 → 대부분 2그룹',
- choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'2グループ（る動詞）',
- ex:'べ는 え단 → 2그룹',rule:'2그룹: て형→たべて / ます形→たべます',grp:'2그룹',
- fu:{}},
+// ═══════════════════════════════════════════════════════
+// 문법 - 동사 활용 / 문형
+// ═══════════════════════════════════════════════════════
 
-{f:'group',form:'그룹판별',word:{k:'する',r:'する',m:'하다'},
- q:'「する」は何グループの動詞ですか。全ての活用形が特殊です。',
- kr:'「する」는 몇 그룹 동사입니까? 모든 활용형이 특수합니다.',
- hint:'2개뿐인 불규칙 동사 중 하나',
- choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'3グループ（不規則）',
- ex:'する는 3그룹 불규칙',rule:'する 전체: して・します・しない・できる・させる',grp:'3그룹',
- fu:{}},
+{s:'grammar',t:'grammar_fill',
+ q:'A「この本を かりても いいですか。」 B「はい。でも、あした（　　）ください。」',
+ kr:'A "이 책 빌려도 됩니까?" B "네. 하지만 내일 ___ 주세요."',
+ word:{k:'かえして',r:'かえして',m:'돌려줘(て형)'},
+ choices:['かえして','かえって','かして','もって'],ans:'かえして',
+ exp:'かえす(返す)のて形=かえして. 「もどして」도 비슷. 「かえって」=帰って(돌아가다)는 전혀 다른 동사!'},
 
-{f:'group',form:'그룹판별',word:{k:'来る',r:'くる',m:'오다'},
- q:'「来る（くる）」は何グループの動詞ですか。日本語で不規則動詞は二つだけです。',
- kr:'「来る」는 몇 그룹 동사입니까? 일본어 불규칙 동사는 두 개뿐입니다.',
- hint:'する와 함께 두 개뿐인 불규칙',
- choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'3グループ（不規則）',
- ex:'くる는 3그룹 불규칙',rule:'くる 전체: きて・きます・こない・こられる・こよう',grp:'3그룹',
- fu:{}},
+{s:'grammar',t:'grammar_fill',
+ q:'まいにち 30ぷん （　　） ジョギングします。',
+ kr:'매일 30분___ 조깅합니다.',
+ word:{k:'ぐらい',r:'ぐらい',m:'정도'},
+ choices:['ぐらい','ごろ','だけ','しか'],ans:'ぐらい',
+ exp:'수량(時間・金額)+「ぐらい/くらい」=정도. 「30分ぐらい」. 「ごろ」는 시각의 "쯤"(3時ごろ). 수량에는「ぐらい」!'},
 
-{f:'group',form:'그룹판별',word:{k:'帰る',r:'かえる',m:'돌아가다'},
- q:'「帰る（かえる）」は何グループの動詞ですか。見た目に騙されないで！',
- kr:'「帰る」는 몇 그룹 동사입니까? 겉모습에 속지 마세요!',
- hint:'주의! る 앞이 え단이지만...',
- choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'1グループ（う動詞）',
- ex:'帰る는 1그룹 예외!',rule:'帰る・切る・走る・入る 등은 2그룹처럼 생겼지만 1그룹!',grp:'1그룹 주의',
- fu:{}},
+{s:'grammar',t:'grammar_fill',
+ q:'このへやで たばこを （　　）。',
+ kr:'이 방에서 담배를 ___ (금지).',
+ word:{k:'すわないでください',r:'すわないでください',m:'피우지 말아주세요'},
+ choices:['すわないでください','すってください','すいてください','すわなかったください'],ans:'すわないでください',
+ exp:'ない形+「でください」= ~하지 말아 주세요(禁止의뢰). 「吸わないでください」. 「吸ってください」=피워 주세요(반대!).'},
 
-{f:'group',form:'그룹판별',word:{k:'見る',r:'みる',m:'보다'},
- q:'「見る（みる）」は何グループの動詞ですか。',
- kr:'「見る」는 몇 그룹 동사입니까?',
- hint:'る 앞이 い단 → 대부분 2그룹',
- choices:['1グループ（う動詞）','2グループ（る動詞）','3グループ（不規則）'],ans:'2グループ（る動詞）',
- ex:'み는 い단 → 2그룹',rule:'2그룹: て形→みて / ます形→みます',grp:'2그룹',
- fu:{}},
+{s:'grammar',t:'grammar_fill',
+ q:'きのう ともだちと えいがを （　　）。',
+ kr:'어제 친구와 영화를 ___ .',
+ word:{k:'みました',r:'みました',m:'봤습니다'},
+ choices:['みました','みます','みたい','みていた'],ans:'みました',
+ exp:'きのう(어제) + 과거형 = 「みました(見ました)」. 「みます」=봅니다(현재), 「みたい」=보고 싶다, 「みていた」=보고 있었다.'},
+
+{s:'grammar',t:'grammar_fill',
+ q:'この しごとは むずかしくて、わたし（　　）できません。',
+ kr:'이 일은 어려워서 저___ 할 수 없습니다.',
+ word:{k:'には',r:'には',m:'에게는'},
+ choices:['には','にも','では','でも'],ans:'には',
+ exp:'「わたしには（できない）」= 나에게는(능력 한계). 「にも」=에게도, 「では」=에서는, 「でも」=에서도. 능력・가능에는「には」!'},
+
+// ═══════════════════════════════════════════════════════
+// 독해
+// ═══════════════════════════════════════════════════════
+
+{s:'reading',t:'reading',
+ passage:'たなかさんは まいあさ ６じに おきます。それから、シャワーを あびて、朝ごはんを たべます。7じに いえを でて、8じに かいしゃに つきます。',
+ q:'たなかさんは なんじに いえを でますか。',
+ kr:'다나카 씨는 몇 시에 집을 나섭니까?',
+ word:{k:'7時',r:'しちじ',m:'7시'},
+ choices:['6じ','7じ','8じ','9じ'],ans:'7じ',
+ exp:'「7じに いえを でて」が正解の根拠. 6時=起きる, 7時=家を出る, 8時=会社に着く. 시간 표현을 정확히 읽는 것이 포인트!'},
+
+{s:'reading',t:'reading',
+ passage:'このレストランは 月曜日から 土曜日まで、11じから 22じまで あいています。日曜日は やすみです。',
+ q:'このレストランが やすみの ひは いつですか。',
+ kr:'이 레스토랑이 쉬는 날은 언제입니까?',
+ word:{k:'日曜日',r:'にちようび',m:'일요일'},
+ choices:['月曜日','土曜日','日曜日','毎日'],ans:'日曜日',
+ exp:'「日曜日はやすみです」が正解根拠. N5독해는 지문에서 직접 찾을 수 있어요. 키워드「やすみ」를 찾으면 됩니다!'},
+
+{s:'reading',t:'reading',
+ passage:'わたしは ペットが すきです。いぬを 2ひき、ねこを 1ぴき かっています。いぬの なまえは「ポチ」と「シロ」です。ねこの なまえは「クロ」です。',
+ q:'この ひとが かっている ペットは ぜんぶで なんびきですか。',
+ kr:'이 사람이 키우는 애완동물은 전부 몇 마리입니까?',
+ word:{k:'3匹',r:'さんびき',m:'3마리'},
+ choices:['1ぴき','2ひき','3びき','4ひき'],ans:'3びき',
+ exp:'いぬ2匹＋ねこ1匹＝3匹. 「ひき」는 작은 동물의 단위예요. 더하기 문제는 각 숫자를 찾아서 계산!'},
+
+{s:'reading',t:'reading',
+ passage:'やまださんへ。あしたの パーティーに いきます。なにを もっていけばいいですか。わたしは ケーキを つくります。すずきより',
+ q:'やまださんは このメモを よんで、なにが わかりますか。',
+ kr:'야마다 씨는 이 메모를 읽고 무엇을 알 수 있습니까?',
+ word:{k:'すずきさん',r:'すずきさん',m:'스즈키 씨'},
+ choices:['すずきさんは パーティーに いきません','すずきさんは ケーキを もっていきます','やまださんは ケーキを つくります','パーティーは きょうです'],ans:'すずきさんは ケーキを もっていきます',
+ exp:'「わたしは ケーキを つくります」→ 스즈키 씨가 케이크를 만들어서 가져간다는 의미. 「パーティーはあした」이므로 오늘이 아님!'},
+
+{s:'reading',t:'reading',
+ passage:'きむらさんは にほんごが すきです。まいにち 1じかん べんきょうします。らいねん、にほんに りゅうがくしたいと おもっています。',
+ q:'きむらさんに ついて、ただしいのは どれですか。',
+ kr:'기무라 씨에 대해 올바른 것은 어느 것입니까?',
+ word:{k:'来年',r:'らいねん',m:'내년'},
+ choices:['きむらさんは にほんごが きらいです','まいにち 2じかん べんきょうします','らいねん にほんに いきたいと おもっています','もう にほんに りゅうがくしています'],ans:'らいねん にほんに いきたいと おもっています',
+ exp:'「らいねん、にほんに りゅうがくしたいと おもっています」が正解. 「まいにち1じかん」→2時間ではない. 「したい」=하고 싶다(まだしていない).'},
+
 ];
 
-// ══════════════════════════════════════════
+
+
+// ═══════════════════════════════════════════
+// GRAMMAR TABLE DATA (기존 유지)
+// ═══════════════════════════════════════════
+const GRAMMAR_INFO={
+  te:{name:'て형',nameJP:'て形',usage:'<b>두 동작 연결</b> (~하고/~해서), 의뢰 (~해 주세요), 진행형 (~하고 있다)',rows:[
+    {grp:'1그룹',g:'g1',end:'く',change:'→ <b>いて</b>',ex:'<ruby>書<rt>か</rt></ruby>く → <ruby>書<rt>か</rt></ruby>いて',kr:'(쓰다 → 써서)'},
+    {grp:'1그룹',g:'g1',end:'ぐ',change:'→ <b>いで</b>',ex:'<ruby>泳<rt>およ</rt></ruby>ぐ → <ruby>泳<rt>およ</rt></ruby>いで',kr:'(수영하다 → 수영해서)'},
+    {grp:'1그룹',g:'g1',end:'む・ぶ・ぬ',change:'→ <b>んで</b>',ex:'<ruby>飲<rt>の</rt></ruby>む → <ruby>飲<rt>の</rt></ruby>んで',kr:'(마시다 → 마시고)'},
+    {grp:'1그룹',g:'g1',end:'う・つ・る',change:'→ <b>って</b>',ex:'<ruby>待<rt>ま</rt></ruby>つ → <ruby>待<rt>ま</rt></ruby>って',kr:'(기다리다 → 기다리고)'},
+    {grp:'⚠️예외',g:'g1w',end:'行く',change:'→ <b>いって</b>',ex:'<ruby>行<rt>い</rt></ruby>く → <ruby>行<rt>い</rt></ruby>って',kr:'(가다 → 가서) ← 예외!',note:'いく는 규칙의 예외! 통째로 외우세요'},
+    {grp:'1그룹',g:'g1',end:'す',change:'→ <b>して</b>',ex:'<ruby>話<rt>はな</rt></ruby>す → <ruby>話<rt>はな</rt></ruby>して',kr:'(말하다 → 말하고)'},
+    {grp:'2그룹',g:'g2',end:'る',change:'る 빼고 → <b>て</b>',ex:'<ruby>食<rt>た</rt></ruby>べる → <ruby>食<rt>た</rt></ruby>べて',kr:'(먹다 → 먹고)'},
+    {grp:'3그룹',g:'g3',end:'する',change:'→ <b>して</b>',ex:'する → して',kr:'(하다 → 하고) 불규칙!'},
+    {grp:'3그룹',g:'g3',end:'くる',change:'→ <b>きて</b>',ex:'くる → きて',kr:'(오다 → 와서) 불규칙!'},
+  ]},
+  masu:{name:'ます형',nameJP:'ます形',usage:'<b>정중한 표현</b> ~합니다 / ~했습니다(ました) / ~하지 않습니다(ません)',rows:[
+    {grp:'1그룹',g:'g1',end:'u단',change:'→ i단 + <b>ます</b>',ex:'<ruby>飲<rt>の</rt></ruby>む → <ruby>飲<rt>の</rt></ruby>みます',kr:'(마시다 → 마십니다)'},
+    {grp:'1그룹',g:'g1',end:'す',change:'→ し + <b>ます</b>',ex:'<ruby>話<rt>はな</rt></ruby>す → <ruby>話<rt>はな</rt></ruby>します',kr:'(말하다 → 말합니다)'},
+    {grp:'2그룹',g:'g2',end:'る',change:'る 빼고 + <b>ます</b>',ex:'<ruby>食<rt>た</rt></ruby>べる → <ruby>食<rt>た</rt></ruby>べます',kr:'(먹다 → 먹습니다)'},
+    {grp:'3그룹',g:'g3',end:'する',change:'→ <b>します</b>',ex:'する → します',kr:'(하다 → 합니다) 불규칙!'},
+    {grp:'3그룹',g:'g3',end:'くる',change:'→ <b>きます</b>',ex:'くる → きます',kr:'(오다 → 옵니다) 불규칙!'},
+  ]},
+  nai:{name:'ない형',nameJP:'ない形',usage:'<b>부정형</b> ~하지 않다 / ~하지 않았다(なかった)',rows:[
+    {grp:'1그룹',g:'g1',end:'u단',change:'→ a단 + <b>ない</b>',ex:'<ruby>飲<rt>の</rt></ruby>む → <ruby>飲<rt>の</rt></ruby>まない',kr:'(마시다 → 마시지 않다)'},
+    {grp:'⚠️예외',g:'g1w',end:'う',change:'→ <b>わ</b> + ない',ex:'<ruby>買<rt>か</rt></ruby>う → <ruby>買<rt>か</rt></ruby>わない',kr:'(사다 → 사지 않다)',note:'う로 끝나면 わ로!'},
+    {grp:'2그룹',g:'g2',end:'る',change:'る 빼고 + <b>ない</b>',ex:'<ruby>食<rt>た</rt></ruby>べる → <ruby>食<rt>た</rt></ruby>べない',kr:'(먹다 → 먹지 않다)'},
+    {grp:'3그룹',g:'g3',end:'する',change:'→ <b>しない</b>',ex:'する → しない',kr:'(하다 → 하지 않다) 불규칙!'},
+    {grp:'3그룹',g:'g3',end:'くる',change:'→ <b>こない</b>',ex:'くる → こない',kr:'(오다 → 오지 않다) 불규칙!'},
+  ]},
+  particle:{name:'조사',nameJP:'助詞',usage:'명사 뒤에 붙어 역할을 표시. <b>で vs に</b>가 가장 헷갈리니 잘 외우세요!',rows:[
+    {grp:'で ①',g:'g2',end:'동작 장소',change:'~에서',ex:'<ruby>図書館<rt>としょかん</rt></ruby>で<ruby>勉強<rt>べんきょう</rt></ruby>する',kr:'도서관에서 공부하다'},
+    {grp:'で ②',g:'g2',end:'수단',change:'~로/~을 타고',ex:'<ruby>電車<rt>でんしゃ</rt></ruby>で<ruby>行<rt>い</rt></ruby>く',kr:'전철로 가다'},
+    {grp:'に ①',g:'g1',end:'존재 위치',change:'~에 있다',ex:'<ruby>駅<rt>えき</rt></ruby>にいます',kr:'역에 있습니다',note:'います/あります 앞은 항상 に!'},
+    {grp:'に ②',g:'g1',end:'이동 방향',change:'~에/~으로',ex:'<ruby>学校<rt>がっこう</rt></ruby>に<ruby>行<rt>い</rt></ruby>く',kr:'학교에 가다'},
+    {grp:'を',g:'g3',end:'목적어',change:'~을/를',ex:'ご<ruby>飯<rt>はん</rt></ruby>を<ruby>食<rt>た</rt></ruby>べる',kr:'밥을 먹다'},
+    {grp:'から',g:'g1',end:'출발점',change:'~부터/~에서',ex:'<ruby>東京<rt>とうきょう</rt></ruby>から',kr:'도쿄에서/도쿄부터'},
+    {grp:'まで',g:'g1',end:'도착점',change:'~까지',ex:'<ruby>大阪<rt>おおさか</rt></ruby>まで',kr:'오사카까지'},
+    {grp:'と',g:'g3',end:'열거',change:'~와/과 (전부)',ex:'りんごとみかん',kr:'사과와 귤'},
+  ]},
+};
+
+// ═══════════════════════════════════════════
 // STATE
-// ══════════════════════════════════════════
-let pool=[], poolIdx=0, generating=false, filterF='all';
-let dailyData={}, stats={correct:0,wrong:0,bestStreak:0,totalDone:0};
-let currentStreak=0, currentView='home', apiKey='';
-let currentQ=null;
+// ═══════════════════════════════════════════
+let pool=[], filterS='all', generating=false, currentQ=null, qCount=0;
+let dailyData={}, stats={correct:0,wrong:0,totalDone:0};
 let vocabList=[];
+let masteredKeys=new Set(), wrongQs=[], queueCount=0;
+let apiKey='', currentView='home';
 const GOAL=10;
 
 function today(){ return new Date().toISOString().split('T')[0]; }
 function todayCount(){ return dailyData[today()]||0; }
+function qKey(q){ return (q.q||q.passage||'').slice(0,25); }
 
 // ── Storage ──
 async function loadAll(){
-  // localStorage 먼저 로드 (GitHub Pages 기본 저장소)
   try{const d=localStorage.getItem('jpq_daily');if(d)dailyData=JSON.parse(d);}catch(e){dailyData={};}
   try{const s=localStorage.getItem('jpq_stats');if(s)stats=JSON.parse(s);}catch(e){}
   try{apiKey=localStorage.getItem('jpq_apikey')||'';}catch(e){}
   try{const v=localStorage.getItem('jpq_vocab');if(v)vocabList=JSON.parse(v);}catch(e){vocabList=[];}
-
-  // window.storage (Claude.ai)에 더 최신 데이터 있으면 덮어쓰기
+  try{const m=localStorage.getItem('jpq_mastered');if(m)masteredKeys=new Set(JSON.parse(m));}catch(e){}
+  try{const w=localStorage.getItem('jpq_wrongqs');if(w)wrongQs=JSON.parse(w);}catch(e){}
+  try{queueCount=parseInt(localStorage.getItem('jpq_qcount')||'0');}catch(e){}
   try{const r=await window.storage.get('jpq_daily');if(r&&r.value)dailyData=JSON.parse(r.value);}catch(e){}
   try{const r=await window.storage.get('jpq_stats');if(r&&r.value)stats=JSON.parse(r.value);}catch(e){}
-  try{const r=await window.storage.get('jpq_apikey');if(r&&r.value)apiKey=r.value;}catch(e){}
-  try{const r=await window.storage.get('jpq_vocab');if(r&&r.value)vocabList=JSON.parse(r.value);}catch(e){}
-
-  if(!Array.isArray(vocabList)) vocabList=[];
+  if(!Array.isArray(vocabList))vocabList=[];
 }
 
 async function saveAll(){
-  const dailyStr=JSON.stringify(dailyData);
-  const statsStr=JSON.stringify(stats);
-
-  // localStorage에 저장 (GitHub Pages / PWA 영구 보존)
-  try{localStorage.setItem('jpq_daily',dailyStr);}catch(e){}
-  try{localStorage.setItem('jpq_stats',statsStr);}catch(e){}
-
-  // window.storage에도 저장 (Claude.ai용)
-  try{await window.storage.set('jpq_daily',dailyStr);}catch(e){}
-  try{await window.storage.set('jpq_stats',statsStr);}catch(e){}
+  const ds=JSON.stringify(dailyData), ss=JSON.stringify(stats);
+  try{localStorage.setItem('jpq_daily',ds);}catch(e){}
+  try{localStorage.setItem('jpq_stats',ss);}catch(e){}
+  try{await window.storage.set('jpq_daily',ds);}catch(e){}
+  try{await window.storage.set('jpq_stats',ss);}catch(e){}
 }
-
-async function saveVocab(){
-  const str=JSON.stringify(vocabList);
-  try{await window.storage.set('jpq_vocab',str);}catch(e){}
-  try{localStorage.setItem('jpq_vocab',str);}catch(e){}
+function saveVocab(){
+  const s=JSON.stringify(vocabList);
+  try{localStorage.setItem('jpq_vocab',s);}catch(e){}
 }
-
+function saveMastered(){
+  try{localStorage.setItem('jpq_mastered',JSON.stringify([...masteredKeys]));}catch(e){}
+  try{localStorage.setItem('jpq_wrongqs',JSON.stringify(wrongQs));}catch(e){}
+  try{localStorage.setItem('jpq_qcount',String(queueCount));}catch(e){}
+}
 async function saveApiKey(){
   const val=document.getElementById('apiKeyInput').value.trim();
   apiKey=val;
-  try{await window.storage.set('jpq_apikey',val);}catch(e){}
   try{localStorage.setItem('jpq_apikey',val);}catch(e){}
   renderSettings();
   const btn=event.target;
@@ -1040,1491 +877,445 @@ async function saveApiKey(){
   setTimeout(()=>{btn.textContent='저장';btn.style.background='var(--ok)';},2000);
 }
 
-function renderSettings(){
-  const st=document.getElementById('apiStatus');
-  const inp=document.getElementById('apiKeyInput');
-  if(apiKey){
-    st.textContent='설정됨 ✓';st.style.background='rgba(39,113,74,.15)';st.style.color='#1f5538';
-    inp.value=apiKey;inp.placeholder='설정됨 (변경하려면 새 키 입력)';
-  } else {
-    st.textContent='미설정';st.style.background='rgba(196,146,40,.15)';st.style.color='#9a6e1a';
-    inp.value='';
-  }
-}
-
-function exportData(){
-  const d={dailyData,stats,vocabList,exportDate:new Date().toISOString()};
-  const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(b);
-  a.download=`jpquiz_backup_${today()}.json`;a.click();
-}
-
-function confirmReset(){
-  if(confirm('모든 학습 기록을 초기화하시겠습니까?\n(마스터한 문제, 복습 목록, 학습 기록 전부 초기화)\n이 작업은 되돌릴 수 없습니다.')){
-    dailyData={};stats={correct:0,wrong:0,bestStreak:0,totalDone:0};
-    shownIds=new Set(); wrongQs=[]; questionCount=0;
-    try{localStorage.removeItem('jpq_mastered');}catch(e){}
-    try{localStorage.removeItem('jpq_wrongqs');}catch(e){}
-    try{localStorage.removeItem('jpq_qcount');}catch(e){}
-    saveAll();renderHome();alert('초기화 완료!');
-  }
-}
-
-// ══════════════════════════════════════════
-// GRAMMAR REFERENCE DATA
-// ══════════════════════════════════════════
-const GRAMMAR_INFO = {
-  te:{
-    name:'て형',nameJP:'て形',
-    usage:'두 동작을 연결 (~하고 나서), 이유/원인, 의뢰 (~해 주세요), 진행형 (~하고 있다) 등 다양하게 사용되는 <b>가장 중요한 활용형</b>입니다.',
-    rows:[
-      {grp:'1그룹',g:'g1',end:'く',change:'→ <b>いて</b>',
-       ex:'<ruby>書<rt>か</rt></ruby>く → <ruby>書<rt>か</rt></ruby>いて',kr:'(쓰다 → 써서)'},
-      {grp:'1그룹',g:'g1',end:'ぐ',change:'→ <b>いで</b>',
-       ex:'<ruby>泳<rt>およ</rt></ruby>ぐ → <ruby>泳<rt>およ</rt></ruby>いで',kr:'(수영하다 → 수영하고)'},
-      {grp:'1그룹',g:'g1',end:'む・ぶ・ぬ',change:'→ <b>んで</b>',
-       ex:'<ruby>飲<rt>の</rt></ruby>む → <ruby>飲<rt>の</rt></ruby>んで',kr:'(마시다 → 마시고)'},
-      {grp:'1그룹',g:'g1',end:'う・つ・る',change:'→ <b>って</b>',
-       ex:'<ruby>待<rt>ま</rt></ruby>つ → <ruby>待<rt>ま</rt></ruby>って',kr:'(기다리다 → 기다리고)'},
-      {grp:'1그룹 ⚠️',g:'g1w',end:'行く だけ',change:'→ <b>いって</b>',
-       ex:'<ruby>行<rt>い</rt></ruby>く → <ruby>行<rt>い</rt></ruby>って',kr:'(가다 → 가서) ← 유일한 예외!',note:'いく만 예외! く→いて 규칙이 적용 안 됩니다'},
-      {grp:'1그룹',g:'g1',end:'す',change:'→ <b>して</b>',
-       ex:'<ruby>話<rt>はな</rt></ruby>す → <ruby>話<rt>はな</rt></ruby>して',kr:'(말하다 → 말하고)'},
-      {grp:'2그룹',g:'g2',end:'る',change:'る 빼고 → <b>て</b>',
-       ex:'<ruby>食<rt>た</rt></ruby>べる → <ruby>食<rt>た</rt></ruby>べて',kr:'(먹다 → 먹고)'},
-      {grp:'3그룹',g:'g3',end:'する',change:'→ <b>して</b>',
-       ex:'する → して',kr:'(하다 → 하고) ← 불규칙!',note:'불규칙 — 통째로 외우세요'},
-      {grp:'3그룹',g:'g3',end:'くる',change:'→ <b>きて</b>',
-       ex:'くる → きて',kr:'(오다 → 와서) ← 불규칙!',note:'불규칙 — 통째로 외우세요'},
-    ]
-  },
-  masu:{
-    name:'ます형',nameJP:'ます形',
-    usage:'<b>정중한 표현</b>으로 일상 회화의 기본입니다. ~합니다(현재/미래), ~했습니다(ました), ~하지 않습니다(ません) 등으로 활용합니다.',
-    rows:[
-      {grp:'1그룹',g:'g1',end:'u단 어미',change:'→ i단 + <b>ます</b>',
-       ex:'<ruby>飲<rt>の</rt></ruby>む → <ruby>飲<rt>の</rt></ruby>みます',kr:'(마시다 → 마십니다)'},
-      {grp:'1그룹',g:'g1',end:'く / ぐ',change:'き / ぎ + <b>ます</b>',
-       ex:'<ruby>書<rt>か</rt></ruby>く → <ruby>書<rt>か</rt></ruby>きます',kr:'(쓰다 → 씁니다)'},
-      {grp:'1그룹',g:'g1',end:'う',change:'→ い + <b>ます</b>',
-       ex:'<ruby>買<rt>か</rt></ruby>う → <ruby>買<rt>か</rt></ruby>います',kr:'(사다 → 삽니다)'},
-      {grp:'1그룹',g:'g1',end:'す',change:'→ し + <b>ます</b>',
-       ex:'<ruby>話<rt>はな</rt></ruby>す → <ruby>話<rt>はな</rt></ruby>します',kr:'(말하다 → 말합니다)'},
-      {grp:'2그룹',g:'g2',end:'る',change:'る 빼고 + <b>ます</b>',
-       ex:'<ruby>食<rt>た</rt></ruby>べる → <ruby>食<rt>た</rt></ruby>べます',kr:'(먹다 → 먹습니다)'},
-      {grp:'3그룹',g:'g3',end:'する',change:'→ <b>します</b>',
-       ex:'する → します',kr:'(하다 → 합니다) ← 불규칙!',note:'불규칙 — 외우세요'},
-      {grp:'3그룹',g:'g3',end:'くる',change:'→ <b>きます</b>',
-       ex:'くる → きます',kr:'(오다 → 옵니다) ← 불규칙!',note:'불규칙 — 외우세요'},
-    ]
-  },
-  nai:{
-    name:'ない형',nameJP:'ない形',
-    usage:'<b>부정형</b>. ~하지 않다(현재), ~하지 않았다(なかった), ~하지 않아도 된다(なくてもいい) 등에 사용합니다.',
-    rows:[
-      {grp:'1그룹',g:'g1',end:'u단 어미',change:'→ a단 + <b>ない</b>',
-       ex:'<ruby>飲<rt>の</rt></ruby>む → <ruby>飲<rt>の</rt></ruby>まない',kr:'(마시다 → 마시지 않다)'},
-      {grp:'1그룹',g:'g1',end:'く / ぐ',change:'か / が + <b>ない</b>',
-       ex:'<ruby>書<rt>か</rt></ruby>く → <ruby>書<rt>か</rt></ruby>かない',kr:'(쓰다 → 쓰지 않다)'},
-      {grp:'1그룹 ⚠️',g:'g1w',end:'う (う로 끝남)',change:'→ <b>わ</b> + ない',
-       ex:'<ruby>買<rt>か</rt></ruby>う → <ruby>買<rt>か</rt></ruby>わない',kr:'(사다 → 사지 않다)',note:'う→わ 로 바뀌는 것 주의!'},
-      {grp:'2그룹',g:'g2',end:'る',change:'る 빼고 + <b>ない</b>',
-       ex:'<ruby>食<rt>た</rt></ruby>べる → <ruby>食<rt>た</rt></ruby>べない',kr:'(먹다 → 먹지 않다)'},
-      {grp:'3그룹',g:'g3',end:'する',change:'→ <b>しない</b>',
-       ex:'する → しない',kr:'(하다 → 하지 않다) ← 불규칙!',note:'불규칙 — 외우세요'},
-      {grp:'3그룹',g:'g3',end:'くる',change:'→ <b>こない</b>',
-       ex:'くる → こない',kr:'(오다 → 오지 않다) ← 불규칙!',note:'불규칙 — 외우세요'},
-    ]
-  },
-  kano:{
-    name:'가능형',nameJP:'可能形',
-    usage:'<b>~할 수 있다</b>. 능력이나 가능성을 나타냅니다. 가능형에서는 목적어에 を 대신 <b>が</b>를 쓰는 경우가 많아요.',
-    rows:[
-      {grp:'1그룹',g:'g1',end:'u단 어미',change:'→ e단 + <b>る</b>',
-       ex:'<ruby>飲<rt>の</rt></ruby>む → <ruby>飲<rt>の</rt></ruby>める',kr:'(마시다 → 마실 수 있다)'},
-      {grp:'1그룹',g:'g1',end:'く / す 등',change:'け / せ + <b>る</b>',
-       ex:'<ruby>話<rt>はな</rt></ruby>す → <ruby>話<rt>はな</rt></ruby>せる',kr:'(말하다 → 말할 수 있다)'},
-      {grp:'2그룹',g:'g2',end:'る',change:'る 빼고 + <b>られる</b>',
-       ex:'<ruby>食<rt>た</rt></ruby>べる → <ruby>食<rt>た</rt></ruby>べられる',kr:'(먹다 → 먹을 수 있다)',note:'구어에서는 ら를 빼고 「食べれる」도 OK'},
-      {grp:'3그룹 ⚠️',g:'g3',end:'する',change:'→ <b>できる</b>',
-       ex:'する → できる',kr:'(하다 → 할 수 있다)',note:'완전히 다른 단어로 바뀜! 통째로 외우세요'},
-      {grp:'3그룹',g:'g3',end:'くる',change:'→ <b>こられる</b>',
-       ex:'くる → こられる',kr:'(오다 → 올 수 있다) ← 불규칙!',note:'불규칙 — 외우세요'},
-    ]
-  },
-  judou:{
-    name:'수동형',nameJP:'受身形',
-    usage:'<b>~당하다, ~받다</b>. 다른 사람에게 동작을 당할 때 사용합니다. 특히 피해를 입었을 때 자주 씁니다. (예: 비를 맞다, 발이 밟히다)',
-    rows:[
-      {grp:'1그룹',g:'g1',end:'u단 어미',change:'→ a단 + <b>れる</b>',
-       ex:'<ruby>飲<rt>の</rt></ruby>む → <ruby>飲<rt>の</rt></ruby>まれる',kr:'(마시다 → 마셔지다/마심을 당하다)'},
-      {grp:'1그룹',g:'g1',end:'く / ぐ 등',change:'か + <b>れる</b>',
-       ex:'<ruby>書<rt>か</rt></ruby>く → <ruby>書<rt>か</rt></ruby>かれる',kr:'(쓰다 → 쓰여지다)'},
-      {grp:'1그룹',g:'g1',end:'う',change:'→ わ + <b>れる</b>',
-       ex:'<ruby>呼<rt>よ</rt></ruby>ぶ → <ruby>呼<rt>よ</rt></ruby>ばれる',kr:'(부르다 → 불리다)'},
-      {grp:'2그룹',g:'g2',end:'る',change:'る 빼고 + <b>られる</b>',
-       ex:'<ruby>食<rt>た</rt></ruby>べる → <ruby>食<rt>た</rt></ruby>べられる',kr:'(먹다 → 먹히다)',note:'가능형과 형태가 같아요! 문맥으로 구분'},
-      {grp:'3그룹',g:'g3',end:'する',change:'→ <b>される</b>',
-       ex:'する → される',kr:'(하다 → 당하다/되다) ← 불규칙!',note:'불규칙 — 외우세요'},
-      {grp:'3그룹',g:'g3',end:'くる',change:'→ <b>こられる</b>',
-       ex:'くる → こられる',kr:'(오다 → 오게 되다) ← 불규칙!',note:'불규칙 — 외우세요'},
-    ]
-  },
-  shieki:{
-    name:'사역형',nameJP:'使役形',
-    usage:'<b>~시키다, ~하게 하다</b>. 부모가 아이에게, 상사가 직원에게 무언가를 시킬 때 사용합니다. 허가("해도 돼")의 의미로도 씁니다.',
-    rows:[
-      {grp:'1그룹',g:'g1',end:'u단 어미',change:'→ a단 + <b>せる</b>',
-       ex:'<ruby>飲<rt>の</rt></ruby>む → <ruby>飲<rt>の</rt></ruby>ませる',kr:'(마시다 → 마시게 하다)'},
-      {grp:'1그룹',g:'g1',end:'く / す 등',change:'か + <b>せる</b>',
-       ex:'<ruby>書<rt>か</rt></ruby>く → <ruby>書<rt>か</rt></ruby>かせる',kr:'(쓰다 → 쓰게 하다)'},
-      {grp:'1그룹',g:'g1',end:'う',change:'→ わ + <b>せる</b>',
-       ex:'<ruby>買<rt>か</rt></ruby>う → <ruby>買<rt>か</rt></ruby>わせる',kr:'(사다 → 사게 하다)'},
-      {grp:'2그룹',g:'g2',end:'る',change:'る 빼고 + <b>させる</b>',
-       ex:'<ruby>食<rt>た</rt></ruby>べる → <ruby>食<rt>た</rt></ruby>べさせる',kr:'(먹다 → 먹게 하다)'},
-      {grp:'3그룹',g:'g3',end:'する',change:'→ <b>させる</b>',
-       ex:'する → させる',kr:'(하다 → 시키다) ← 불규칙!',note:'불규칙 — 외우세요'},
-      {grp:'3그룹',g:'g3',end:'くる',change:'→ <b>こさせる</b>',
-       ex:'くる → こさせる',kr:'(오다 → 오게 하다) ← 불규칙!',note:'불규칙 — 외우세요'},
-    ]
-  },
-  iko:{
-    name:'의향형',nameJP:'意向形',
-    usage:'<b>~하자(권유), ~할까(의지)</b>. 「〜しようと思う」 형태로 "~하려고 생각한다"는 의지 표현에도 자주 씁니다.',
-    rows:[
-      {grp:'1그룹',g:'g1',end:'u단 어미',change:'→ o단 + <b>う</b>',
-       ex:'<ruby>飲<rt>の</rt></ruby>む → <ruby>飲<rt>の</rt></ruby>もう',kr:'(마시다 → 마시자!)'},
-      {grp:'1그룹',g:'g1',end:'く / す 등',change:'こ / そ + <b>う</b>',
-       ex:'<ruby>行<rt>い</rt></ruby>く → <ruby>行<rt>い</rt></ruby>こう',kr:'(가다 → 가자!)'},
-      {grp:'2그룹',g:'g2',end:'る',change:'る 빼고 + <b>よう</b>',
-       ex:'<ruby>食<rt>た</rt></ruby>べる → <ruby>食<rt>た</rt></ruby>べよう',kr:'(먹다 → 먹자!)'},
-      {grp:'3그룹',g:'g3',end:'する',change:'→ <b>しよう</b>',
-       ex:'する → しよう',kr:'(하다 → 하자!) ← 불규칙!',note:'불규칙 — 외우세요'},
-      {grp:'3그룹',g:'g3',end:'くる',change:'→ <b>こよう</b>',
-       ex:'くる → こよう',kr:'(오다 → 오자!) ← 불규칙!',note:'불규칙 — 외우세요'},
-    ]
-  },
-  meirei:{
-    name:'명령형',nameJP:'命令形',
-    usage:'<b>~해라!</b> 강한 명령. 일상 대화에서는 거의 안 쓰고 「〜てください」가 자연스럽습니다. 긴급 상황이나 스포츠 응원 때 주로 사용해요.',
-    rows:[
-      {grp:'1그룹',g:'g1',end:'u단 어미',change:'→ e단 (그냥 읽기)',
-       ex:'<ruby>飲<rt>の</rt></ruby>む → <ruby>飲<rt>の</rt></ruby>め',kr:'(마시다 → 마셔라!)'},
-      {grp:'1그룹',g:'g1',end:'く / つ 등',change:'け / て',
-       ex:'<ruby>待<rt>ま</rt></ruby>つ → <ruby>待<rt>ま</rt></ruby>て',kr:'(기다리다 → 기다려라!)'},
-      {grp:'2그룹',g:'g2',end:'る',change:'る 빼고 + <b>ろ</b> (구어)',
-       ex:'<ruby>食<rt>た</rt></ruby>べる → <ruby>食<rt>た</rt></ruby>べろ',kr:'(먹다 → 먹어라!)',note:'문어체(글)에서는 「食べよ」도 있어요'},
-      {grp:'3그룹',g:'g3',end:'する',change:'→ <b>しろ</b>',
-       ex:'する → しろ',kr:'(하다 → 해라!) ← 불규칙!',note:'불규칙 — 외우세요'},
-      {grp:'3그룹',g:'g3',end:'くる',change:'→ <b>こい</b>',
-       ex:'くる → こい',kr:'(오다 → 와라!) ← 불규칙!',note:'불규칙 — 외우세요'},
-    ]
-  },
-  group:{
-    name:'그룹 판별법',nameJP:'動詞グループ',
-    usage:'동사 그룹을 알면 <b>모든 활용형을 규칙대로</b> 만들 수 있어요! 순서대로 확인하세요: ① 3그룹 먼저 → ② 2그룹 → ③ 나머지는 1그룹',
-    rows:[
-      {grp:'① 3그룹',g:'g3',end:'する / くる 인가?',change:'→ 무조건 3그룹',
-       ex:'<ruby>勉強<rt>べんきょう</rt></ruby>する・<ruby>来<rt>く</rt></ruby>る',kr:'(공부하다・오다)',note:'딱 2개! 불규칙이라 따로 외워야 해요'},
-      {grp:'② 2그룹',g:'g2',end:'る 앞 글자가 い단/え단?',change:'→ 대부분 2그룹',
-       ex:'<ruby>食<rt>た</rt></ruby>べる(べ=え단)・<ruby>見<rt>み</rt></ruby>る(み=い단)',kr:'(먹다・보다)',note:''},
-      {grp:'③ 1그룹',g:'g1',end:'る 이외로 끝나면',change:'→ 무조건 1그룹',
-       ex:'<ruby>書<rt>か</rt></ruby>く・<ruby>飲<rt>の</rt></ruby>む・<ruby>話<rt>はな</rt></ruby>す',kr:'(쓰다・마시다・말하다)',note:''},
-      {grp:'⚠️ 함정 단어',g:'g1w',end:'る로 끝나는 1그룹',change:'る 앞이 a/u/o단인데 2그룹처럼 생긴 것',
-       ex:'<ruby>帰<rt>かえ</rt></ruby>る・<ruby>切<rt>き</rt></ruby>る・<ruby>走<rt>はし</rt></ruby>る・<ruby>入<rt>はい</rt></ruby>る',kr:'(돌아가다・자르다・달리다・들어가다)',note:'て형에서 って가 됩니다! (帰る→帰って)'},
-    ]
-  },
-  particle:{
-    name:'주요 조사',nameJP:'助詞',
-    usage:'조사는 단어 뒤에 붙어 역할을 알려줍니다. <b>で vs に 의 구분</b>이 가장 헷갈리므로 잘 외워두세요!',
-    rows:[
-      {grp:'で ①',g:'g2',end:'동작의 장소',change:'~에서 (동작)',
-       ex:'<ruby>図書館<rt>としょかん</rt></ruby>で<ruby>勉強<rt>べんきょう</rt></ruby>する',kr:'도서관에서 공부하다'},
-      {grp:'で ②',g:'g2',end:'수단・방법',change:'~로 / ~을 타고',
-       ex:'<ruby>電車<rt>でんしゃ</rt></ruby>で<ruby>行<rt>い</rt></ruby>く',kr:'전철로 가다'},
-      {grp:'で ③',g:'g2',end:'원인・이유',change:'~때문에',
-       ex:'<ruby>病気<rt>びょうき</rt></ruby>で<ruby>休<rt>やす</rt></ruby>む',kr:'병으로 쉬다'},
-      {grp:'に ①',g:'g1',end:'존재 위치',change:'~에 있다 (います・あります)',
-       ex:'<ruby>駅<rt>えき</rt></ruby>にいます',kr:'역에 있습니다',note:'で와 헷갈림 주의! います/あります 앞은 항상 に'},
-      {grp:'に ②',g:'g1',end:'이동 목적지',change:'~에 (행く・来る 앞)',
-       ex:'<ruby>学校<rt>がっこう</rt></ruby>に<ruby>行<rt>い</rt></ruby>く',kr:'학교에 가다'},
-      {grp:'に ③',g:'g1',end:'시간',change:'~에 (특정 시간)',
-       ex:'3<ruby>時<rt>じ</rt></ruby>に・<ruby>月曜日<rt>げつようび</rt></ruby>に',kr:'3시에・월요일에'},
-      {grp:'を',g:'g3',end:'목적어',change:'~을/를',
-       ex:'ご<ruby>飯<rt>はん</rt></ruby>を<ruby>食<rt>た</rt></ruby>べる',kr:'밥을 먹다'},
-      {grp:'が',g:'g3',end:'능력・감정의 대상',change:'~이/가 (できる・すき 앞)',
-       ex:'<ruby>日本語<rt>にほんご</rt></ruby>が<ruby>話<rt>はな</rt></ruby>せる',kr:'일본어를 말할 수 있다',note:'가능형・좋아함 표현 앞에서는 を 대신 が를 써요'},
-    ]
-  }
-};
-
-// ── GRAMMAR RENDERING ──
-let currentGSection='te';
-function renderGrammar(){
-  const navEl=document.getElementById('grammarNav');
-  const contEl=document.getElementById('grammarContent');
-  if(!navEl||!contEl) return;
-  const sections=Object.keys(GRAMMAR_INFO);
-  // Nav buttons
-  navEl.innerHTML=sections.map(k=>`
-    <button class="gnav-btn ${k===currentGSection?'on':''}" onclick="showGSection('${k}')">
-      ${GRAMMAR_INFO[k].name}
-    </button>`).join('');
-  // Content
-  showGSection(currentGSection,false);
-}
-
-function showGSection(key, updateNav=true){
-  currentGSection=key;
-  const info=GRAMMAR_INFO[key];
-  if(!info) return;
-  if(updateNav){
-    document.querySelectorAll('.gnav-btn').forEach(b=>{
-      b.classList.toggle('on',b.textContent.trim()===info.name);
-    });
-  }
-
-  // 그룹별로 rows를 묶기
-  const groups={};
-  info.rows.forEach(r=>{
-    const key2=r.g;
-    if(!groups[key2]) groups[key2]={g:r.g,rows:[]};
-    groups[key2].rows.push(r);
-  });
-
-  const grpLabels={
-    g1:'1그룹 (う동사)', g1w:'⚠️ 1그룹 주의', g2:'2그룹 (る동사)', g3:'3그룹 (불규칙)'
-  };
-  const grpRules={
-    g1:'어미(마지막 글자)를 바꿔서 활용해요',
-    g1w:'る로 끝나지만 사실 1그룹이에요! 조심!',
-    g2:'る를 떼고 뒤에 붙여요',
-    g3:'する・くる — 불규칙, 통째로 외워요!'
-  };
-
-  const sectionsHtml=Object.values(groups).map(grp=>`
-    <div class="grp-section">
-      <div class="gs-header">
-        <span class="gs-badge ${grp.g}">${grpLabels[grp.g]||grp.g}</span>
-        <span class="gs-rule">${grpRules[grp.g]||''}</span>
-      </div>
-      <div class="gs-body">
-        ${grp.rows.map(r=>{
-          const exRaw=r.ex.replace(/<[^>]+>/g,'');
-          const parts=exRaw.split('→');
-          const from=(parts[0]||'').trim();
-          const to=(parts[1]||'').trim();
-          return `<div class="gs-row">
-            <div class="gs-jp">${r.ex.includes('<ruby>')?r.ex.split('→')[0].trim():from}</div>
-            <div class="gs-arrow-col">→</div>
-            <div class="gs-right">
-              <div class="gs-result">${to}</div>
-              <div class="gs-kr">${(r.kr||'').replace(/\(|\)/g,'')}</div>
-              <div class="gs-rule-inline" style="font-size:12px;color:rgba(26,26,46,.5);font-family:var(--FB);margin-top:2px">${r.change.replace(/<b>|<\/b>/g,'')}</div>
-              ${r.note?`<div class="gs-note">⚠️ ${r.note}</div>`:''}
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`).join('');
-
-  document.getElementById('grammarContent').innerHTML=`
-    <div class="grammar-card">
-      <div class="gc-top-band">
-        <div class="gct-name">${info.name}</div>
-        <div class="gct-jp">${info.nameJP}</div>
-        <div class="gct-usage">${info.usage}</div>
-      </div>
-      ${sectionsHtml}
-    </div>
-    <div style="text-align:center;padding:8px 0 20px;font-size:12px;color:rgba(245,240,232,.25)">
-      퀴즈에서 틀리면 자동으로 해당 문법표가 표시돼요
-    </div>
-  `;
-}
-
-// ── 그룹 정보 ──
-function getGrpInfo(grp){
-  if(!grp||grp==='-') return {cls:'g1',label:'조사',desc:''};
-  if(grp.includes('주의')||grp.includes('예외')) return {cls:'g1w',label:'1그룹 ⚠️ 주의',desc:'る로 끝나지만 1그룹인 동사!'};
-  if(grp.includes('3그룹')) return {cls:'g3',label:'3그룹 (불규칙)',desc:'する・くる — 통째로 외우는 불규칙 동사'};
-  if(grp.includes('2그룹')) return {cls:'g2',label:'2그룹',desc:'る 앞이 い단/え단 — る를 떼고 활용'};
-  if(grp.includes('1그룹')) return {cls:'g1',label:'1그룹',desc:'어미를 바꿔서 활용 (う동사)'};
-  return {cls:'g1',label:grp,desc:''};
-}
-
-// ── 단계별 활용 설명 생성 ──
-function buildSteps(q){
-  const f=q.f, grp=q.grp||'', w=q.word;
-  const is1=grp.includes('1그룹'), is2=grp.includes('2그룹'), is3=grp.includes('3그룹');
-  const isWarn=grp.includes('주의')||grp.includes('예외');
-
-  const steps=[];
-
-  if(f==='group'||f==='particle'){
-    // 그룹판별/조사는 스텝 생략, 규칙만 표시
-    return [];
-  }
-
-  if(is2){
-    steps.push({label:'원형',val:`${w.k}　<span class="dim">(${w.r})</span>`,kr:`${w.m}`});
-    steps.push({label:'① る를 뗀다',val:`${w.k.replace(/る$/,'')}`+`<span class="accent"> ✂️る</span>`,kr:'어간만 남김'});
-    const suffix=getForm2Suffix(f);
-    steps.push({label:`② ${suffix.label} 붙이기`,val:`${w.k.replace(/る$/,'')}<span class="final">${suffix.val}</span>`,kr:suffix.kr});
-  } else if(is3){
-    steps.push({label:'원형 (불규칙)',val:`${w.k}　<span class="dim">(${w.r})</span>`,kr:`${w.m}`});
-    const s3=getForm3(f, w.r);
-    steps.push({label:'활용형 (통째로 외우기!)',val:`<span class="final">${s3.val}</span>`,kr:s3.kr});
-  } else if(is1||isWarn){
-    steps.push({label:'원형',val:`${w.k}　<span class="dim">(${w.r})</span>`,kr:`${w.m}`});
-    const s1=getForm1Steps(f, q.ans, w, isWarn);
-    s1.forEach(s=>steps.push(s));
-  }
-  return steps;
-}
-
-function getForm2Suffix(f){
-  const map={
-    te:{label:'て',val:'て',kr:'~하고/~해서'},
-    masu:{label:'ます',val:'ます',kr:'~합니다'},
-    nai:{label:'ない',val:'ない',kr:'~하지 않다'},
-    kano:{label:'られる',val:'られる',kr:'~할 수 있다'},
-    judou:{label:'られる',val:'られる',kr:'~당하다/~받다'},
-    shieki:{label:'させる',val:'させる',kr:'~시키다'},
-    iko:{label:'よう',val:'よう',kr:'~하자/~할게'},
-    meirei:{label:'ろ',val:'ろ',kr:'~해라!'},
-  };
-  return map[f]||{label:'',val:'',kr:''};
-}
-
-function getForm3(f, r){
-  const isSuru=r.includes('する')||r==='する';
-  const map={
-    te:   isSuru?{val:'して',kr:'~하고/~해서'}:{val:'きて',kr:'~와서'},
-    masu: isSuru?{val:'します',kr:'~합니다'}:{val:'きます',kr:'~옵니다'},
-    nai:  isSuru?{val:'しない',kr:'~하지 않다'}:{val:'こない',kr:'~오지 않다'},
-    kano: isSuru?{val:'できる',kr:'~할 수 있다 ← 완전히 다른 단어!'}:{val:'こられる',kr:'~올 수 있다'},
-    judou:isSuru?{val:'される',kr:'~당하다'}:{val:'こられる',kr:'~오게 되다'},
-    shieki:isSuru?{val:'させる',kr:'~시키다'}:{val:'こさせる',kr:'~오게 하다'},
-    iko:  isSuru?{val:'しよう',kr:'~하자!'}:{val:'こよう',kr:'~오자!'},
-    meirei:isSuru?{val:'しろ',kr:'~해라!'}:{val:'こい',kr:'~와라!'},
-  };
-  return map[f]||{val:'?',kr:''};
-}
-
-function getForm1Steps(f, ans, w, isWarn){
-  const steps=[];
-  const endChar=w.r.slice(-1);
-  const stem=w.r.slice(0,-1);
-
-  const toA={"く":"か","ぐ":"が","む":"ま","ぶ":"ば","ぬ":"な","う":"わ","つ":"た","る":"ら","す":"さ"};
-  const toI={"く":"き","ぐ":"ぎ","む":"み","ぶ":"び","ぬ":"に","う":"い","つ":"ち","る":"り","す":"し"};
-  const toE={"く":"け","ぐ":"げ","む":"め","ぶ":"べ","ぬ":"ね","う":"え","つ":"て","る":"れ","す":"せ"};
-  const toO={"く":"こ","ぐ":"ご","む":"も","ぶ":"ぼ","ぬ":"の","う":"お","つ":"と","る":"ろ","す":"そ"};
-
-  const kana2kr={"く":"쿠","ぐ":"구","む":"무","ぶ":"부","ぬ":"누","う":"우","つ":"츠","る":"루","す":"스","か":"카","が":"가","ま":"마","ば":"바","な":"나","わ":"와","た":"타","ら":"라","さ":"사","き":"키","ぎ":"기","み":"미","び":"비","に":"니","い":"이","ち":"치","り":"리","し":"시","け":"케","げ":"게","め":"메","べ":"베","ね":"네","え":"에","て":"테","れ":"레","せ":"세","こ":"코","ご":"고","も":"모","ぼ":"보","の":"노","お":"오","と":"토","ろ":"로","そ":"소"};
-  function krPron(c){ return kana2kr[c]?c+"("+kana2kr[c]+")":c; }
-
-  steps.push({label:"원형 확인", val:w.k+' <span class="dim">('+w.r+')</span>', kr:'"'+ w.m +'" → 1그룹 동사'});
-  steps.push({label:"마지막 글자 확인", val:stem+'<span class="accent" style="font-size:22px;border-bottom:3px solid var(--acc);padding:0 4px">'+endChar+'</span> <span class="dim" style="font-size:14px">← 이 글자를 바꿔요!</span>', kr:"마지막 글자 = "+krPron(endChar)});
-
-  if(f==="te"){
-    const isIku=w.r==="いく";
-    let newEnd, desc;
-    if(isIku){newEnd="って"; desc="行く(이쿠)는 특별 예외!\n일본에서 예부터 이렇게 써왔어요. 이것만 따로 외우세요!";}
-    else if(endChar==="く"){newEnd="いて"; desc="쿠(く) → 이테(いて)로 바꿔요";}
-    else if(endChar==="ぐ"){newEnd="いで"; desc="구(ぐ) → 이데(いで)로 바꿔요";}
-    else if(["む","ぶ","ぬ"].includes(endChar)){newEnd="んで"; desc=krPron(endChar)+" → んで(응데)로 바꿔요\nむ/ぶ/ぬ로 끝나면 모두 んで예요";}
-    else if(["う","つ","る"].includes(endChar)){newEnd="って"; desc=krPron(endChar)+" → って(떼)로 바꿔요\nう/つ/る(1그룹)로 끝나면 모두 って예요";}
-    else if(endChar==="す"){newEnd="して"; desc="스(す) → 시테(して)로 바꿔요";}
-    else{newEnd=ans.slice(stem.length); desc="";}
-    steps.push({label:"마지막 글자 바꾸기: "+krPron(endChar)+" → "+newEnd, val:stem+'<span class="final">'+newEnd+"</span>", kr:desc});
-    steps.push({label:"완성! 🎉", val:'<span class="final" style="font-size:24px">'+stem+newEnd+"</span>", kr:'= "'+stem+newEnd+'" ('+w.m.replace("다","고/어서")+")"});
-  }
-  else if(f==="nai"){
-    const na=toA[endChar]||endChar;
-    steps.push({label:"마지막 글자 바꾸기: "+krPron(endChar)+" → "+krPron(na), val:stem+'<span class="final">'+na+"</span>", kr:kana2kr[endChar]||endChar+"("+endChar+") → "+(kana2kr[na]||na)+"("+na+") 로 바꿔요\n발음이 비슷하죠? 뒤 소리만 \"아\"로 바뀌는 거예요!"});
-    steps.push({label:"ない(나이) 붙이기", val:stem+na+'<span class="final">ない</span>', kr:'= "'+stem+na+'ない" = "'+w.m.replace("다","지 않다")+'"'});
-  }
-  else if(f==="masu"){
-    const mi=toI[endChar]||endChar;
-    steps.push({label:"마지막 글자 바꾸기: "+krPron(endChar)+" → "+krPron(mi), val:stem+'<span class="final">'+mi+"</span>", kr:(kana2kr[endChar]||endChar)+"("+endChar+") → "+(kana2kr[mi]||mi)+"("+mi+") 로 바꿔요\n뒤 소리만 \"이\"로 바뀌는 거예요!"});
-    steps.push({label:"ます(마스) 붙이기", val:stem+mi+'<span class="final">ます</span>', kr:'= "'+stem+mi+'ます" = "'+w.m.replace("다","습니다")+'" (정중한 말투)'});
-  }
-  else if(f==="kano"){
-    const ke=toE[endChar]||endChar;
-    steps.push({label:"마지막 글자 바꾸기: "+krPron(endChar)+" → "+krPron(ke), val:stem+'<span class="final">'+ke+"</span>", kr:(kana2kr[endChar]||endChar)+"("+endChar+") → "+(kana2kr[ke]||ke)+"("+ke+") 로 바꿔요\n뒤 소리만 \"에\"로 바뀌는 거예요!"});
-    steps.push({label:"る(루) 붙이기", val:stem+ke+'<span class="final">る</span>', kr:'= "'+stem+ke+'る" = "'+w.m.replace("다","을 수 있다")+'"'});
-  }
-  else if(f==="judou"){
-    const ra=toA[endChar]||endChar;
-    steps.push({label:"마지막 글자 바꾸기: "+krPron(endChar)+" → "+krPron(ra), val:stem+'<span class="final">'+ra+"</span>", kr:(kana2kr[endChar]||endChar)+"("+endChar+") → "+(kana2kr[ra]||ra)+"("+ra+") 로 바꿔요 (ない형이랑 같아요!)"});
-    steps.push({label:"れる(레루) 붙이기", val:stem+ra+'<span class="final">れる</span>', kr:'= "'+stem+ra+'れる" = "당하다/받다" 의미가 추가돼요'});
-  }
-  else if(f==="shieki"){
-    const sa=toA[endChar]||endChar;
-    steps.push({label:"마지막 글자 바꾸기: "+krPron(endChar)+" → "+krPron(sa), val:stem+'<span class="final">'+sa+"</span>", kr:(kana2kr[endChar]||endChar)+"("+endChar+") → "+(kana2kr[sa]||sa)+"("+sa+") 로 바꿔요 (ない형이랑 같아요!)"});
-    steps.push({label:"せる(세루) 붙이기", val:stem+sa+'<span class="final">せる</span>', kr:'= "'+stem+sa+'せる" = "시키다" 의미가 추가돼요'});
-  }
-  else if(f==="iko"){
-    const ko=toO[endChar]||endChar;
-    steps.push({label:"마지막 글자 바꾸기: "+krPron(endChar)+" → "+krPron(ko), val:stem+'<span class="final">'+ko+"</span>", kr:(kana2kr[endChar]||endChar)+"("+endChar+") → "+(kana2kr[ko]||ko)+"("+ko+") 로 바꿔요\n뒤 소리만 \"오\"로 바뀌는 거예요!"});
-    steps.push({label:"う(우) 붙이기", val:stem+ko+'<span class="final">う</span>', kr:'= "'+stem+ko+'う" = "'+w.m.replace("다","자!/할게!")+" (권유/의지 표현)"});
-  }
-  else if(f==="meirei"){
-    const ke=toE[endChar]||endChar;
-    steps.push({label:"마지막 글자 바꾸기: "+krPron(endChar)+" → "+krPron(ke), val:stem+'<span class="final">'+ke+"</span>", kr:(kana2kr[endChar]||endChar)+"("+endChar+") → "+(kana2kr[ke]||ke)+"("+ke+") 로 바꾸기만 하면 끝!\n뒤에 아무것도 안 붙여도 돼요."});
-    steps.push({label:"완성! 🎉", val:'<span class="final" style="font-size:24px">'+stem+ke+"</span>", kr:'= "'+stem+ke+'" = "'+w.m.replace("다","아라/해라!")+" (강한 명령)"});
-  }
-  return steps;
-}
-
-// ── 미니 패턴표 (이 동사의 실제 활용을 하이라이트) ──
-function buildMiniPattern(q){
-  const info=GRAMMAR_INFO[q.f];
-  if(!info||!info.rows||q.f==='group'||q.f==='particle') return '';
-
-  const grp=q.grp||'';
-  const endChar=q.word.r.slice(-1);
-  const stem=q.word.r.slice(0,-1);
-
-  // 어미→변환 map
-  const toA={'く':'か','ぐ':'が','む':'ま','ぶ':'ば','ぬ':'な','う':'わ','つ':'た','る':'ら','す':'さ'};
-  const toI={'く':'き','ぐ':'ぎ','む':'み','ぶ':'び','ぬ':'に','う':'い','つ':'ち','る':'り','す':'し'};
-  const toE={'く':'け','ぐ':'げ','む':'め','ぶ':'べ','ぬ':'ね','う':'え','つ':'て','る':'れ','す':'せ'};
-  const toO={'く':'こ','ぐ':'ご','む':'も','ぶ':'ぼ','ぬ':'の','う':'お','つ':'と','る':'ろ','す':'そ'};
-
-  // 이 동사의 실제 활용형 계산
-  function getActual(f){
-    if(grp.includes('2그룹')){
-      const s=q.word.k.replace(/る$/,'');
-      const m={'te':s+'て','masu':s+'ます','nai':s+'ない','kano':s+'られる','judou':s+'られる','shieki':s+'させる','iko':s+'よう','meirei':s+'ろ'};
-      return m[f]||q.ans;
-    }
-    if(grp.includes('3그룹')){
-      return q.ans;
-    }
-    const isIku=q.word.r==='いく';
-    if(f==='te'){
-      if(isIku) return stem+'って';
-      if(endChar==='く') return stem+'いて';
-      if(endChar==='ぐ') return stem+'いで';
-      if(['む','ぶ','ぬ'].includes(endChar)) return stem+'んで';
-      if(['う','つ','る'].includes(endChar)) return stem+'って';
-      if(endChar==='す') return stem+'して';
-    }
-    if(f==='nai') return stem+(toA[endChar]||endChar)+'ない';
-    if(f==='masu') return stem+(toI[endChar]||endChar)+'ます';
-    if(f==='kano') return stem+(toE[endChar]||endChar)+'る';
-    if(f==='judou') return stem+(toA[endChar]||endChar)+'れる';
-    if(f==='shieki') return stem+(toA[endChar]||endChar)+'せる';
-    if(f==='iko') return stem+(toO[endChar]||endChar)+'う';
-    if(f==='meirei') return stem+(toE[endChar]||endChar);
-    return q.ans;
-  }
-
-  // 하이라이트할 행 찾기
-  let matchIdx=-1;
-  info.rows.forEach((r,i)=>{
-    if(grp.includes('3그룹')&&r.g==='g3'){
-      const isSuru=q.word.r.includes('する');
-      if(isSuru&&r.end.includes('する')) matchIdx=i;
-      else if(!isSuru&&r.end.includes('くる')) matchIdx=i;
-    }
-    else if(grp.includes('2그룹')&&r.g==='g2') matchIdx=i;
-    else if((grp.includes('주의')||grp.includes('예외'))&&r.g==='g1w') matchIdx=i;
-    else if(grp.includes('1그룹')&&!grp.includes('주의')&&!grp.includes('예외')&&r.g==='g1'&&matchIdx===-1) matchIdx=i;
-  });
-
-  const actualResult=getActual(q.f);
-  const wordKana=q.word.r; // 히라가나 표기
-
-  const rowsHtml=info.rows.map((r,i)=>{
-    const isHL=i===matchIdx;
-    // 하이라이트 행에는 이 동사의 실제 예시를 보여줌
-    const exRaw=r.ex.replace(/<[^>]+>/g,'');
-    const exParts=exRaw.split('→');
-    const displayFrom=isHL?wordKana:(exParts[0]||'').trim();
-    const displayTo=isHL?actualResult:(exParts[1]||'').trim();
-    const displayKr=isHL?`(${q.word.m.replace('다','지 않다/합니다/어서 등 형태에 맞게')}) ← 지금 이 문제!`:(r.kr||'').replace(/\(|\)/g,'');
-    const actualKr=isHL?`← ${q.word.k}(${q.word.m})의 실제 활용`:'';
-
-    return `<div class="mp-row ${isHL?'mp-hl':''}">
-      <div class="mp-grp ${r.g}">${r.grp.replace(' ⚠️','⚠')}${isHL?`<span class="mp-now">지금</span>`:''}</div>
-      <div class="mp-info">
-        <div class="mp-rule">${r.change.replace(/<b>|<\/b>/g,'')}</div>
-        <div class="mp-ex">${displayFrom} → <b>${displayTo}</b></div>
-        ${isHL?`<div class="mp-kr" style="color:var(--ok);font-weight:700">👆 이 동사의 활용 결과</div>`:`<div class="mp-kr">${(r.kr||'').replace(/\(|\)/g,'')}</div>`}
-      </div>
-    </div>`;
-  }).join('');
-
-  return `<div class="mini-pattern">
-    <div class="mp-title">📊 ${info.name} — 그룹별 비교 (지금 이 동사 기준)</div>
-    ${rowsHtml}
-  </div>`;
-}
-
-// ── 피드백 빌드 ──
-// ── 형태별 핵심 설명 (왜 이렇게 바뀌나?) ──
-function getBigPicture(q){
-  const f=q.f, grp=q.grp||'';
-  const is1=grp.includes('1그룹'), is2=grp.includes('2그룹'), is3=grp.includes('3그룹');
-  const isWarn=grp.includes('주의')||grp.includes('예외');
-
-  // 조사/그룹판별은 별도
-  if(f==='particle') return {icon:'💬', title:'조사는 단어 역할을 표시해요', body:'で = ~에서(장소)/~로(수단) · に = ~에(위치/방향) · を = ~을/를 · が = ~이/가\n한국어랑 비슷하게 명사 뒤에 붙여요!'};
-  if(f==='group') return {icon:'🔍', title:'동사 그룹 판별법', body:'①  먼저 3그룹 확인 → する・くる면 3그룹!\n②  る로 끝나고 る 앞이 이/에 계열 → 대부분 2그룹\n③  나머지 전부 → 1그룹'};
-
-  // 2그룹
-  if(is2){
-    const suffixMap={
-      te:'て(테)',masu:'ます(마스)',nai:'ない(나이)',
-      kano:'られる(라레루)',judou:'られる(라레루)',
-      shieki:'させる(사세루)',iko:'よう(요우)',meirei:'ろ(로)'
-    };
-    const meaningMap={
-      te:'~하고/~해서',masu:'~합니다(정중)',nai:'~하지 않다',
-      kano:'~할 수 있다',judou:'~당하다/~받다',
-      shieki:'~시키다',iko:'~하자!/~할게',meirei:'~해라!'
-    };
-    return {
-      icon:'2️⃣',
-      title:'2그룹 동사 활용법 — 공식이 딱 하나예요!',
-      body:`る를 떼어내고 → ${suffixMap[f]||'?'} 를 붙이면 끝!\n\n예) 食べ[る] → 食べ + ${suffixMap[f]||'?'} → 食べ${suffixMap[f]?.split('(')[0]||'?'}\n뜻: "${meaningMap[f]||''}" 가 돼요\n\n2그룹은 공식이 하나뿐이라 가장 쉬워요 😊`
-    };
-  }
-
-  // 3그룹
-  if(is3){
-    const isSuru=q.word.r.includes('する');
-    const conjugMap={
-      te:   {s:'して(시테)',k:'きて(키테)'},
-      masu: {s:'します(시마스)',k:'きます(키마스)'},
-      nai:  {s:'しない(시나이)',k:'こない(코나이)'},
-      kano: {s:'できる(데키루)',k:'こられる(코라레루)'},
-      judou:{s:'される(사레루)',k:'こられる(코라레루)'},
-      shieki:{s:'させる(사세루)',k:'こさせる(코사세루)'},
-      iko:  {s:'しよう(시요우)',k:'こよう(코요우)'},
-      meirei:{s:'しろ(시로)',k:'こい(코이)'},
-    };
-    const cur=conjugMap[f]||{s:'?',k:'?'};
-    return {
-      icon:'3️⃣',
-      title:'3그룹 동사 — 규칙 없이 통째로 외워요!',
-      body:`する(하다)와 くる(오다) 딱 2개만 3그룹이에요.\n규칙이 없어서 외우는 수밖에 없어요!\n\nする → ${cur.s}\nくる → ${cur.k}\n\n지금 이 동사: ${isSuru?'する → '+cur.s:'くる → '+cur.k}`
-    };
-  }
-
-  // 1그룹 (일반 + 주의)
-  const formInfo={
-    nai:{
-      title:'1그룹 ない형 — 마지막 소리를 "아" 계열로!',
-      body:`마지막 글자의 소리를 "아" 계열로 바꾸고 ない(나이)를 붙여요.\n\n쿠(く) → 카(か)ない\n무(む) → 마(ま)ない\n츠(つ) → 타(た)ない\n스(す) → 사(さ)ない\n부(ぶ) → 바(ば)ない\n우(う) → 와(わ)ない ← 특별!\n\n"아" 계열 = 카/가/마/바/나/와/타/라/사`,
-    },
-    masu:{
-      title:'1그룹 ます형 — 마지막 소리를 "이" 계열로!',
-      body:`마지막 글자의 소리를 "이" 계열로 바꾸고 ます(마스)를 붙여요.\n\n쿠(く) → 키(き)ます\n무(む) → 미(み)ます\n츠(つ) → 치(ち)ます\n스(す) → 시(し)ます\n부(ぶ) → 비(び)ます\n우(う) → 이(い)ます\n\n"이" 계열 = 키/기/미/비/니/이/치/리/시`,
-    },
-    te:{
-      title:'1그룹 て형 — 어미 종류마다 달라요!',
-      body:`て형은 마지막 글자 종류에 따라 3가지 패턴이 있어요.\n\n[패턴①] く→いて / ぐ→いで\n例) いく → いいて ⚠️예외! → いって\n    およぐ → およいで\n\n[패턴②] む/ぶ/ぬ → んで\n例) のむ → のんで / よぶ → よんで\n\n[패턴③] う/つ/る → って / す → して\n例) まつ → まって / はなす → はなして`,
-    },
-    kano:{
-      title:'1그룹 가능형 — 마지막 소리를 "에" 계열로!',
-      body:`마지막 글자의 소리를 "에" 계열로 바꾸고 る(루)를 붙여요.\n\n쿠(く) → 케(け)る\n무(む) → 메(め)る\n츠(つ) → 테(て)る\n스(す) → 세(せ)る\n부(ぶ) → 베(べ)る\n우(う) → 에(え)る\n\n"에" 계열 = 케/게/메/베/네/에/테/레/세`,
-    },
-    judou:{
-      title:'1그룹 수동형 — ない형이랑 같은 변환!',
-      body:`마지막 글자를 "아" 계열로 바꾸고 (ない형과 동일!)\n그 다음 れる(레루)를 붙여요.\n\n쿠(く) → 카(か)れる\n무(む) → 마(ま)れる\n스(す) → 사(さ)れる\n\n"~당하다, ~받다" 의 의미가 추가돼요.\n例) よぶ(부르다) → よばれる(불리다)`,
-    },
-    shieki:{
-      title:'1그룹 사역형 — 이것도 "아" 계열 변환!',
-      body:`마지막 글자를 "아" 계열로 바꾸고 (ない/수동형과 동일!)\n그 다음 せる(세루)를 붙여요.\n\n쿠(く) → 카(か)せる\n무(む) → 마(ま)せる\n스(す) → 사(さ)せる\n\n"~시키다, ~하게 하다" 의 의미가 추가돼요.\n例) のむ(마시다) → のませる(마시게 하다)`,
-    },
-    iko:{
-      title:'1그룹 의향형 — 마지막 소리를 "오" 계열로!',
-      body:`마지막 글자의 소리를 "오" 계열로 바꾸고 う(우)를 붙여요.\n\n쿠(く) → 코(こ)う\n무(む) → 모(も)う\n츠(つ) → 토(と)う\n스(す) → 소(そ)う\n우(う) → 오(お)う\n\n"~하자! / ~할게!" 의 권유/의지 표현이에요.`,
-    },
-    meirei:{
-      title:'1그룹 명령형 — "에" 계열로 바꾸기만!',
-      body:`가능형이랑 같은 변환인데, る(루)를 붙이지 않아요.\n마지막 글자를 "에" 계열로 바꾸면 그게 바로 명령형이에요!\n\n쿠(く) → 케(け)\n무(む) → 메(め)\n스(す) → 세(せ)\n\n日常 대화에선 거의 안 써요.\n~てください(~해 주세요)가 훨씬 자연스럽답니다.`,
-    },
-  };
-
-  const info=formInfo[f];
-  if(!info) return null;
-
-  if(isWarn){
-    return {
-      icon:'⚠️',
-      title:`1그룹 주의 동사 — る로 끝나지만 1그룹!`,
-      body:`帰る(카에루)・切る(키루)・走る(하시루)・入る(하이루) 등\n見た目(겉모습)은 2그룹 같지만 실제로는 1그룹이에요!\n\n${info.body}`
-    };
-  }
-  return info;
-}
-
-function buildFeedbackPattern(q){
-  const grpInfo=getGrpInfo(q.grp||'');
-  const bigPic=getBigPicture(q);
-  const steps=buildSteps(q);
-  const miniPattern=buildMiniPattern(q);
-
-  // 핵심 설명 박스
-  const bigPicHtml=bigPic?`
-    <div style="margin:0 14px 10px;background:rgba(26,26,46,.05);border-radius:10px;overflow:hidden;border:1.5px solid rgba(26,26,46,.1)">
-      <div style="background:var(--ink);padding:10px 14px;display:flex;align-items:center;gap:8px">
-        <span style="font-size:18px">${bigPic.icon}</span>
-        <span style="font-family:var(--FB);font-size:14px;font-weight:700;color:var(--goldL)">${bigPic.title}</span>
-      </div>
-      <div style="padding:12px 14px;font-size:14px;color:rgba(26,26,46,.75);font-family:var(--FB);line-height:1.9;white-space:pre-line">${bigPic.body}</div>
-    </div>`:'';
-
-  const stepsHtml=steps.length?`
-    <div class="conjugation-box">
-      <div class="cb-title">📝 이 문제 풀이 (단계별)</div>
-      ${steps.map((s,i)=>`
-        <div class="cb-step">
-          <div class="cb-num">${i+1}</div>
-          <div class="cb-content">
-            <div class="cb-label">${s.label}</div>
-            <div class="cb-val">${s.val}</div>
-            ${s.kr?`<div class="cb-kr" style="white-space:pre-line">${s.kr}</div>`:''}
-          </div>
-        </div>`).join('')}
-    </div>`:'';
-
-  return `
-    <div class="fb-grp-row">
-      <span class="grp-badge ${grpInfo.cls}">${grpInfo.label}</span>
-      <span class="fb-grp-desc">${grpInfo.desc}</span>
-    </div>
-    ${bigPicHtml}
-    ${stepsHtml}
-    ${miniPattern}
-    <button class="fb-goto-grammar" onclick="switchView('grammar');showGSection('${q.f}')">📋 문법표 전체 보기 →</button>
-  `;
-}
-// ══════════════════════════════════════════
-// 전역 후리가나 사전 (N5/N4 전체 커버)
-// ══════════════════════════════════════════
-const WORD_FU = {
-  // 동사 (기본형)
-  '食べる':'たべる','飲む':'のむ','書く':'かく','行く':'いく','待つ':'まつ',
-  '乗る':'のる','起きる':'おきる','帰る':'かえる','話す':'はなす',
-  '読む':'よむ','見る':'みる','聞く':'きく','走る':'はしる','切る':'きる',
-  '着る':'きる','泳ぐ':'およぐ','買う':'かう','使う':'つかう','教える':'おしえる',
-  '覚える':'おぼえる','忘れる':'わすれる','入る':'はいる','出る':'でる',
-  '寝る':'ねる','働く':'はたらく','遊ぶ':'あそぶ','呼ぶ':'よぶ','叱る':'しかる',
-  '始める':'はじめる','終わる':'おわる','作る':'つくる','出かける':'でかける',
-  '泊まる':'とまる','渡る':'わたる','降る':'ふる','浴びる':'あびる',
-  '決める':'きめる','集める':'あつめる','調べる':'しらべる','続ける':'つづける',
-  '開ける':'あける','閉める':'しめる','洗う':'あらう','送る':'おくる',
-  '借りる':'かりる','貸す':'かす','返す':'かえす','急ぐ':'いそぐ',
-  '泣く':'なく','笑う':'わらう','驚く':'おどろく','困る':'こまる',
-  // 시간
-  '毎朝':'まいあさ','毎日':'まいにち','毎晩':'まいばん','毎週':'まいしゅう',
-  '今日':'きょう','明日':'あした','昨日':'きのう','今夜':'こんや',
-  '今週':'こんしゅう','来週':'らいしゅう','先週':'せんしゅう',
-  '今月':'こんげつ','今年':'ことし','来年':'らいねん','去年':'きょねん',
-  '午前':'ごぜん','午後':'ごご','朝':'あさ','昼':'ひる','夜':'よる','夕方':'ゆうがた',
-  '六時':'ろくじ','三時':'さんじ','何時':'なんじ',
-  '三十分':'さんじっぷん','六ヶ月':'ろっかげつ','三ヶ月':'さんかげつ','一年':'いちねん',
-  // 장소
-  '学校':'がっこう','会社':'かいしゃ','図書館':'としょかん','病院':'びょういん',
-  '駅':'えき','家':'いえ','部屋':'へや','公園':'こうえん','店':'みせ','銀行':'ぎんこう',
-  // 교통
-  '電車':'でんしゃ','自転車':'じてんしゃ','車':'くるま','飛行機':'ひこうき',
-  '地下鉄':'ちかてつ',
-  // 사람
-  '友達':'ともだち','先生':'せんせい','学生':'がくせい','社員':'しゃいん',
-  '新入社員':'しんにゅうしゃいん','部長':'ぶちょう','子供':'こども',
-  '親':'おや','父':'ちち','母':'はは','兄':'あに','姉':'あね',
-  '弟':'おとうと','妹':'いもうと','家族':'かぞく',
-  // 음식
-  '野菜':'やさい','果物':'くだもの','肉':'にく','魚':'さかな','牛乳':'ぎゅうにゅう',
-  '寿司':'すし','朝ごはん':'あさごはん','晩ごはん':'ばんごはん','夕ごはん':'ゆうごはん',
-  // 학습/업무
-  '勉強':'べんきょう','日本語':'にほんご','漢字':'かんじ','言葉':'ことば',
-  '授業':'じゅぎょう','授業中':'じゅぎょうちゅう','宿題':'しゅくだい',
-  '試験':'しけん','練習':'れんしゅう','復習':'ふくしゅう','予習':'よしゅう',
-  '会議':'かいぎ','会議中':'かいぎちゅう','残業':'ざんぎょう',
-  '仕事':'しごと','書類':'しょるい','受付':'うけつけ',
-  // 일상
-  '電話':'でんわ','名前':'なまえ','住所':'じゅうしょ','健康':'けんこう',
-  '運動':'うんどう','薬':'くすり','病気':'びょうき','心配':'しんぱい',
-  '約束':'やくそく','問題':'もんだい','大丈夫':'だいじょうぶ',
-  '連休':'れんきゅう','誕生日':'たんじょうび',
-  '冷蔵庫':'れいぞうこ','急用':'きゅうよう','大幅':'おおはば',
-  '住所':'じゅうしょ','受付':'うけつけ',
-  // 나라/세계
-  '日本':'にほん','韓国':'かんこく','中国':'ちゅうごく',
-  '世界':'せかい','世界中':'せかいじゅう',
-  // 숫자/인원
-  '一人':'ひとり','二人':'ふたり','三人':'さんにん',
-  '三錠':'さんじょう','毎食後':'まいしょくごう',
-  // 자연
-  '海':'うみ','山':'やま','川':'かわ','雨':'あめ','雪':'ゆき','花':'はな',
-  // 형용사
-  '大事':'だいじ','大切':'たいせつ','新しい':'あたらしい','古い':'ふるい',
-  '高い':'たかい','安い':'やすい','早い':'はやい','遅い':'おそい',
-  '強い':'つよい','弱い':'よわい','遠い':'とおい','近い':'ちかい',
-  '大きい':'おおきい','小さい':'ちいさい','楽しい':'たのしい',
-  '嬉しい':'うれしい','悲しい':'かなしい','甘い':'あまい',
-  // 기타
-  '映画':'えいが','音楽':'おんがく','小説':'しょうせつ','新聞':'しんぶん',
-  '自然':'しぜん','急':'きゅう','横':'よこ','間':'あいだ','頭':'あたま',
-  '体':'からだ','手':'て','足':'あし','目':'め','耳':'みみ',
-  '勉強する':'べんきょうする',
-};
-
-function addFurigana(text, fuMap){
-  // 전역 사전 + 문제별 fu 합치기 (문제별이 우선)
-  const combined = Object.assign({}, WORD_FU, fuMap||{});
-  const keys = Object.keys(combined).sort((a,b)=>b.length-a.length);
-  let result = text;
-  keys.forEach(k=>{
-    const r = combined[k];
-    // 이미 ruby 태그 안 텍스트는 다시 처리 안 함
-    if(result.includes(`<ruby>${k}`)) return;
-    result = result.split(k).join(`<ruby>${k}<rt>${r}</rt></ruby>`);
-  });
-  return result;
-}
-
-// ══════════════════════════════════════════
-// VOCAB
-// ══════════════════════════════════════════
-function isInVocab(word){
-  return vocabList.some(v=>v.k===word.k);
-}
-
-function addToVocab(word){
-  if(isInVocab(word)){
-    showToast('이미 저장된 단어예요!');
-    return;
-  }
-  vocabList.unshift({k:word.k, r:word.r, m:word.m, date:today()});
-  saveVocab();
-  showToast('📚 단어장에 저장됐어요!');
-  // Update save button if card is still showing
-  const btn=document.getElementById('wbSaveBtn');
-  if(btn){btn.textContent='📚 저장됨';btn.classList.add('saved');btn.disabled=true;}
-}
-
-function removeFromVocab(i){
-  vocabList.splice(i,1);
-  saveVocab();
-  renderVocab();
-}
-
-function clearAllVocab(){
-  if(confirm('단어장을 모두 비우시겠습니까?')){
-    vocabList=[];saveVocab();renderVocab();
-  }
-}
-
-function renderVocab(){
-  const el=document.getElementById('vocabContent');
-  if(!el) return;
-  const cnt=vocabList.length;
-  let html=`<div class="vocab-header">
-    <div class="vocab-hero-title">📚 단어장</div>
-    <div class="vocab-count">${cnt}개 저장됨</div>
-  </div>`;
-  if(cnt===0){
-    html+=`<div class="vocab-empty">
-      <div class="ve-icon">📖</div>
-      <div class="ve-msg">아직 저장된 단어가 없어요.<br>퀴즈 화면에서 <b>📚 저장</b> 버튼을 눌러보세요!</div>
-    </div>`;
-  } else {
-    vocabList.forEach((w,i)=>{
-      html+=`<div class="vocab-card">
-        <div class="vc-main">
-          <div class="vc-k">${w.k}</div>
-          <div class="vc-r">${w.r}</div>
-          <div class="vc-m">${w.m}</div>
-          <div class="vc-date">${w.date}</div>
-        </div>
-        <button class="vc-del" onclick="removeFromVocab(${i})">🗑</button>
-      </div>`;
-    });
-    html+=`<button class="vocab-clear-btn" onclick="clearAllVocab()">🗑 전체 삭제</button>`;
-  }
-  el.innerHTML=html;
-}
-
-// ══════════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════════
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.classList.add('show');
-  clearTimeout(t._t);
-  t._t=setTimeout(()=>t.classList.remove('show'),2200);
-}
-
-// ══════════════════════════════════════════
-// HOME
-// ══════════════════════════════════════════
+// ── HOME ──
 function renderHome(){
   const now=new Date();
   const days=['일','월','화','수','목','금','토'];
-  const months=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-  document.getElementById('heroDate').textContent=
-    `${now.getFullYear()}년 ${months[now.getMonth()]} ${now.getDate()}일 ${days[now.getDay()]}요일`;
+  const months=['1','2','3','4','5','6','7','8','9','10','11','12'];
+  document.getElementById('heroDate').textContent=`${now.getFullYear()}년 ${months[now.getMonth()]}월 ${now.getDate()}일 ${days[now.getDay()]}요일`;
   const tc=todayCount();
-  currentStreak=calcStreak();
   let greet='',sub='';
-  if(tc>=GOAL){greet='目標達成！오늘 목표 완료 🎌';sub='훌륭합니다! 내일도 계속해봐요.';}
-  else if(tc>=GOAL/2){greet='折り返し！절반을 넘었어요 ⛩️';sub=`목표까지 ${GOAL-tc}문제 남았습니다.`;}
-  else if(tc>0){greet='いいスタート！좋은 시작이에요 🌸';sub=`오늘 ${tc}문제 완료. ${GOAL-tc}문제 더 해봐요!`;}
-  else if(currentStreak>0){greet='연속중！꾸준히 하고 있어요 🔥';sub='오늘 목표 10문제를 시작해봐요!';}
-  else{greet='始めましょう！시작해봐요 🌿';sub='매일 10문제로 일본어 실력이 늘어납니다!';}
+  if(tc>=GOAL){greet='目標達成！오늘 목표 완료 🎌';sub='훌륭합니다!';}
+  else if(tc>0){greet='いいスタート！좋은 시작이에요 🌸';sub=`오늘 ${tc}문제 완료. ${GOAL-tc}문제 더!`;}
+  else{greet='始めましょう！시작해봐요 🌿';sub='매일 10문제로 N5 합격을 향해!';}
   document.getElementById('heroGreeting').textContent=greet;
   document.getElementById('heroSub').textContent=sub;
   document.getElementById('gcCount').innerHTML=`${tc}<span>/${GOAL}</span>`;
-  const dotsEl=document.getElementById('dotsRow');
-  dotsEl.innerHTML='';
-  for(let i=0;i<GOAL;i++){
-    const d=document.createElement('div');
-    d.className='dot'+(i<tc?' done'+(i===GOAL-1?' gold':''):'');
-    dotsEl.appendChild(d);
-  }
-  const msgs=[
-    '오늘도 화이팅! 첫 문제부터 시작해봐요 🌱',
-    '좋아요! 시작했어요 😊',
-    '잘 하고 있어요! 계속해요 ✨',
-    '3문제 완료! 리듬을 탔어요 🎵',
-    '절반 왔어요! 한국어랑 비슷하죠? 👍',
-    '반 넘었어요! 대단해요 🌟',
-    '7문제! 거의 다 왔어요 💪',
-    '8문제 완료! 마지막 스퍼트 🚀',
-    '딱 하나만 더! 할 수 있어요 🔥',
-    '오늘 목표 달성! 수고했어요 🎉',
-    '목표 초과 달성! 일본어 마스터의 길 🎌'
-  ];
+  const dr=document.getElementById('dotsRow');dr.innerHTML='';
+  for(let i=0;i<GOAL;i++){const d=document.createElement('div');d.className='dot'+(i<tc?' done':'');dr.appendChild(d);}
+  const msgs=['오늘도 화이팅! 🌱','시작했어요 😊','잘하고 있어요!','3문제!','절반!','넘었어요!','거의 다!','8문제!','하나만 더!','목표 달성! 🎉','초과 달성! 🔥'];
   document.getElementById('gcMsg').textContent=msgs[Math.min(tc,msgs.length-1)];
-  document.getElementById('stStreak').textContent=currentStreak;
+  document.getElementById('stStreak').textContent=calcStreak();
   document.getElementById('stWeek').textContent=weekCount();
   document.getElementById('stMonth').textContent=monthCount();
   document.getElementById('stTotal').textContent=stats.totalDone||0;
   document.getElementById('navToday').textContent=tc;
   renderCalendar();
 }
-
 function calcStreak(){
-  let s=0;
-  const d=new Date();
-  let dt=new Date(d);
+  let s=0;const d=new Date();let dt=new Date(d);
   if((dailyData[dt.toISOString().split('T')[0]]||0)>=GOAL){
     s++;dt.setDate(dt.getDate()-1);
-    while(true){
-      const k=dt.toISOString().split('T')[0];
-      if((dailyData[k]||0)>=GOAL){s++;dt.setDate(dt.getDate()-1);}else break;
-    }
-  } else {
-    dt.setDate(dt.getDate()-1);
-    while(true){
-      const k=dt.toISOString().split('T')[0];
-      if((dailyData[k]||0)>=GOAL){s++;dt.setDate(dt.getDate()-1);}else break;
-    }
-  }
+    while((dailyData[dt.toISOString().split('T')[0]]||0)>=GOAL){s++;dt.setDate(dt.getDate()-1);}
+  }else{dt.setDate(dt.getDate()-1);while((dailyData[dt.toISOString().split('T')[0]]||0)>=GOAL){s++;dt.setDate(dt.getDate()-1);}}
   return s;
 }
-
-function weekCount(){
-  let c=0;const d=new Date();
-  for(let i=0;i<7;i++){
-    const dt=new Date(d);dt.setDate(d.getDate()-i);
-    c+=dailyData[dt.toISOString().split('T')[0]]||0;
-  }
-  return c;
-}
-
-function monthCount(){
-  let c=0;const d=new Date();const m=d.getMonth(),y=d.getFullYear();
-  Object.entries(dailyData).forEach(([k,v])=>{
-    const dd=new Date(k);if(dd.getMonth()===m&&dd.getFullYear()===y)c+=v;
-  });
-  return c;
-}
-
+function weekCount(){let c=0;const d=new Date();for(let i=0;i<7;i++){const dt=new Date(d);dt.setDate(d.getDate()-i);c+=dailyData[dt.toISOString().split('T')[0]]||0;}return c;}
+function monthCount(){let c=0;const d=new Date();const m=d.getMonth(),y=d.getFullYear();Object.entries(dailyData).forEach(([k,v])=>{const dd=new Date(k);if(dd.getMonth()===m&&dd.getFullYear()===y)c+=v;});return c;}
 function renderCalendar(){
   const grid=document.getElementById('calGrid');grid.innerHTML='';
-  const now=new Date();
-  const todayStr=now.toISOString().split('T')[0];
-  const startD=new Date(now);
-  startD.setDate(startD.getDate()-startD.getDay()-28);
+  const now=new Date();const todayStr=now.toISOString().split('T')[0];
+  const startD=new Date(now);startD.setDate(startD.getDate()-startD.getDay()-28);
   for(let i=0;i<35;i++){
     const d=new Date(startD);d.setDate(startD.getDate()+i);
-    const k=d.toISOString().split('T')[0];
-    const count=dailyData[k]||0;
-    const isFuture=d>now;
-    const isToday=k===todayStr;
-    const cell=document.createElement('div');
-    cell.className='cal-day';
+    const k=d.toISOString().split('T')[0];const count=dailyData[k]||0;const isFuture=d>now;
+    const cell=document.createElement('div');cell.className='cal-day';
     if(isFuture)cell.classList.add('future');
     else if(count===0)cell.classList.add('empty');
     else if(count<5)cell.classList.add('c1');
     else if(count<10)cell.classList.add('c2');
     else cell.classList.add('c3');
-    if(isToday)cell.classList.add('today');
+    if(k===todayStr)cell.classList.add('today');
     if(!isFuture)cell.textContent=d.getDate();
-    if(count>0&&!isFuture)cell.title=`${d.getDate()}일: ${count}문제`;
     grid.appendChild(cell);
   }
 }
-
-document.getElementById('deployCard').addEventListener('click',()=>{
-  const b=document.getElementById('deployBody');const a=document.getElementById('deployArrow');
-  b.classList.toggle('open');a.textContent=b.classList.contains('open')?'▲':'▼';
-});
-
 function toggleTips(){
-  const b=document.getElementById('tipsBody');
-  const a=document.getElementById('tipsArrow');
-  const isOpen=b.style.display!=='none';
-  b.style.display=isOpen?'none':'block';
-  a.textContent=isOpen?'▼':'▲';
+  const b=document.getElementById('tipsBody'),a=document.getElementById('tipsArrow');
+  const open=b.style.display!=='none';b.style.display=open?'none':'block';a.textContent=open?'▼':'▲';
 }
 
-// ══════════════════════════════════════════
-// QUIZ
-// ══════════════════════════════════════════
-function goQuiz(){ switchView('quiz'); }
-
-function shuffle(arr){
-  for(let i=arr.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];
-  }
-  return arr;
-}
-
-let shownIds=new Set();  // 맞춘 문제 (다시 안 나옴)
-let wrongQs=[];          // 틀린 문제 큐 [{q, returnAt}]
-let questionCount=0;     // 총 출제 횟수 (간격 계산용)
-
-function qKey(q){ return q.q.slice(0,30); } // 문제 고유 키
-
-function initPool(){
-  pool=[...SEED]; shuffle(pool); poolIdx=0;
-  // localStorage에서 맞춘 문제 목록 복원
-  try{
-    const saved=JSON.parse(localStorage.getItem('jpq_mastered')||'[]');
-    shownIds=new Set(saved);
-  }catch(e){ shownIds=new Set(); }
-  try{
-    wrongQs=JSON.parse(localStorage.getItem('jpq_wrongqs')||'[]');
-  }catch(e){ wrongQs=[]; }
-  try{
-    questionCount=parseInt(localStorage.getItem('jpq_qcount')||'0');
-  }catch(e){ questionCount=0; }
-}
-
-function saveMastered(){
-  try{ localStorage.setItem('jpq_mastered', JSON.stringify([...shownIds])); }catch(e){}
-  try{ localStorage.setItem('jpq_wrongqs', JSON.stringify(wrongQs)); }catch(e){}
-  try{ localStorage.setItem('jpq_qcount', String(questionCount)); }catch(e){}
-}
-
-function markCorrect(q){
-  shownIds.add(qKey(q));
-  // 틀린 문제 큐에서도 제거
-  wrongQs=wrongQs.filter(w=>w.key!==qKey(q));
-  saveMastered();
-}
-
-function markWrong(q){
-  // 이미 틀린 문제 큐에 있으면 returnAt 갱신
-  wrongQs=wrongQs.filter(w=>w.key!==qKey(q));
-  wrongQs.push({ key:qKey(q), q:q, returnAt:questionCount+50 });
-  saveMastered();
-}
+// ── QUIZ ENGINE ──
+function initPool(){pool=[...SEED];shuffle(pool);}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
 
 function getFiltered(){
-  if(filterF==='all') return pool;
-  return pool.filter(q=>q.f===filterF);
+  if(filterS==='all')return pool;
+  // vocab_syn도 vocab 섹션으로 분류
+  return pool.filter(q=>{
+    if(filterS==='vocab') return q.s==='vocab'||q.t==='vocab_syn';
+    return q.s===filterS;
+  });
 }
 
-function getNextQ(fp){
-  if(fp.length===0) return null;
-
-  // 1. 틀린 문제 중 50문제 지난 것 우선 복귀
-  const dueWrong=wrongQs.filter(w=>w.returnAt<=questionCount);
-  if(dueWrong.length>0){
-    const pick=dueWrong[Math.floor(Math.random()*dueWrong.length)];
-    return pick.q;
-  }
-
-  // 2. 아직 안 본 새 문제 (맞춘 것 제외)
-  const fresh=fp.filter(q=>!shownIds.has(qKey(q)) && !wrongQs.some(w=>w.key===qKey(q)));
-  if(fresh.length>0){
-    return fresh[Math.floor(Math.random()*fresh.length)];
-  }
-
-  // 3. 전부 맞췄으면 → 새 문제 생성 대기
+function getNextQ(){
+  const fp=getFiltered();
+  if(fp.length===0)return null;
+  // 틀린 문제 중 50개 지난 것 복귀
+  const due=wrongQs.filter(w=>w.returnAt<=queueCount&&(filterS==='all'||fp.some(q=>qKey(q)===w.key)));
+  if(due.length>0)return due[Math.floor(Math.random()*due.length)].q;
+  // 미완료 새 문제
+  const fresh=fp.filter(q=>!masteredKeys.has(qKey(q))&&!wrongQs.some(w=>w.key===qKey(q)));
+  if(fresh.length>0)return fresh[Math.floor(Math.random()*fresh.length)];
   return null;
 }
 
 function showQ(){
-  renderQuizStrip();
-  const fp=getFiltered();
-
-  const q=getNextQ(fp);
-
+  renderPoolInfo();
+  const q=getNextQ();
   if(!q){
-    const masteredCount=shownIds.size;
     if(generating){
-      // 이미 생성 중 — 3초 후 자동 재시도
-      document.getElementById('cardArea').innerHTML=
-        `<div class="loading-card">
-          <div class="spin" style="font-size:28px">✨</div>
-          <div style="margin-top:12px;font-size:15px;font-weight:700;color:var(--ink);font-family:var(--FB)">새 문제 만드는 중...</div>
-          <div style="margin-top:6px;font-size:13px;color:rgba(26,26,46,.45);font-family:var(--FB)">잠깐만요! 곧 나와요 😊</div>
-        </div>`;
-      setTimeout(()=>{ if(currentView==='quiz') showQ(); }, 3000);
-    } else {
-      // 생성 시작 + 즉시 시작 화면 표시
-      document.getElementById('cardArea').innerHTML=
-        `<div class="loading-card">
-          <div style="font-size:36px;margin-bottom:10px">🎉</div>
-          <div style="font-size:16px;font-weight:700;color:var(--ink);font-family:var(--FB);margin-bottom:6px">전부 마스터! 대단해요!</div>
-          <div style="font-size:13px;color:rgba(26,26,46,.5);font-family:var(--FB);line-height:1.7;margin-bottom:14px">
-            맞춘 문제: ${masteredCount}개 ✅<br>새 문제를 생성하고 있어요...
-          </div>
-          <div class="spin" style="font-size:22px">⏳</div>
-        </div>`;
-      generateQuestions().then(()=>{
-        if(currentView==='quiz') showQ();
-      });
+      document.getElementById('cardArea').innerHTML=`<div class="loading-card"><div class="spin">✨</div><div style="margin-top:12px;font-size:15px;font-weight:700;color:var(--ink);font-family:var(--FB)">새 문제 준비 중...</div><div style="font-size:13px;color:rgba(26,26,46,.45);margin-top:6px">잠깐만요! 😊</div></div>`;
+      setTimeout(()=>{if(currentView==='quiz')showQ();},3000);
+    }else{
+      document.getElementById('cardArea').innerHTML=`<div class="loading-card"><div style="font-size:36px;margin-bottom:10px">🎉</div><div style="font-size:16px;font-weight:700;color:var(--ink);font-family:var(--FB);margin-bottom:6px">이 섹션 완료!</div><div style="font-size:13px;color:rgba(26,26,46,.5);font-family:var(--FB)">맞춘 문제: ${masteredKeys.size}개 ✅<br>새 문제 생성 중...</div><div class="spin" style="font-size:22px;margin-top:12px">⏳</div></div>`;
+      generateQuestions();
     }
     return;
   }
-
-  questionCount++;
+  queueCount++;
   saveMastered();
+  currentQ=q;
   renderCard(q);
-  poolIdx++;
-
-  // 남은 문제 10개 미만이면 미리 생성 시작 (로딩 대기 없도록)
-  const fp2=getFiltered();
-  const remainingUnseen=fp2.filter(q2=>!shownIds.has(qKey(q2))&&!wrongQs.some(w=>w.key===qKey(q2))).length;
-  if(remainingUnseen<10&&!generating) generateQuestions();
-}
-
-function renderQuizStrip(){
-  const tc=todayCount();
-  const dots=document.getElementById('tsDots');
-  dots.innerHTML='';
-  for(let i=0;i<GOAL;i++){
-    const d=document.createElement('div');
-    d.className='ts-dot'+(i<tc?' done':'');
-    dots.appendChild(d);
-  }
-  document.getElementById('tsLabel').textContent=`${tc}/${GOAL}`;
-  renderPoolInfo();
+  document.getElementById('qNum').textContent=`#${queueCount}`;
+  // 남은 문제 10개 미만이면 미리 생성
+  const fp=getFiltered();
+  const rem=fp.filter(q2=>!masteredKeys.has(qKey(q2))&&!wrongQs.some(w=>w.key===qKey(q2))).length;
+  if(rem<10&&!generating)generateQuestions();
 }
 
 function renderPoolInfo(){
   const fp=getFiltered();
-  const total=fp.length;
-  const mastered=fp.filter(q=>shownIds.has(qKey(q))).length;
-  const wrong=wrongQs.filter(w=>filterF==='all'||fp.some(q=>qKey(q)===w.key)).length;
-  const remaining=total-mastered-wrong;
-
-  const todayAdded=parseInt(localStorage.getItem('jpq_today_added')||'0');
-  const lastAddedDate=localStorage.getItem('jpq_today_added_date')||'';
-  const todayCount2=today();
-  const todayNew= lastAddedDate===todayCount2 ? todayAdded : 0;
-
-  const parts=[];
-  parts.push(`남은 ${Math.max(0,remaining)}개`);
-  if(mastered>0) parts.push(`✅ 완료 ${mastered}개`);
-  if(wrong>0)    parts.push(`🔄 복습 ${wrong}개`);
-  if(todayNew>0) parts.push(`🆕 오늘 +${todayNew}개`);
-
+  const mastered=fp.filter(q=>masteredKeys.has(qKey(q))).length;
+  const wrong=wrongQs.filter(w=>filterS==='all'||fp.some(q=>qKey(q)===w.key)).length;
+  const remaining=fp.length-mastered-wrong;
+  const tc=todayCount();
+  // dots
+  const dots=document.getElementById('tsDots');dots.innerHTML='';
+  for(let i=0;i<GOAL;i++){const d=document.createElement('div');d.className='ts-dot'+(i<tc?' done':'');dots.appendChild(d);}
+  document.getElementById('tsLabel').textContent=`${tc}/${GOAL}`;
+  const parts=[`남은 ${Math.max(0,remaining)}개`];
+  if(mastered>0)parts.push(`✅ ${mastered}개`);
+  if(wrong>0)parts.push(`🔄 복습 ${wrong}개`);
   document.getElementById('poolInfo').textContent=parts.join('  ');
 }
 
-const FORM_COLORS={te:'ft',masu:'fm',nai:'fn',kano:'fk',judou:'fj',shieki:'fs',iko:'fi',meirei:'fme',group:'fg',particle:'fp'};
+// 섹션별 색상
+const SEC_COLOR={vocab:'vocab',grammar:'grammar',reading:'reading'};
+const TYPE_NAME={
+  kanji_read:'問題1 — 漢字の読み方',
+  kanji_write:'問題2 — 表記（ひらがな→漢字）',
+  vocab_ctx:'問題3 — 文脈規定',
+  vocab_syn:'問題4 — 言い換え類義',
+  grammar_fill:'文法',
+  reading:'読解'
+};
 
 function renderCard(q){
-  currentQ=q;
-  const badgeEl=document.getElementById('fBadge');
-  badgeEl.className='fbadge '+(FORM_COLORS[q.f]||'ft');
-  badgeEl.textContent=q.form;
+  const secCls=SEC_COLOR[q.s]||'vocab';
+  const typeName=TYPE_NAME[q.t]||q.t;
+  const secName={vocab:'문자·어휘',grammar:'문법',reading:'독해'}[q.s]||q.s;
 
-  // Build question text with furigana
-  const rawQ=q.q.replace('___','<span class="blank">___</span>');
-  const qHtml=addFurigana(rawQ, q.fu||{});
+  // Build question HTML
+  let qHtml='';
+  if(q.t==='reading'&&q.passage){
+    qHtml+=`<div class="passage-label">📄 지문</div>
+    <div class="passage-box">${q.passage}</div>`;
+  }
 
-  // Korean translation
-  const krHtml=q.kr?`<div class="kr-line">${q.kr.replace('___','<span style="color:var(--acc)">___</span>')}</div>`:'';
+  // Word bar (어휘/한자 문제) — 뜻은 숨김
+  const showWordBar=q.word&&q.t!=='reading';
+  let wordBarHtml='';
+  if(showWordBar){
+    const isSaved=vocabList.some(v=>v.k===q.word.k);
+    wordBarHtml=`<div class="word-bar">
+      <span class="wb-k">${q.word.k}</span>
+      <span class="wb-r">${q.word.r}</span>
+      <span class="wb-m" id="wbMeaning">= ${q.word.m}</span>
+      <button class="wb-save ${isSaved?'saved':''}" id="wbSaveBtn" onclick="addToVocab(currentQ.word)" ${isSaved?'disabled':''}>${isSaved?'📚 저장됨':'📚 저장'}</button>
+    </div>`;
+  }
 
-  // 선택지 순서 항상 섞기 (정답이 항상 같은 위치에 오지 않도록)
+  const qText=q.q.replace(/___/g,'<span class="blank">＿＿</span>');
+
+  // 한국어 번역 — 기본 숨김, 버튼으로 토글
+  const krHtml=q.kr?`
+    <button class="kr-toggle-btn" id="krToggleBtn" onclick="toggleKr()">🇰🇷 한국어 번역 보기</button>
+    <div class="kr-box" id="krBox">${q.kr.replace(/___/g,'<b style="color:var(--acc)">___</b>')}</div>
+  `:'';
+
+  // Shuffle choices
   const labels=['A','B','C','D'];
-  let choicesHtml='';
-  const shuffledChoices=[...q.choices];
-  shuffle(shuffledChoices); // 반드시 섞기!
-  shuffledChoices.forEach((c,i)=>{
-    choicesHtml+=`<button class="ch" onclick="pickChoice(this,'${escQ(c)}')" data-ans="${escQ(c)}">
-      <span class="cl">${labels[i]}</span>${c}
-    </button>`;
-  });
-
-  const savedClass=isInVocab(q.word)?'saved':'';
-  const savedText=isInVocab(q.word)?'📚 저장됨':'📚 저장';
+  const sc=[...q.choices];shuffle(sc);
+  // vocab은 세로 1열, grammar/reading은 2열
+  const isTwoCol = (q.s==='grammar'||q.s==='reading');
+  const choicesHtml=sc.map((c,i)=>`<button class="ch" onclick="pickChoice(this,'${c.replace(/'/g,"\\'")}'" data-ans="${c.replace(/"/g,'&quot;')}""><span class="cl">${labels[i]}</span>${c}</button>`).join('');
 
   document.getElementById('cardArea').innerHTML=`
-    <div class="card ani">
-      <div class="q-label">Q. ${q.form} 문제</div>
-      <div class="word-bar">
-        <span class="wb-k">${q.word.k}</span>
-        <span class="wb-r">${q.word.r}</span>
-        <span class="wb-m">= ${q.word.m}</span>
-        <button id="wbSaveBtn" class="wb-save ${savedClass}" onclick="addToVocab(currentQ.word)"
-          ${isInVocab(q.word)?'disabled':''}>${savedText}</button>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">
-        <div class="q-text" style="flex:1;margin-bottom:0">${qHtml}</div>
-        <button class="speech-btn" id="qSpeechBtn" onclick="speakQuestion()" title="일본어로 읽기">🔊</button>
-      </div>
-      ${krHtml}
-      <div class="q-hint">💡 힌트: ${q.hint}</div>
-      <div class="choices">${choicesHtml}</div>
-      <div class="fb" id="fb"></div>
-      <button class="next-btn" id="nextBtn" onclick="nextQ()">다음 문제 →</button>
+  <div class="sbadge ${secCls}">${secName}</div>
+  <div class="type-lbl"><span class="n5-badge">N5</span>${typeName}</div>
+  <div class="card ${secCls}-card ani">
+    ${wordBarHtml}
+    <div class="q-wrap">
+      ${qHtml}
+      <div class="q-text">${qText}</div>
     </div>
-  `;
-  document.getElementById('qNum').textContent=`#${poolIdx}`;
+    ${krHtml}
+    <div class="choices${isTwoCol?' two-col':''}">${choicesHtml}</div>
+    <div class="fb" id="fb"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQ()">次へ → 다음 문제</button>
+  </div>`;
   document.getElementById('skipBtn').style.display='';
 }
 
-function escQ(s){ return s.replace(/'/g,"\\'"); }
+function toggleKr(){
+  const box=document.getElementById('krBox');
+  const btn=document.getElementById('krToggleBtn');
+  const wbM=document.getElementById('wbMeaning');
+  const isShown=box&&box.classList.contains('show');
+  if(box)box.classList.toggle('show',!isShown);
+  if(wbM)wbM.classList.toggle('show',!isShown);
+  if(btn){
+    btn.classList.toggle('revealed',!isShown);
+    btn.textContent=isShown?'🇰🇷 한국어 번역 보기':'🙈 번역 숨기기';
+  }
+}
 
-function pickChoice(el, chosen){
-  const q=currentQ;
-  if(!q) return;
+function escC(s){return s.replace(/'/g,"\\'");}
+
+function pickChoice(el,chosen){
+  const q=currentQ;if(!q)return;
   const isCorrect=chosen===q.ans;
-  const allCh=el.closest('.choices').querySelectorAll('.ch');
-  allCh.forEach(ch=>{
+  el.closest('.choices').querySelectorAll('.ch').forEach(ch=>{
     ch.disabled=true;
-    const ans=ch.dataset.ans.replace(/\\'/g,"'");
-    if(ans===q.ans) ch.classList.add('ok');
-    else if(ans===chosen&&!isCorrect) ch.classList.add('ng');
+    const a=ch.dataset.ans;
+    if(a===q.ans)ch.classList.add('ok');
+    else if(a===chosen&&!isCorrect)ch.classList.add('ng');
   });
+
   const fb=document.getElementById('fb');
-  const patternHtml=buildFeedbackPattern(q);
+  const expHtml=q.exp?`<div class="fb-exp">${q.exp.replace(/\n/g,'<br>')}</div>`:'';
+
   if(isCorrect){
     fb.className='fb on ok';
-    fb.innerHTML=`
-      <div class="fb-banner">
-        <span class="fb-banner-icon">✅</span>
-        <span class="fb-banner-title">정답!</span>
-        <div class="fb-ans-row">
-          <span class="fb-banner-ans">${q.ans}</span>
-          <button class="speech-btn-fb" onclick="speakFullSentence()" title="전체 문장 듣기">🔊</button>
-        </div>
-      </div>
-      ${patternHtml}`;
-  } else {
+    fb.innerHTML=`<div class="fb-banner"><span class="fb-banner-icon">✅</span><span class="fb-banner-title">정답!</span><div style="display:flex;align-items:center;gap:6px"><span class="fb-banner-ans">${q.ans}</span><button class="speech-btn-fb" onclick="speakText('${escC(q.ans)}')" title="발음 듣기">🔊</button></div></div>${expHtml}`;
+    masteredKeys.add(qKey(q));wrongQs=wrongQs.filter(w=>w.key!==qKey(q));
+  }else{
     fb.className='fb on ng';
-    fb.innerHTML=`
-      <div class="fb-banner">
-        <span class="fb-banner-icon">❌</span>
-        <span class="fb-banner-title">오답!</span>
-        <div class="fb-ans-row">
-          <span class="fb-banner-ans">${q.ans}</span>
-          <button class="speech-btn-fb" onclick="speakFullSentence()" title="정답 문장 듣기">🔊</button>
-        </div>
-      </div>
-      <div class="fb-wrong-compare">
-        <span class="fb-wrong-label">내 답</span>
-        <span class="fb-wrong-my">${chosen}</span>
-        <span class="fb-wrong-arrow">→</span>
-        <span class="fb-wrong-correct">정답: ${q.ans}</span>
-      </div>
-      ${patternHtml}`;
+    fb.innerHTML=`<div class="fb-banner"><span class="fb-banner-icon">❌</span><span class="fb-banner-title">오답!</span><div style="display:flex;align-items:center;gap:6px"><span class="fb-banner-ans">${q.ans}</span><button class="speech-btn-fb" onclick="speakText('${escC(q.ans)}')" title="발음 듣기">🔊</button></div></div><div class="fb-wrong-bar"><span style="font-size:12px;color:rgba(26,26,46,.5)">내 답</span><span class="fb-wrong-my">${chosen}</span><span class="fb-wrong-arrow">→</span><span class="fb-wrong-correct">정답: ${q.ans}</span></div>${expHtml}`;
+    wrongQs=wrongQs.filter(w=>w.key!==qKey(q));
+    wrongQs.push({key:qKey(q),q:q,returnAt:queueCount+50});
   }
+
   document.getElementById('nextBtn').classList.add('on');
   document.getElementById('skipBtn').style.display='none';
-  if(isCorrect){
-    stats.correct=(stats.correct||0)+1;
-    markCorrect(q); // ✅ 맞추면 다시 안 나옴
-  } else {
-    stats.wrong=(stats.wrong||0)+1;
-    markWrong(q);   // ❌ 틀리면 50문제 후 재출제
-  }
+  saveMastered();
+
+  if(isCorrect)stats.correct=(stats.correct||0)+1;
+  else stats.wrong=(stats.wrong||0)+1;
   stats.totalDone=(stats.totalDone||0)+1;
-  const td=today();
-  dailyData[td]=(dailyData[td]||0)+1;
+  const td=today();dailyData[td]=(dailyData[td]||0)+1;
   saveAll();
   document.getElementById('navToday').textContent=todayCount();
-  renderPoolInfo(); // 문제 현황 업데이트
+  renderPoolInfo();
+}
+function nextQ(){showQ();}
+
+// Speech
+function speakText(text){
+  if(!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='ja-JP';u.rate=0.9;
+  window.speechSynthesis.speak(u);
 }
 
-
-function getGrpClass(grp){
-  if(!grp||grp==='-') return '';
-  if(grp.includes('주의')) return 'gt1w';
-  if(grp.includes('예외')) return 'gt1w';
-  if(grp.includes('1그룹')) return 'gt1';
-  if(grp.includes('2그룹')) return 'gt2';
-  if(grp.includes('3그룹')) return 'gt3';
-  return '';
-}
-
-function nextQ(){ showQ(); }
-
-// Form filter tabs
-document.getElementById('formTabs').addEventListener('click',e=>{
-  const t=e.target.closest('.ftab');if(!t) return;
-  filterF=t.dataset.f;
-  document.querySelectorAll('.ftab').forEach(x=>x.classList.remove('on'));
+// Section filter tabs
+document.getElementById('sectionTabs').addEventListener('click',e=>{
+  const t=e.target.closest('.stab');if(!t)return;
+  filterS=t.dataset.s;
+  document.querySelectorAll('.stab').forEach(x=>{x.classList.remove('on');});
   t.classList.add('on');
-  poolIdx=0; showQ();
+  showQ();
 });
+document.getElementById('skipBtn').addEventListener('click',()=>{ nextQ(); });
 
-// Skip - doesn't count toward daily goal
-document.getElementById('skipBtn').addEventListener('click',()=>{
-  nextQ();
-});
-
-// ══════════════════════════════════════════
-// API GENERATION
-// ══════════════════════════════════════════
-// 형태별 이름 매핑
-const FORM_NAMES={
-  te:'て형(て形)', masu:'ます형(ます形)', nai:'ない형(ない形)',
-  kano:'가능형(可能形)', judou:'수동형(受身形)', shieki:'사역형(使役形)',
-  iko:'의향형(意向形)', meirei:'명령형(命令形)', group:'그룹판별', particle:'조사(助詞)'
-};
-
-function buildPrompt(targetForm){
-  const focusLine = targetForm && targetForm!=='all'
-    ? `⚠️ 중요: 모든 10개 문제를 반드시 "${FORM_NAMES[targetForm]||targetForm}" 형태로만 만들어주세요. f값은 모두 "${targetForm}"이어야 합니다.`
-    : `10가지 형태(te/masu/nai/kano/judou/shieki/iko/meirei/group/particle)를 골고루 섞어서 만들어주세요.`;
-
-  return `일본어 문법 퀴즈 문제 10개를 JSON으로 생성하세요.
-${focusLine}
-각 항목 형식:
-{
-  "f": "te|masu|nai|kano|judou|shieki|iko|meirei|group|particle",
-  "form": "て형|ます형|ない형|가능형|수동형|사역형|의향형|명령형|그룹판별|조사",
-  "word": {"k": "漢字형태", "r": "히라가나읽기", "m": "한국어뜻"},
-  "q": "___가 포함된 완전한 자연스러운 일본어 문장 (N5/N4)",
-  "kr": "___가 포함된 한국어 번역",
-  "hint": "활용 힌트 (한국어)",
-  "choices": ["4개 선택지"],
-  "ans": "정답",
-  "ex": "활용 예: 원형→활용형",
-  "rule": "한국어로 규칙 설명",
-  "grp": "1그룹|2그룹|3그룹|1그룹 주의|3그룹|-",
-  "fu": {"한자": "읽기"}
+// ── VOCAB ──
+function isInVocab(word){return vocabList.some(v=>v.k===word.k);}
+function addToVocab(word){
+  if(isInVocab(word)){showToast('이미 저장된 단어예요!');return;}
+  vocabList.unshift({k:word.k,r:word.r,m:word.m,date:today()});
+  saveVocab();showToast('📚 단어장에 저장됐어요!');
+  const btn=document.getElementById('wbSaveBtn');
+  if(btn){btn.textContent='📚 저장됨';btn.classList.add('saved');btn.disabled=true;}
 }
+function removeFromVocab(i){vocabList.splice(i,1);saveVocab();renderVocab();}
+function clearAllVocab(){if(confirm('단어장을 모두 비우시겠습니까?')){vocabList=[];saveVocab();renderVocab();}}
+function renderVocab(){
+  const el=document.getElementById('vocabContent');if(!el)return;
+  let html=`<div class="vocab-header"><div class="vocab-hero-title">📚 단어장</div><div class="vocab-count">${vocabList.length}개 저장됨</div></div>`;
+  if(vocabList.length===0){
+    html+=`<div class="vocab-empty"><div class="ve-icon">📖</div><div class="ve-msg">아직 저장된 단어가 없어요.<br>퀴즈 화면에서 <b>📚 저장</b> 버튼을 눌러보세요!</div></div>`;
+  }else{
+    vocabList.forEach((w,i)=>{html+=`<div class="vocab-card"><div class="vc-main"><div class="vc-k">${w.k}</div><div class="vc-r">${w.r}</div><div class="vc-m">${w.m}</div><div class="vc-date">${w.date}</div></div><button class="vc-del" onclick="removeFromVocab(${i})">🗑</button></div>`;});
+    html+=`<button class="vocab-clear-btn" onclick="clearAllVocab()">🗑 전체 삭제</button>`;
+  }
+  el.innerHTML=html;
+}
+
+// ── GRAMMAR TABLE ──
+let currentGSection='te';
+function renderGrammar(){
+  const navEl=document.getElementById('grammarNav');
+  document.querySelectorAll('.gnav-btn').forEach(b=>b.classList.remove('on'));
+  navEl.innerHTML=Object.keys(GRAMMAR_INFO).map(k=>`<button class="gnav-btn${k===currentGSection?' on':''}" onclick="showGSection('${k}')">${GRAMMAR_INFO[k].name}</button>`).join('');
+  showGSection(currentGSection,false);
+}
+function showGSection(key,updateNav=true){
+  currentGSection=key;
+  if(updateNav)document.querySelectorAll('.gnav-btn').forEach(b=>{b.classList.toggle('on',b.textContent.trim()===GRAMMAR_INFO[key].name);});
+  const info=GRAMMAR_INFO[key];if(!info)return;
+  const grpLabels={g1:'1그룹 (う동사)',g1w:'⚠️ 1그룹 주의',g2:'2그룹 (る동사)',g3:'3그룹 (불규칙)'};
+  const grpRules={g1:'어미를 바꿔서 활용',g1w:'る로 끝나지만 1그룹!',g2:'る를 떼고 뒤에 붙이기',g3:'통째로 외우기!'};
+  const groups={};
+  info.rows.forEach(r=>{if(!groups[r.g])groups[r.g]={g:r.g,rows:[]};groups[r.g].rows.push(r);});
+  const sectionsHtml=Object.values(groups).map(grp=>`
+    <div class="grp-section">
+      <div class="gs-header"><span class="gs-badge ${grp.g}">${grpLabels[grp.g]||grp.g}</span><span class="gs-rule-txt">${grpRules[grp.g]||''}</span></div>
+      <div class="gs-body">${grp.rows.map(r=>{
+        const ex=r.ex.replace(/<[^>]+>/g,'');const parts=ex.split('→');
+        const from=(parts[0]||'').trim();const to=(parts[1]||'').trim();
+        return `<div class="gs-row"><div class="gs-jp">${r.ex.split('→')[0].trim()}</div><div class="gs-arrow-col">→</div><div class="gs-right"><div class="gs-result">${to}</div><div class="gs-kr">${(r.kr||'').replace(/[()]/g,'')}</div><div style="font-size:12px;color:rgba(26,26,46,.5);font-family:var(--FB)">${r.change.replace(/<b>|<\/b>/g,'')}</div>${r.note?`<div class="gs-note">⚠️ ${r.note}</div>`:''}</div></div>`;
+      }).join('')}</div>
+    </div>`).join('');
+  document.getElementById('grammarContent').innerHTML=`
+    <div class="grammar-card-wrap">
+      <div class="gc-top-band"><div class="gct-name">${info.name}</div><div class="gct-jp">${info.nameJP}</div><div class="gct-usage">${info.usage}</div></div>
+      ${sectionsHtml}
+    </div>`;
+}
+
+// ── SETTINGS ──
+function renderSettings(){
+  const st=document.getElementById('apiStatus'),inp=document.getElementById('apiKeyInput');
+  if(apiKey){st.textContent='설정됨 ✓';st.style.background='rgba(39,113,74,.15)';st.style.color='#1f5538';inp.value=apiKey;}
+  else{st.textContent='미설정';inp.value='';}
+}
+async function testApiKey(){
+  const btn=document.getElementById('testApiBtn'),res=document.getElementById('testApiResult');
+  if(!apiKey){res.textContent='❌ API 키를 먼저 입력해주세요!';res.style.color='var(--ng)';return;}
+  btn.textContent='테스트 중...';btn.disabled=true;res.textContent='';
+  try{
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'테스트. "작동중"이라고만 답해주세요.'}]}]})});
+    const d=await r.json();
+    if(d.error){res.textContent='❌ 오류: '+d.error.message;res.style.color='var(--ng)';}
+    else{res.textContent='✅ API 정상 작동 중!';res.style.color='var(--ok)';}
+  }catch(e){res.textContent='❌ 연결 실패: '+e.message;res.style.color='var(--ng)';}
+  btn.textContent='🔍 API 키 테스트';btn.disabled=false;
+}
+function exportData(){
+  const d={dailyData,stats,vocabList,exportDate:new Date().toISOString()};
+  const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`n5quiz_${today()}.json`;a.click();
+}
+function confirmReset(){
+  if(confirm('모든 학습 기록을 초기화하시겠습니까?')){
+    dailyData={};stats={correct:0,wrong:0,totalDone:0};masteredKeys=new Set();wrongQs=[];queueCount=0;
+    try{localStorage.removeItem('jpq_mastered');localStorage.removeItem('jpq_wrongqs');localStorage.removeItem('jpq_qcount');}catch(e){}
+    saveAll();renderHome();alert('초기화 완료!');
+  }
+}
+
+// ── API GENERATION ──
+const SECTION_NAMES={vocab:'文字・語彙(문자어휘)',grammar:'文法(문법)',reading:'読解(독해)'};
+function buildPrompt(sec){
+  const focus=sec&&sec!=='all'?`⚠️ 모든 문제를 반드시 "${SECTION_NAMES[sec]||sec}" 섹션으로만 만들어주세요. s값은 모두 "${sec}"이어야 합니다.`:'각 섹션(vocab/grammar/reading)을 골고루 만들어주세요.';
+  return `JLPT N5 퀴즈 문제 8개를 JSON 배열로 생성하세요.
+${focus}
+
+형식:
+{
+  "s": "vocab|grammar|reading",
+  "t": "kanji_read|kanji_write|vocab_ctx|grammar_fill|reading",
+  "q": "문제 텍스트 (빈칸은 （　　） 사용)",
+  "passage": "독해 지문 (reading 타입만)",
+  "word": {"k": "핵심 단어 한자", "r": "히라가나", "m": "한국어 뜻"},
+  "kr": "한국어 번역",
+  "choices": ["정답포함 4개 선택지 — 헷갈리도록 만들것"],
+  "ans": "정답",
+  "exp": "한국어로 설명 (왜 이 답인지, 오답과의 차이)"
+}
+
 규칙:
-- q는 반드시 완전한 문장, ___는 하나만, 1/2/3그룹 골고루
-- fu에는 문장의 모든 한자 포함
-- choices는 반드시 헷갈리도록:
-  * 같은 동사의 다른 형태 (수동형↔사역형, 가능형↔수동형)
-  * 1그룹 규칙을 2그룹에 잘못 적용한 것 (たべって)
-  * 어미 변화를 한 단계 틀리게 한 것
-  * "たべにて" 같은 말도 안 되는 오답 절대 금지
-JSON 배열만 출력 (마크다운 없이).`;
+- N5 수준 (기초 한자 100개, 기본 문법)
+- choices는 실제로 헷갈릴 법하게 만들것 (비슷한 단어/형태)
+- exp는 초보자도 이해할 수 있게 한국어로 설명
+- JSON 배열만 출력 (마크다운 없이)`;
 }
 
 async function generateQuestions(){
-  if(generating) return;
-  generating=true;
-  document.getElementById('genBar').classList.add('on');
+  if(generating)return;
+  generating=true;document.getElementById('genBar').classList.add('on');
   const isClaudeAI=(typeof window.storage!=='undefined');
-  // 현재 필터에 맞는 전용 프롬프트 사용
-  const prompt=buildPrompt(filterF);
+  const prompt=buildPrompt(filterS);
   try{
-    if(isClaudeAI) await generateAnthropic(prompt);
-    else if(apiKey) await generateGemini(prompt);
-    else showToast('⚠️ Gemini API 키를 설정에서 입력해주세요!');
-  }catch(e){
-    console.error('Gen error:',e);
-    showToast('⚠️ 문제 생성 실패: '+e.message);
-  }
-  generating=false;
-  document.getElementById('genBar').classList.remove('on');
-  renderQuizStrip();
-}
-
-async function generateAnthropic(prompt){
-  const resp=await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      model:'claude-sonnet-4-20250514',max_tokens:4000,
-      messages:[{role:'user',content:prompt}]
-    })
-  });
-  const data=await resp.json();
-  if(data.error) throw new Error(data.error.message||'Anthropic error');
-  const text=data.content.map(c=>c.text||'').join('');
-  parseAndAdd(text);
-}
-
-async function generateGemini(prompt){
-  const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-  const resp=await fetch(url,{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
-  });
-  const data=await resp.json();
-  if(data.error) throw new Error(data.error.message||'Gemini error');
-  const text=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
-  if(!text) throw new Error('응답이 비어있어요');
-  parseAndAdd(text);
-}
-
-// API 키 테스트
-async function testApiKey(){
-  const btn=document.getElementById('testApiBtn');
-  const result=document.getElementById('testApiResult');
-  if(!apiKey){
-    result.textContent='❌ API 키가 없어요! 먼저 키를 입력하고 저장해주세요.';
-    result.style.color='var(--ng)';
-    return;
-  }
-  btn.textContent='테스트 중...';
-  btn.disabled=true;
-  result.textContent='';
-  try{
-    const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-    const resp=await fetch(url,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({contents:[{parts:[{text:'안녕하세요. 테스트입니다. "작동중"이라고만 답해주세요.'}]}]})
-    });
-    const data=await resp.json();
-    if(data.error){
-      result.textContent='❌ 오류: '+data.error.message;
-      result.style.color='var(--ng)';
-    } else {
-      const text=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
-      result.textContent='✅ API 키 정상 작동 중! 응답: '+text.slice(0,30);
-      result.style.color='var(--ok)';
+    if(isClaudeAI){
+      const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',content:prompt}]})});
+      const d=await r.json();if(d.error)throw new Error(d.error.message);
+      parseAndAdd(d.content.map(c=>c.text||'').join(''));
+    }else if(apiKey){
+      const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+      const d=await r.json();if(d.error)throw new Error(d.error.message);
+      const text=d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+      if(!text)throw new Error('응답 없음');
+      parseAndAdd(text);
     }
-  }catch(e){
-    result.textContent='❌ 연결 실패: '+e.message;
-    result.style.color='var(--ng)';
-  }
-  btn.textContent='🔍 API 키 테스트';
-  btn.disabled=false;
+  }catch(e){console.error(e);showToast('⚠️ 생성 실패: '+e.message);}
+  generating=false;document.getElementById('genBar').classList.remove('on');
+  renderPoolInfo();
+  if(currentView==='quiz'&&document.getElementById('cardArea').querySelector('.loading-card'))showQ();
 }
-
 function parseAndAdd(text){
   try{
     const clean=text.replace(/```json|```/g,'').trim();
-    const match=clean.match(/\[[\s\S]*\]/);
-    if(!match) return;
-    const qs=JSON.parse(match[0]);
-    if(!Array.isArray(qs)) return;
-
-    // 중복 제거
-    const existingKeys=new Set(pool.map(q=>q.q.slice(0,30)));
-    const newQs=qs.filter(q=>q.q && !existingKeys.has(q.q.slice(0,30)));
-
+    const m=clean.match(/\[[\s\S]*\]/);if(!m)return;
+    const qs=JSON.parse(m[0]);if(!Array.isArray(qs))return;
+    const existing=new Set(pool.map(q=>qKey(q)));
+    const newQs=qs.filter(q=>q.q&&!existing.has(qKey(q)));
     if(newQs.length>0){
       pool.push(...newQs);
-
-      // 오늘 추가된 문제 수 누적
+      // 오늘 추가 카운트
       const todayStr=today();
       const lastDate=localStorage.getItem('jpq_today_added_date')||'';
       const prev=lastDate===todayStr?parseInt(localStorage.getItem('jpq_today_added')||'0'):0;
-      localStorage.setItem('jpq_today_added', String(prev+newQs.length));
-      localStorage.setItem('jpq_today_added_date', todayStr);
-
-      showToast(`✨ 새 문제 ${newQs.length}개 추가됐어요!`);
-      renderQuizStrip();
+      localStorage.setItem('jpq_today_added',String(prev+newQs.length));
+      localStorage.setItem('jpq_today_added_date',todayStr);
+      showToast(`✨ 새 문제 ${newQs.length}개 추가!`);
+      renderPoolInfo();
     }
-  }catch(e){console.error('Parse error:',e);}
+  }catch(e){console.error(e);}
 }
 
-// ══════════════════════════════════════════
-// NAV & VIEW SWITCHING
-// ══════════════════════════════════════════
+// ── TOAST ──
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ── NAV ──
 function switchView(v){
   currentView=v;
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('on'));
   document.querySelectorAll('.ntab').forEach(el=>el.classList.remove('on'));
-  const viewEl=document.getElementById(v+'View');
-  const tabEl=document.querySelector(`.ntab[data-v="${v}"]`);
-  if(viewEl) viewEl.classList.add('on');
-  if(tabEl) tabEl.classList.add('on');
-  if(v==='home') renderHome();
+  const ve=document.getElementById(v+'View'),te=document.querySelector(`.ntab[data-v="${v}"]`);
+  if(ve)ve.classList.add('on');if(te)te.classList.add('on');
+  if(v==='home')renderHome();
   if(v==='quiz'){if(pool.length===0)initPool();showQ();}
-  if(v==='settings') renderSettings();
-  if(v==='vocab') renderVocab();
-  if(v==='grammar') renderGrammar();
+  if(v==='vocab')renderVocab();
+  if(v==='grammar')renderGrammar();
+  if(v==='settings')renderSettings();
 }
-
-document.querySelectorAll('.ntab').forEach(t=>{
-  t.addEventListener('click',()=>switchView(t.dataset.v));
-});
-
-// Play Store toggle
-document.getElementById('playStoreCard').addEventListener('click',()=>{
-  const b=document.getElementById('playBody');const a=document.getElementById('playArrow');
-  b.classList.toggle('open');a.textContent=b.classList.contains('open')?'▲':'▼';
-});
-
-// PWA
-let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{
-  e.preventDefault();deferredPrompt=e;
-  document.getElementById('installBtnWrap').style.display='block';
-});
-function installPWA(){
-  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;});}
-}
-
-// ══════════════════════════════════════════
-// WEB SPEECH API
-// ══════════════════════════════════════════
-function speak(text, btnEl){
-  if(!window.speechSynthesis) return;
-  // Cancel any ongoing speech
-  window.speechSynthesis.cancel();
-
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'ja-JP';
-  utter.rate = 0.9;   // 살짝 천천히 — 초보자용
-  utter.pitch = 1.0;
-
-  if(btnEl){
-    btnEl.classList.add('speaking');
-    utter.onend = () => btnEl.classList.remove('speaking');
-    utter.onerror = () => btnEl.classList.remove('speaking');
-  }
-  window.speechSynthesis.speak(utter);
-}
-
-// 1. 질문 읽기 (빈칸 제외 — ___ 를 읽지 않음)
-function speakQuestion(){
-  const q = currentQ;
-  if(!q) return;
-  // 빈칸(___) 부분을 제거하고 읽기
-  const text = q.q.replace(/___/g, '').replace(/。/g, '。 ').trim();
-  const btn = document.getElementById('qSpeechBtn');
-  speak(text, btn);
-}
-
-// 2. 정답 포함 전체 문장 읽기
-function speakFullSentence(){
-  const q = currentQ;
-  if(!q) return;
-  // 빈칸을 정답으로 채운 전체 문장
-  const text = q.q.replace(/___/g, q.ans);
-  const btn = event.target.closest('button');
-  speak(text, btn);
-}
+document.querySelectorAll('.ntab').forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.v)));
 
 // ── INIT ──
 async function init(){
