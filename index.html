@@ -130,17 +130,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
 /* Question */
 .q-wrap{margin-bottom:10px}
 .q-num{font-family:var(--FP);font-size:10px;color:rgba(26,26,46,.35);letter-spacing:1px;margin-bottom:6px}
-.q-text{font-family:var(--FJ);font-size:19px;color:var(--ink);line-height:2.2;margin-bottom:4px}
+.q-text{font-family:var(--FJ);font-size:19px;color:var(--ink);line-height:1.8;margin-bottom:4px}
 .q-text .blank{display:inline-block;border-bottom:3px solid var(--acc);min-width:55px;text-align:center;color:var(--acc);font-weight:800;padding:0 5px}
+/* 문제 지시문 */
+.q-instruction{font-size:12px;color:rgba(26,26,46,.45);font-family:var(--FB);margin-bottom:10px;padding:6px 10px;background:rgba(26,26,46,.04);border-radius:6px;border-left:2px solid rgba(26,26,46,.12)}
 .kr-box{font-size:14px;color:rgba(26,26,46,.6);line-height:1.7;padding:9px 13px;background:rgba(196,146,40,.07);border-radius:8px;margin-bottom:12px;font-family:var(--FB);border-left:3px solid rgba(196,146,40,.5);display:none}
 .kr-box.show{display:block}
 /* 번역 버튼 */
 .kr-toggle-btn{display:inline-flex;align-items:center;gap:6px;border:1.5px solid rgba(196,146,40,.35);background:rgba(196,146,40,.07);color:rgba(26,26,46,.55);border-radius:20px;padding:5px 13px;font-size:12px;font-family:var(--FB);cursor:pointer;margin-bottom:12px;transition:all .15s}
 .kr-toggle-btn:hover{background:rgba(196,146,40,.15);color:var(--ink)}
 .kr-toggle-btn.revealed{background:rgba(196,146,40,.12);color:rgba(26,26,46,.7);border-color:rgba(196,146,40,.5)}
-/* word bar — 뜻 숨김 */
-.wb-m{font-size:13px;color:var(--teal);font-weight:700;display:none}
-.wb-m.show{display:inline}
+/* word bar — 뜻 숨김 (답 전 노출 방지) */
+.wb-m-hidden{display:none}
 .q-hint{font-size:12px;color:rgba(26,26,46,.5);margin-bottom:14px;padding:5px 10px;background:rgba(26,26,46,.05);border-radius:6px;border-left:2px solid rgba(196,146,40,.4)}
 /* Choices */
 .choices{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
@@ -280,7 +281,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
   </div>
   <div class="nav-right">
     <div class="nav-today">오늘 <b id="navToday">0</b>/10</div>
-    <div class="nav-version">v7.6</div>
+    <div class="nav-version">v7.8</div>
   </div>
 </nav>
 
@@ -1016,37 +1017,48 @@ function renderCard(q){
   const typeName=TYPE_NAME[q.t]||q.t;
   const secName={vocab:'문자·어휘',grammar:'문법',reading:'독해'}[q.s]||q.s;
 
-  // Build question HTML
+  // 문제 유형별 지시문 (실제 N5 시험 형식)
+  const instructions={
+    kanji_read:'밑줄 친 한자의 읽기를 고르세요。',
+    kanji_write:'밑줄 친 히라가나를 한자로 바르게 쓴 것을 고르세요。',
+    vocab_ctx:'(　　)에 들어갈 가장 알맞은 것을 고르세요。',
+    vocab_syn:'밑줄 친 말과 의미가 가장 비슷한 것을 고르세요。',
+    grammar_fill:'(　　)에 들어갈 가장 알맞은 것을 고르세요。',
+    reading:'글을 읽고 질문에 답하세요。',
+  };
+  const instrHtml=`<div class="q-instruction">${instructions[q.t]||''}</div>`;
+
+  // 독해 지문
   let qHtml='';
   if(q.t==='reading'&&q.passage){
+    const passageDisplay=q.passage.replace(/。/g,'。<br>').replace(/\n/g,'<br>');
     qHtml+=`<div class="passage-label">📄 지문</div>
-    <div class="passage-box">${q.passage}</div>`;
+    <div class="passage-box">${passageDisplay}</div>`;
   }
-
-  // Word bar — 답 고르기 전엔 숨김 (정답 노출 방지)
-  // 답 후에 fb-exp에서 보여줌
-  const wordBarHtml = '';  // 항상 숨김
 
   const qText=q.q.replace(/___/g,'<span class="blank">＿＿</span>');
 
-  // 한국어 번역 — 기본 숨김, 버튼으로 토글
+  // 한국어 번역 토글
   const krHtml=q.kr?`
     <button class="kr-toggle-btn" id="krToggleBtn" onclick="toggleKr()">🇰🇷 한국어 번역 보기</button>
     <div class="kr-box" id="krBox">${q.kr.replace(/___/g,'<b style="color:var(--acc)">___</b>')}</div>
   `:'';
 
-  // Shuffle choices
+  // 선택지 셔플
   const labels=['A','B','C','D'];
   const sc=[...q.choices];shuffle(sc);
-  // vocab은 세로 1열, grammar/reading은 2열
-  const isTwoCol = (q.s==='grammar'||q.s==='reading');
-  const choicesHtml=sc.map((c,i)=>`<button class="ch" onclick="pickChoice(this,'${c.replace(/'/g,"\\'")}'" data-ans="${c.replace(/"/g,'&quot;')}""><span class="cl">${labels[i]}</span>${c}</button>`).join('');
+  const isTwoCol=(q.s==='grammar'||q.s==='reading');
+  const choicesHtml=sc.map((c,i)=>{
+    const esc=c.replace(/'/g,"\\'");
+    const ans=c.replace(/"/g,'&quot;');
+    return '<button class="ch" onclick="pickChoice(this,\''+esc+'\');" data-ans="'+ans+'"><span class="cl">'+labels[i]+'</span>'+c+'</button>';
+  }).join('');
 
   document.getElementById('cardArea').innerHTML=`
   <div class="sbadge ${secCls}">${secName}</div>
   <div class="type-lbl"><span class="n5-badge">N5</span>${typeName}</div>
   <div class="card ${secCls}-card ani">
-    ${wordBarHtml}
+    ${instrHtml}
     <div class="q-wrap">
       ${qHtml}
       <div class="q-text">${qText}</div>
@@ -1086,9 +1098,9 @@ function pickChoice(el,chosen){
 
   const fb=document.getElementById('fb');
 
-  // 답 후에 단어 정보 표시 (정답 노출 방지를 위해 여기서만 보여줌)
+  // 답 후 단어 정보 표시 (vocab_syn은 제외 — 단어 자체가 힌트라서)
   let wordInfoHtml='';
-  if(q.word&&q.word.k&&q.t!=='reading'){
+  if(q.word&&q.word.k&&q.t!=='reading'&&q.t!=='vocab_syn'){
     const isSaved=vocabList.some(v=>v.k===q.word.k);
     wordInfoHtml=`<div style="display:flex;align-items:center;gap:10px;padding:10px 15px;background:rgba(26,26,46,.04);border-bottom:1px solid rgba(26,26,46,.08);flex-wrap:wrap">
       <span style="font-family:var(--FJ);font-size:20px;font-weight:700;color:var(--ink)">${q.word.k}</span>
@@ -1114,6 +1126,12 @@ function pickChoice(el,chosen){
   document.getElementById('nextBtn').classList.add('on');
   document.getElementById('skipBtn').style.display='none';
   saveMastered();
+
+  // 피드백 보이도록 스크롤
+  setTimeout(()=>{
+    const fbEl=document.getElementById('fb');
+    if(fbEl) fbEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+  },100);
 
   if(isCorrect)stats.correct=(stats.correct||0)+1;
   else stats.wrong=(stats.wrong||0)+1;
@@ -1233,28 +1251,34 @@ function confirmReset(){
 // ── API GENERATION ──
 const SECTION_NAMES={vocab:'文字・語彙(문자어휘)',grammar:'文法(문법)',reading:'読解(독해)'};
 function buildPrompt(sec){
-  const focus=sec&&sec!=='all'?`⚠️ 모든 문제를 반드시 "${SECTION_NAMES[sec]||sec}" 섹션으로만 만들어주세요. s값은 모두 "${sec}"이어야 합니다.`:'각 섹션(vocab/grammar/reading)을 골고루 만들어주세요.';
+  const focus=sec&&sec!=='all'
+    ?`⚠️ 모든 문제를 반드시 "${SECTION_NAMES[sec]||sec}" 섹션으로만. s값은 모두 "${sec}".`
+    :'각 섹션(vocab/grammar/reading) 골고루.';
   return `JLPT N5 퀴즈 문제 8개를 JSON 배열로 생성하세요.
 ${focus}
 
 형식:
 {
   "s": "vocab|grammar|reading",
-  "t": "kanji_read|kanji_write|vocab_ctx|grammar_fill|reading",
-  "q": "문제 텍스트 (빈칸은 （　　） 사용)",
-  "passage": "독해 지문 (reading 타입만)",
-  "word": {"k": "핵심 단어 한자", "r": "히라가나", "m": "한국어 뜻"},
+  "t": "kanji_read|kanji_write|vocab_ctx|vocab_syn|grammar_fill|reading",
+  "q": "문제 텍스트. 한자읽기=<u><b>漢字</b></u>로 밑줄, 표기=<u>ひらがな</u>로 밑줄, 유의표현=<u>단어</u>로 밑줄, 빈칸=（　　）",
+  "passage": "독해 지문 (reading만)",
+  "word": {"k": "핵심단어", "r": "히라가나", "m": "한국어뜻"},
   "kr": "한국어 번역",
-  "choices": ["정답포함 4개 선택지 — 헷갈리도록 만들것"],
+  "choices": ["4개 선택지 — 진짜 헷갈리게"],
   "ans": "정답",
-  "exp": "한국어로 설명 (왜 이 답인지, 오답과의 차이)"
+  "exp": "한국어 설명 (왜 이 답인지 + 오답과 차이)"
 }
 
-규칙:
-- N5 수준 (기초 한자 100개, 기본 문법)
-- choices는 실제로 헷갈릴 법하게 만들것 (비슷한 단어/형태)
-- exp는 초보자도 이해할 수 있게 한국어로 설명
-- JSON 배열만 출력 (마크다운 없이)`;
+타입별 규칙:
+- kanji_read: 문장에서 한자 하나를 <u><b></b></u>로 감싸고, 선택지=유사 발음 히라가나 4개
+- kanji_write: 문장에서 히라가나를 <u></u>로 감싸고, 선택지=비슷하게 생긴 한자 4개
+- vocab_ctx: （　　）빈칸에 맞는 단어, 선택지=문맥상 헷갈리는 단어들
+- vocab_syn: 밑줄 단어의 유의어, 선택지=비슷하지만 다른 뜻 단어들
+- grammar_fill: （　　）에 맞는 문법/조사, 선택지=헷갈리는 문법형태들
+- reading: passage+question, 선택지=지문 내용 기반
+
+N5 수준 유지. JSON만 출력.`;
 }
 
 async function generateQuestions(){
