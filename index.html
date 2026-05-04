@@ -26,8 +26,10 @@
 --r8:8px;--r12:12px;--r16:16px;
 }
 body{font-family:var(--FB);background:var(--ink);min-height:100vh;color:var(--paper);overflow-x:hidden;font-size:15px;line-height:1.6}
-ruby{font-family:var(--FJ);ruby-align:center}
-rt{display:block;font-size:0.52em;color:rgba(26,26,46,.5);font-family:var(--FB);font-weight:400;text-align:center;line-height:1.2}
+ruby{font-family:var(--FJ);ruby-align:center;display:inline-flex;flex-direction:column;align-items:center;vertical-align:bottom;line-height:1}
+rt{font-size:0.5em;color:rgba(26,26,46,.55);font-family:var(--FB);font-weight:400;text-align:center;line-height:1.4;order:-1}
+/* 후리가나 숨기기 */
+body.no-furigana rt{visibility:hidden;font-size:0}
 #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink2);color:var(--paper);padding:10px 20px;border-radius:30px;font-family:var(--FP);font-size:11px;z-index:9999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)}
 #toast.show{opacity:1}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:stretch;padding:0 12px}
@@ -131,8 +133,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
 .fb{display:none;border-radius:var(--r12);overflow:hidden;width:100%}
 .fb.on{display:block}
 /* Passage (독해) */
-.passage-box{background:rgba(26,26,46,.06);border-radius:10px;padding:14px 16px;margin-bottom:14px;font-family:var(--FJ);font-size:15px;color:var(--ink);line-height:2.2}
+.passage-kr-box{display:none;font-size:14px;color:rgba(26,26,46,.6);line-height:1.8;padding:10px 14px;background:rgba(196,146,40,.07);border-radius:8px;margin-top:-8px;margin-bottom:10px;font-family:var(--FB);border-left:3px solid rgba(196,146,40,.4)}
+.passage-kr-box.show{display:block}
 .passage-label{font-family:var(--FP);font-size:9px;letter-spacing:2px;color:rgba(26,26,46,.35);text-transform:uppercase;margin-bottom:8px}
+.passage-box{background:rgba(26,26,46,.07);border-radius:10px;padding:14px 16px;margin-bottom:10px;font-family:var(--FJ);font-size:15px;color:var(--ink);line-height:2.0;border-left:3px solid rgba(26,26,46,.15)}
 /* Question */
 .q-wrap{margin-bottom:10px}
 .q-num{font-family:var(--FP);font-size:10px;color:rgba(26,26,46,.35);letter-spacing:1px;margin-bottom:6px}
@@ -168,7 +172,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
 /* 정답/오답 색상 */
 .fb.ok{border:2px solid var(--ok)}
 .fb.ng{border:2px solid var(--ng)}
-.fb-banner{display:flex;align-items:center;gap:10px;padding:13px 16px}
+.fb-banner{display:flex;align-items:center;gap:8px;padding:12px 16px;flex-wrap:wrap}
 .fb.ok .fb-banner{background:var(--ok)}
 .fb.ng .fb-banner{background:var(--ng)}
 .fb-banner-icon{font-size:22px}
@@ -273,7 +277,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
 @keyframes sIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .card.ani{animation:sIn .22s ease}
 @media(max-width:480px){
-  .choices.two-col{grid-template-columns:1fr}
   .stats-row{grid-template-columns:1fr 1fr}
 }
 </style>
@@ -293,7 +296,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
   </div>
   <div class="nav-right">
     <div class="nav-today">오늘 <b id="navToday">0</b>/10</div>
-    <div class="nav-version">v8.3</div>
+    <div class="nav-version">v9.0</div>
   </div>
 </nav>
 
@@ -358,7 +361,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(22,22,42,.97
       <div class="ts-dots" id="tsDots"></div>
       <div class="ts-label" id="tsLabel"></div>
     </div>
-    <div class="pool-info" id="poolInfo"></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button id="furiganaBtn" onclick="toggleFurigana()" style="font-family:var(--FP);font-size:9px;letter-spacing:.5px;padding:4px 9px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:rgba(245,240,232,.5);cursor:pointer;transition:all .2s">読み ON</button>
+      <div class="pool-info" id="poolInfo"></div>
+    </div>
   </div>
   <div id="cardArea"></div>
   <div class="action-row">
@@ -425,70 +431,70 @@ const SEED = [
 // ═══════════════════════════════════════════════════════
 
 {s:'vocab',t:'kanji_read',
- q:'あの <u><b>山</b></u> に ゆきが あります。',
+ q:'あの <u><b>山</b></u> に ゆきが あります。',fu:{},
  kr:'저 산에 눈이 있습니다.',
  word:{k:'山',r:'やま',m:'산'},
  choices:['やま','さん','やみ','かな'],ans:'やま',
  exp:'山(やま)=산. 「さん」은 山の音読み(산기슭 같은 합성어)로 쓰여요. やみ(闇=어둠)・かな는 전혀 다른 단어!'},
 
 {s:'vocab',t:'kanji_read',
- q:'まいにち 六 <u><b>時</b></u> に おきます。',
+ q:'まいにち 六 <u><b>時</b></u> に おきます。',fu:{'六':'ろく'},
  kr:'매일 6시에 일어납니다.',
  word:{k:'時',r:'じ',m:'시(시간)'},
  choices:['じ','とき','し','ち'],ans:'じ',
  exp:'六時(ろくじ)의 「時」는 じ. 「とき」는 "때"라는 뜻의 명사로 쓸 때. 「三時(さんじ)・何時(なんじ)」도 같아요.'},
 
 {s:'vocab',t:'kanji_read',
- q:'ここは <u><b>駅</b></u> から とおいですか。',
+ q:'ここは <u><b>駅</b></u> から とおいですか。',fu:{},
  kr:'여기는 역에서 멉니까?',
  word:{k:'駅',r:'えき',m:'역'},
  choices:['えき','やく','えいき','けき'],ans:'えき',
  exp:'駅(えき)=역. やく(役=역할/약), えいき는 없는 단어. 전철 관련 단어는 駅(えき)만 기억!'},
 
 {s:'vocab',t:'kanji_read',
- q:'<u><b>先生</b></u> は やさしい ひとです。',
+ q:'<u><b>先生</b></u> は やさしい ひとです。',fu:{},
  kr:'선생님은 친절한 사람입니다.',
  word:{k:'先生',r:'せんせい',m:'선생님'},
  choices:['せんせい','さきせい','せんせ','さんせい'],ans:'せんせい',
  exp:'先生(せんせい)=선생님. 「さきせい」「せんせ」는 없는 단어. 「賛成(さんせい)」=찬성은 전혀 다른 단어!'},
 
 {s:'vocab',t:'kanji_read',
- q:'この <u><b>川</b></u> は きれいですね。',
+ q:'この <u><b>川</b></u> は きれいですね。',fu:{},
  kr:'이 강은 깨끗하네요.',
  word:{k:'川',r:'かわ',m:'강'},
  choices:['かわ','がわ','かは','こ'],ans:'かわ',
  exp:'川(かわ)=강. 「がわ」는 濁点(탁점)이 붙은 것으로 「右川(みぎがわ)=오른쪽」같이 뒤에 붙을 때. 「かは」는 고어 표기!'},
 
 {s:'vocab',t:'kanji_read',
- q:'<u><b>右</b></u> に まがって ください。',
+ q:'<u><b>右</b></u> に まがって ください。',fu:{},
  kr:'오른쪽으로 돌아주세요.',
  word:{k:'右',r:'みぎ',m:'오른쪽'},
  choices:['みぎ','ひだり','みき','うぎ'],ans:'みぎ',
  exp:'右(みぎ)=오른쪽. 「左(ひだり)」=왼쪽은 반대 방향. 「みき」「うぎ」는 없는 단어. 右(う/ゆう)는 음독이에요.'},
 
 {s:'vocab',t:'kanji_read',
- q:'まいにち <u><b>電車</b></u> で がっこうへ いきます。',
+ q:'まいにち <u><b>電車</b></u> で がっこうへ いきます。',fu:{},
  kr:'매일 전철로 학교에 갑니다.',
  word:{k:'電車',r:'でんしゃ',m:'전철'},
  choices:['でんしゃ','てんしゃ','でんじゃ','でんき'],ans:'でんしゃ',
  exp:'電車(でんしゃ). 「電気(でんき)」=전기, 「天井(てんじょう)」=천장. 電(でん)+車(しゃ)=전철!'},
 
 {s:'vocab',t:'kanji_read',
- q:'きょうは <u><b>父</b></u> の たんじょうびです。',
+ q:'きょうは <u><b>父</b></u> の たんじょうびです。',fu:{},
  kr:'오늘은 아버지의 생일입니다.',
  word:{k:'父',r:'ちち',m:'아버지(내 아버지)'},
  choices:['ちち','はは','おとうさん','ふ'],ans:'ちち',
  exp:'父(ちち)=（내）아버지. 「はは(母)」=어머니. 「おとうさん」=아버지(존댓말). 「ふ」는 음독이에요.'},
 
 {s:'vocab',t:'kanji_read',
- q:'この <u><b>本</b></u> は おもしろいですか。',
+ q:'この <u><b>本</b></u> は おもしろいですか。',fu:{},
  kr:'이 책은 재미있습니까?',
  word:{k:'本',r:'ほん',m:'책'},
  choices:['ほん','もと','ぼん','はん'],ans:'ほん',
  exp:'本(ほん)=책. 「元(もと)」=근원/원래, 「盆(ぼん)」=쟁반, 「判(はん)」=판정. 本は「ほん」と覚えよう!'},
 
 {s:'vocab',t:'kanji_read',
- q:'きょうは <u><b>学校</b></u> が やすみです。',
+ q:'きょうは <u><b>学校</b></u> が やすみです。',fu:{},
  kr:'오늘은 학교가 쉽니다.',
  word:{k:'学校',r:'がっこう',m:'학교'},
  choices:['がっこう','がくこう','がっこ','かっこう'],ans:'がっこう',
@@ -500,56 +506,56 @@ const SEED = [
 // ═══════════════════════════════════════════════════════
 
 {s:'vocab',t:'kanji_write',
- q:'あの <u>やま</u> に ゆきが あります。',
+ q:'あの <u>やま</u> に ゆきが あります。',fu:{},
  kr:'저 산에 눈이 있습니다.',
  word:{k:'山',r:'やま',m:'산'},
  choices:['山','川','林','谷'],ans:'山',
  exp:'やま = 山. 「川(かわ)」=강, 「林(はやし)」=숲, 「谷(たに)」=골짜기. 形が似ていますが意味が全然違う!'},
 
 {s:'vocab',t:'kanji_write',
- q:'ここから <u>えき</u> まで あるいて いきます。',
+ q:'ここから <u>えき</u> まで あるいて いきます。',fu:{},
  kr:'여기서 역까지 걸어서 갑니다.',
  word:{k:'駅',r:'えき',m:'역'},
  choices:['駅','役','益','液'],ans:'駅',
  exp:'えき = 駅(えき). 「役(やく)」=역할, 「益(えき)」=이익, 「液(えき)」=액체. 발음은 같지만 한자가 달라요!'},
 
 {s:'vocab',t:'kanji_write',
- q:'まいにち <u>みず</u> を のみます。',
+ q:'まいにち <u>みず</u> を のみます。',fu:{},
  kr:'매일 물을 마십니다.',
  word:{k:'水',r:'みず',m:'물'},
  choices:['水','氷','池','海'],ans:'水',
  exp:'みず = 水(みず). 「氷(こおり)」=얼음, 「池(いけ)」=연못, 「海(うみ)」=바다. 물 관련 한자가 많으니 주의!'},
 
 {s:'vocab',t:'kanji_write',
- q:'きょうは <u>かぜ</u> が つよいですね。',
+ q:'きょうは <u>かぜ</u> が つよいですね。',fu:{},
  kr:'오늘은 바람이 강하네요.',
  word:{k:'風',r:'かぜ',m:'바람'},
  choices:['風','雨','雪','雲'],ans:'風',
  exp:'かぜ = 風(かぜ). 「雨(あめ)」=비, 「雪(ゆき)」=눈, 「雲(くも)」=구름. 날씨 한자 セットで覚えよう!'},
 
 {s:'vocab',t:'kanji_write',
- q:'きのう <u>ほん</u> を よみました。',
+ q:'きのう <u>ほん</u> を よみました。',fu:{},
  kr:'어제 책을 읽었습니다.',
  word:{k:'本',r:'ほん',m:'책'},
  choices:['本','文','木','目'],ans:'本',
  exp:'ほん = 本(ほん)=책. 「文(ぶん)」=문장, 「木(き)」=나무, 「目(め)」=눈(目). 形が似ているので注意!'},
 
 {s:'vocab',t:'kanji_write',
- q:'わたしの <u>ちち</u> は かいしゃいんです。',
+ q:'わたしの <u>ちち</u> は かいしゃいんです。',fu:{},
  kr:'나의 아버지는 회사원입니다.',
  word:{k:'父',r:'ちち',m:'아버지'},
  choices:['父','母','兄','姉'],ans:'父',
  exp:'ちち = 父(ちち)=아버지. 「母(はは)」=어머니, 「兄(あに)」=형/오빠, 「姉(あね)」=누나/언니. 가족 한자!'},
 
 {s:'vocab',t:'kanji_write',
- q:'そとは <u>あめ</u> が ふっています。',
+ q:'そとは <u>あめ</u> が ふっています。',fu:{},
  kr:'밖에는 비가 내리고 있습니다.',
  word:{k:'雨',r:'あめ',m:'비'},
  choices:['雨','雪','風','空'],ans:'雨',
  exp:'あめ = 雨(あめ). 「雪(ゆき)」=눈, 「風(かぜ)」=바람, 「空(そら)」=하늘. 일기 예보 관련 한자!'},
 
 {s:'vocab',t:'kanji_write',
- q:'この <u>みち</u> は せまいですね。',
+ q:'この <u>みち</u> は せまいですね。',fu:{},
  kr:'이 길은 좁네요.',
  word:{k:'道',r:'みち',m:'길'},
  choices:['道','通','路','町'],ans:'道',
@@ -621,42 +627,42 @@ const SEED = [
 // ═══════════════════════════════════════════════════════
 
 {s:'vocab',t:'vocab_syn',
- q:'この えいがは とても <u>たのしい</u> です。',
+ q:'この えいがは とても <u>たのしい</u> です。',fu:{},
  kr:'이 영화는 매우 즐겁습니다.',
  word:{k:'たのしい',r:'たのしい',m:'즐겁다'},
  choices:['おもしろい','やさしい','あかるい','うれしい'],ans:'おもしろい',
  exp:'「たのしい(楽しい)」≒「おもしろい(面白い)」 둘 다 "재미있다/즐겁다". 「やさしい」=쉽다/친절하다, 「あかるい」=밝다, 「うれしい」=기쁘다.'},
 
 {s:'vocab',t:'vocab_syn',
- q:'もう少し <u>ゆっくり</u> はなして ください。',
+ q:'もう少し <u>ゆっくり</u> はなして ください。',fu:{'少':'すこ'},
  kr:'조금 더 천천히 말해 주세요.',
  word:{k:'ゆっくり',r:'ゆっくり',m:'천천히'},
  choices:['おそく','はやく','おおきく','しずかに'],ans:'おそく',
  exp:'「ゆっくり(話す)」≒「おそく(遅く)話す」 = 천천히 말하다. 「はやく」=빨리(반대), 「おおきく」=크게, 「しずかに」=조용히.'},
 
 {s:'vocab',t:'vocab_syn',
- q:'この もんだいは とても <u>むずかしい</u> です。',
+ q:'この もんだいは とても <u>むずかしい</u> です。',fu:{'問題':'もんだい'},
  kr:'이 문제는 매우 어렵습니다.',
  word:{k:'むずかしい',r:'むずかしい',m:'어렵다'},
  choices:['かんたんではない','つまらない','わからない','できない'],ans:'かんたんではない',
  exp:'「むずかしい」=어렵다 ≒「かんたんではない(簡単ではない)」=쉽지 않다. 「つまらない」=지루하다, 「わからない」=모른다는 비슷하지만 정확히는 다른 의미.'},
 
 {s:'vocab',t:'vocab_syn',
- q:'わたしは にほんごが <u>すこし</u> わかります。',
+ q:'わたしは にほんごが <u>すこし</u> わかります。',fu:{'日本語':'にほんご'},
  kr:'나는 일본어를 조금 압니다.',
  word:{k:'すこし',r:'すこし',m:'조금'},
  choices:['ちょっと','あまり','たくさん','ぜんぜん'],ans:'ちょっと',
  exp:'「すこし(少し)」≒「ちょっと」 둘 다 "조금". 「あまり」=별로(부정에 쓰임), 「たくさん」=많이(반대), 「ぜんぜん」=전혀.'},
 
 {s:'vocab',t:'vocab_syn',
- q:'きのう ともだちに プレゼントを <u>もらいました</u>。',
+ q:'きのう ともだちに プレゼントを <u>もらいました</u>。',fu:{},
  kr:'어제 친구에게 선물을 받았습니다.',
  word:{k:'もらいました',r:'もらいました',m:'받았습니다'},
  choices:['いただきました','あげました','くれました','おくりました'],ans:'いただきました',
  exp:'「もらいました」≒「いただきました」 둘 다 "받았습니다"(いただく가 더 정중). 「あげました」=줬습니다(반대), 「くれました」=줬습니다(상대가 나에게).'},
 
 {s:'vocab',t:'vocab_syn',
- q:'あしたの かいぎに <u>でる</u> ことができません。',
+ q:'あしたの かいぎに <u>でる</u> ことができません。',fu:{'会議':'かいぎ'},
  kr:'내일 회의에 나갈 수 없습니다.',
  word:{k:'でる',r:'でる',m:'나가다/참석하다'},
  choices:['さんかする','やすむ','おくれる','くる'],ans:'さんかする',
@@ -667,42 +673,42 @@ const SEED = [
 // ═══════════════════════════════════════════════════════
 
 {s:'grammar',t:'grammar_fill',
- q:'図書館（　　）本を読みます。',
+ q:'図書館（　　）本を読みます。',fu:{'図書館':'としょかん','本':'ほん','読':'よ'},
  kr:'도서관___ 책을 읽습니다.',
  word:{k:'で',r:'で',m:'에서 (동작 장소)'},
  choices:['で','に','を','が'],ans:'で',
  exp:'「で」= 동작이 일어나는 장소. 「図書館で読む」. 「に」는 있는 장소(います・あります) 또는 방향에 써요.'},
 
 {s:'grammar',t:'grammar_fill',
- q:'東京（　　）大阪まで、新幹線で二時間です。',
+ q:'東京（　　）大阪まで、新幹線で二時間です。',fu:{'東京':'とうきょう','大阪':'おおさか','新幹線':'しんかんせん','二時間':'にじかん'},
  kr:'도쿄___ 오사카까지 신칸센으로 두 시간입니다.',
  word:{k:'から',r:'から',m:'에서/부터 (출발점)'},
  choices:['から','まで','に','へ'],ans:'から',
  exp:'「から〜まで」= ~부터 ~까지. 出発点=から, 到着点=まで. セットで覚えよう!'},
 
 {s:'grammar',t:'grammar_fill',
- q:'りんご（　　）みかんを　かいました。',
+ q:'りんご（　　）みかんを　かいました。',fu:{},
  kr:'사과___ 귤을 샀습니다.',
  word:{k:'と',r:'と',m:'와/과 (전부 나열)'},
  choices:['と','や','か','も'],ans:'と',
  exp:'「と」= 전부 열거. 「や」= 일부 열거(~등). 「りんごとみかんだけ」사고 다른 건 안 샀을 때는「と」!'},
 
 {s:'grammar',t:'grammar_fill',
- q:'３じ（　　）ともだちに あいます。',
+ q:'３じ（　　）ともだちに あいます。',fu:{},
  kr:'3시___ 친구를 만납니다.',
  word:{k:'に',r:'に',m:'에 (시간)'},
  choices:['に','で','は','が'],ans:'に',
  exp:'時間+「に」= ~에. 「３時に、月曜日に」. 曜日・時刻に「に」を使う. ただし「まいにち・あした」など一部は「に」不要!'},
 
 {s:'grammar',t:'grammar_fill',
- q:'バスで えきの まえ（　　）おります。',
+ q:'バスで えきの まえ（　　）おります。',fu:{},
  kr:'버스로 역 앞___ 내립니다.',
  word:{k:'で',r:'で',m:'에서 (동작 장소)'},
  choices:['で','に','を','から'],ans:'で',
  exp:'降りる(おりる)의 장소 → 「で」. 「バス停でおりる」. 「に」는 이동의 도착점(乗る・つく 앞). おりる場所=「で」!'},
 
 {s:'grammar',t:'grammar_fill',
- q:'かばんの なか（　　）なにが ありますか。',
+ q:'かばんの なか（　　）なにが ありますか。',fu:{},
  kr:'가방 안___ 무엇이 있습니까?',
  word:{k:'に',r:'に',m:'에 (존재 위치)'},
  choices:['に','で','を','は'],ans:'に',
@@ -713,35 +719,35 @@ const SEED = [
 // ═══════════════════════════════════════════════════════
 
 {s:'grammar',t:'grammar_fill',
- q:'A「この本を かりても いいですか。」 B「はい。でも、あした（　　）ください。」',
+ q:'A「この本を かりても いいですか。」 B「はい。でも、あした（　　）ください。」',fu:{'本':'ほん'},
  kr:'A "이 책 빌려도 됩니까?" B "네. 하지만 내일 ___ 주세요."',
  word:{k:'かえして',r:'かえして',m:'돌려줘(て형)'},
  choices:['かえして','かえって','かして','もって'],ans:'かえして',
  exp:'かえす(返す)のて形=かえして. 「もどして」도 비슷. 「かえって」=帰って(돌아가다)는 전혀 다른 동사!'},
 
 {s:'grammar',t:'grammar_fill',
- q:'まいにち 30ぷん （　　） ジョギングします。',
+ q:'まいにち 30ぷん （　　） ジョギングします。',fu:{},
  kr:'매일 30분___ 조깅합니다.',
  word:{k:'ぐらい',r:'ぐらい',m:'정도'},
  choices:['ぐらい','ごろ','だけ','しか'],ans:'ぐらい',
  exp:'수량(時間・金額)+「ぐらい/くらい」=정도. 「30分ぐらい」. 「ごろ」는 시각의 "쯤"(3時ごろ). 수량에는「ぐらい」!'},
 
 {s:'grammar',t:'grammar_fill',
- q:'このへやで たばこを （　　）。',
+ q:'このへやで たばこを （　　）。',fu:{'部屋':'へや'},
  kr:'이 방에서 담배를 ___ (금지).',
  word:{k:'すわないでください',r:'すわないでください',m:'피우지 말아주세요'},
  choices:['すわないでください','すってください','すいてください','すわなかったください'],ans:'すわないでください',
  exp:'ない形+「でください」= ~하지 말아 주세요(禁止의뢰). 「吸わないでください」. 「吸ってください」=피워 주세요(반대!).'},
 
 {s:'grammar',t:'grammar_fill',
- q:'きのう ともだちと えいがを （　　）。',
+ q:'きのう ともだちと えいがを （　　）。',fu:{},
  kr:'어제 친구와 영화를 ___ .',
  word:{k:'みました',r:'みました',m:'봤습니다'},
  choices:['みました','みます','みたい','みていた'],ans:'みました',
  exp:'きのう(어제) + 과거형 = 「みました(見ました)」. 「みます」=봅니다(현재), 「みたい」=보고 싶다, 「みていた」=보고 있었다.'},
 
 {s:'grammar',t:'grammar_fill',
- q:'この しごとは むずかしくて、わたし（　　）できません。',
+ q:'この しごとは むずかしくて、わたし（　　）できません。',fu:{'仕事':'しごと'},
  kr:'이 일은 어려워서 저___ 할 수 없습니다.',
  word:{k:'には',r:'には',m:'에게는'},
  choices:['には','にも','では','でも'],ans:'には',
@@ -752,7 +758,7 @@ const SEED = [
 // ═══════════════════════════════════════════════════════
 
 {s:'reading',t:'reading',
- passage:'たなかさんは まいあさ ６じに おきます。それから、シャワーを あびて、朝ごはんを たべます。7じに いえを でて、8じに かいしゃに つきます。',
+ passage:'たなかさんは まいあさ ６じに おきます。それから、シャワーを あびて、朝ごはんを たべます。7じに いえを でて、8じに かいしゃに つきます。',passage_kr:'다나카 씨는 매일 아침 6시에 일어납니다. 그 다음 샤워를 하고 아침밥을 먹습니다. 7시에 집을 나서서 8시에 회사에 도착합니다.',
  q:'たなかさんは なんじに いえを でますか。',
  kr:'다나카 씨는 몇 시에 집을 나섭니까?',
  word:{k:'7時',r:'しちじ',m:'7시'},
@@ -760,7 +766,7 @@ const SEED = [
  exp:'「7じに いえを でて」が正解の根拠. 6時=起きる, 7時=家を出る, 8時=会社に着く. 시간 표현을 정확히 읽는 것이 포인트!'},
 
 {s:'reading',t:'reading',
- passage:'このレストランは 月曜日から 土曜日まで、11じから 22じまで あいています。日曜日は やすみです。',
+ passage:'このレストランは 月曜日から 土曜日まで、11じから 22じまで あいています。日曜日は やすみです。',passage_kr:'이 레스토랑은 월요일부터 토요일까지 11시부터 22시까지 영업합니다. 일요일은 쉽니다.',
  q:'このレストランが やすみの ひは いつですか。',
  kr:'이 레스토랑이 쉬는 날은 언제입니까?',
  word:{k:'日曜日',r:'にちようび',m:'일요일'},
@@ -768,7 +774,7 @@ const SEED = [
  exp:'「日曜日はやすみです」が正解根拠. N5독해는 지문에서 직접 찾을 수 있어요. 키워드「やすみ」를 찾으면 됩니다!'},
 
 {s:'reading',t:'reading',
- passage:'わたしは ペットが すきです。いぬを 2ひき、ねこを 1ぴき かっています。いぬの なまえは「ポチ」と「シロ」です。ねこの なまえは「クロ」です。',
+ passage:'わたしは ペットが すきです。いぬを 2ひき、ねこを 1ぴき かっています。いぬの なまえは「ポチ」と「シロ」です。ねこの なまえは「クロ」です。',passage_kr:'저는 애완동물을 좋아합니다. 개 2마리, 고양이 1마리를 키우고 있습니다. 개 이름은 「포치」와 「시로」입니다. 고양이 이름은 「쿠로」입니다.',
  q:'この ひとが かっている ペットは ぜんぶで なんびきですか。',
  kr:'이 사람이 키우는 애완동물은 전부 몇 마리입니까?',
  word:{k:'3匹',r:'さんびき',m:'3마리'},
@@ -776,7 +782,7 @@ const SEED = [
  exp:'いぬ2匹＋ねこ1匹＝3匹. 「ひき」는 작은 동물의 단위예요. 더하기 문제는 각 숫자를 찾아서 계산!'},
 
 {s:'reading',t:'reading',
- passage:'やまださんへ。あしたの パーティーに いきます。なにを もっていけばいいですか。わたしは ケーキを つくります。すずきより',
+ passage:'やまださんへ。あしたの パーティーに いきます。なにを もっていけばいいですか。わたしは ケーキを つくります。すずきより',passage_kr:'야마다 씨에게. 내일 파티에 갑니다. 무엇을 가져가면 좋을까요? 저는 케이크를 만들겠습니다. 스즈키로부터',
  q:'やまださんは このメモを よんで、なにが わかりますか。',
  kr:'야마다 씨는 이 메모를 읽고 무엇을 알 수 있습니까?',
  word:{k:'すずきさん',r:'すずきさん',m:'스즈키 씨'},
@@ -784,7 +790,7 @@ const SEED = [
  exp:'「わたしは ケーキを つくります」→ 스즈키 씨가 케이크를 만들어서 가져간다는 의미. 「パーティーはあした」이므로 오늘이 아님!'},
 
 {s:'reading',t:'reading',
- passage:'きむらさんは にほんごが すきです。まいにち 1じかん べんきょうします。らいねん、にほんに りゅうがくしたいと おもっています。',
+ passage:'きむらさんは にほんごが すきです。まいにち 1じかん べんきょうします。らいねん、にほんに りゅうがくしたいと おもっています。',passage_kr:'기무라 씨는 일본어를 좋아합니다. 매일 1시간 공부합니다. 내년에 일본에 유학하고 싶다고 생각하고 있습니다.',
  q:'きむらさんに ついて、ただしいのは どれですか。',
  kr:'기무라 씨에 대해 올바른 것은 어느 것입니까?',
  word:{k:'来年',r:'らいねん',m:'내년'},
@@ -1001,16 +1007,22 @@ function renderPoolInfo(){
   const fp=getFiltered();
   const mastered=fp.filter(q=>masteredKeys.has(qKey(q))).length;
   const wrong=wrongQs.filter(w=>filterS==='all'||fp.some(q=>qKey(q)===w.key)).length;
-  const remaining=fp.length-mastered-wrong;
+  const remaining=Math.max(0, fp.length-mastered-wrong);
   const tc=todayCount();
-  // dots
-  const dots=document.getElementById('tsDots');dots.innerHTML='';
+  const dots=document.getElementById('tsDots'); dots.innerHTML='';
   for(let i=0;i<GOAL;i++){const d=document.createElement('div');d.className='ts-dot'+(i<tc?' done':'');dots.appendChild(d);}
   document.getElementById('tsLabel').textContent=`${tc}/${GOAL}`;
-  const parts=[`남은 ${Math.max(0,remaining)}개`];
-  if(mastered>0)parts.push(`✅ ${mastered}개`);
-  if(wrong>0)parts.push(`🔄 복습 ${wrong}개`);
-  document.getElementById('poolInfo').textContent=parts.join('  ');
+
+  const todayStr=today();
+  const lastDate=localStorage.getItem('jpq_today_added_date')||'';
+  const todayNew=lastDate===todayStr?parseInt(localStorage.getItem('jpq_today_added')||'0'):0;
+
+  const parts=[`남은 ${remaining}개`];
+  if(mastered>0) parts.push(`✅ ${mastered}개`);
+  if(wrong>0) parts.push(`🔄 ${wrong}개`);
+  if(todayNew>0) parts.push(`🆕 +${todayNew}`);
+  if(generating) parts.push(`⏳생성중`);
+  document.getElementById('poolInfo').textContent=parts.join(' · ');
 }
 
 // 섹션별 색상
@@ -1025,14 +1037,115 @@ const TYPE_NAME={
 };
 
 // q 텍스트 처리
+// ── N5 한자 자동 후리가나 사전 ──
+const KANJI_MAP = {
+  // 숫자
+  '一':'いち','二':'に','三':'さん','四':'し','五':'ご',
+  '六':'ろく','七':'なな','八':'はち','九':'きゅう','十':'じゅう',
+  '百':'ひゃく','千':'せん','万':'まん',
+  // 날짜/시간
+  '年':'ねん','月':'つき','日':'にち','時':'じ','分':'ふん',
+  '週':'しゅう','今':'いま','昨':'さく','明':'あした',
+  '毎':'まい','朝':'あさ','晩':'ばん','夜':'よる','午':'ご',
+  '前':'まえ','後':'あと','間':'あいだ',
+  // 요일
+  '曜':'よう','火':'か','水':'みず','木':'き','金':'きん','土':'ど',
+  // 사람/가족
+  '人':'ひと','父':'ちち','母':'はは','兄':'あに','姉':'あね',
+  '弟':'おとうと','妹':'いもうと','子':'こ','友':'とも',
+  '先':'せん','生':'せい','男':'おとこ','女':'おんな',
+  // 장소
+  '山':'やま','川':'かわ','海':'うみ','空':'そら','森':'もり',
+  '林':'はやし','花':'はな','木':'き','石':'いし','田':'た',
+  '国':'くに','町':'まち','村':'むら','道':'みち','橋':'はし',
+  '駅':'えき','店':'みせ','家':'いえ','部':'へ','屋':'や',
+  // 학교/공부
+  '学':'がく','校':'こう','語':'ご','文':'ぶん','字':'じ',
+  '書':'か','読':'よ','話':'はな','聞':'き','見':'み',
+  '言':'い','教':'おし','習':'なら','勉':'べん','強':'つよ',
+  '問':'もん','題':'だい','答':'こた',
+  // 이동/교통
+  '行':'い','来':'く','帰':'かえ','出':'で','入':'はい',
+  '上':'うえ','下':'した','右':'みぎ','左':'ひだり','中':'なか',
+  '外':'そと','前':'まえ','後':'うし','東':'ひがし','西':'にし',
+  '南':'みなみ','北':'きた','電':'でん','車':'くるま','自':'じ',
+  // 동사/형용사 어간
+  '食':'た','飲':'の','買':'か','売':'う','作':'つく',
+  '使':'つか','起':'お','寝':'ね','立':'た','座':'すわ',
+  '走':'はし','歩':'ある','泳':'およ','待':'ま','会':'あ',
+  '開':'あ','閉':'し','休':'やす','働':'はたら',
+  '大':'おお','小':'ちい','高':'たか','安':'やす','新':'あたら',
+  '古':'ふる','長':'なが','短':'みじか','多':'おお','少':'すく',
+  '好':'す','悪':'わる','良':'よ','正':'ただ',
+  // 음식
+  '飯':'はん','米':'こめ','肉':'にく','魚':'さかな',
+  '野':'の','菜':'さい','果':'か','物':'もの',
+  // 신체
+  '体':'からだ','頭':'あたま','目':'め','耳':'みみ',
+  '口':'くち','手':'て','足':'あし','顔':'かお',
+  // 자주 나오는 복합어 (긴 것 우선)
+  '月曜日':'げつようび','火曜日':'かようび','水曜日':'すいようび',
+  '木曜日':'もくようび','金曜日':'きんようび','土曜日':'どようび',
+  '日曜日':'にちようび',
+  '今日':'きょう','明日':'あした','昨日':'きのう',
+  '今年':'ことし','来年':'らいねん','去年':'きょねん',
+  '今週':'こんしゅう','来週':'らいしゅう',
+  '今月':'こんげつ','来月':'らいげつ',
+  '毎日':'まいにち','毎週':'まいしゅう','毎月':'まいつき','毎年':'まいとし',
+  '毎朝':'まいあさ','毎晩':'まいばん',
+  '午前':'ごぜん','午後':'ごご',
+  '先生':'せんせい','学生':'がくせい','留学生':'りゅうがくせい',
+  '小学校':'しょうがっこう','中学校':'ちゅうがっこう',
+  '高校':'こうこう','大学':'だいがく',
+  '図書館':'としょかん','食堂':'しょくどう',
+  '電車':'でんしゃ','自転車':'じてんしゃ','自動車':'じどうしゃ',
+  '東京':'とうきょう','大阪':'おおさか','日本':'にほん',
+  '新幹線':'しんかんせん',
+  '会社':'かいしゃ','銀行':'ぎんこう','病院':'びょういん',
+  '駅':'えき','空港':'くうこう',
+  '食べ物':'たべもの','飲み物':'のみもの',
+  '日本語':'にほんご','英語':'えいご','中国語':'ちゅうごくご',
+  '外国語':'がいこくご','外国人':'がいこくじん',
+  '電話':'でんわ','電気':'でんき',
+  '買い物':'かいもの',
+  '友達':'ともだち',
+  '家族':'かぞく',
+  '学校':'がっこう',
+  '部屋':'へや',
+  '問題':'もんだい',
+  '勉強':'べんきょう',
+  '会議':'かいぎ',
+  '仕事':'しごと',
+  '休み':'やすみ',
+  '時間':'じかん',
+  '来月':'らいげつ',
+  '先週':'せんしゅう',
+};
+
+function autoFurigana(text, skipKanji){
+  const keys = Object.keys(KANJI_MAP).sort((a,b)=>b.length-a.length);
+  keys.forEach(k=>{
+    if(skipKanji && k===skipKanji) return;
+    if(text.includes('<ruby>'+k)) return;
+    const safe=k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    text=text.replace(new RegExp(safe,'g'),m=>`<ruby>${k}<rt>${KANJI_MAP[k]}</rt></ruby>`);
+  });
+  return text;
+}
+
 function processQText(q){
   let text = q.q;
+
+  // 빈칸 스타일
   text = text.replace(/___/g, '<span class="blank">　　　</span>');
   text = text.replace(/（　　）/g, '<span class="blank">（　　）</span>');
+
+  // 타입별 밑줄 처리
+  let skipKanji = null;
   if(q.t==='kanji_read'){
-    text = text.replace(/<u><b>(.*?)<\/b><\/u>/g,'<span class="hl-kanji">$1</span>');
-    text = text.replace(/<b><u>(.*?)<\/u><\/b>/g,'<span class="hl-kanji">$1</span>');
-    text = text.replace(/<u>(.*?)<\/u>/g,'<span class="hl-kanji">$1</span>');
+    text = text.replace(/<u><b>(.*?)<\/b><\/u>/g,(m,p1)=>{ skipKanji=p1; return `<span class="hl-kanji">${p1}</span>`; });
+    text = text.replace(/<b><u>(.*?)<\/u><\/b>/g,(m,p1)=>{ skipKanji=p1; return `<span class="hl-kanji">${p1}</span>`; });
+    text = text.replace(/<u>(.*?)<\/u>/g,(m,p1)=>{ if(!skipKanji)skipKanji=p1; return `<span class="hl-kanji">${p1}</span>`; });
   } else if(q.t==='kanji_write'){
     text = text.replace(/<u><b>(.*?)<\/b><\/u>/g,'<span class="hl-kana">$1</span>');
     text = text.replace(/<b><u>(.*?)<\/u><\/b>/g,'<span class="hl-kana">$1</span>');
@@ -1042,7 +1155,23 @@ function processQText(q){
     text = text.replace(/<b><u>(.*?)<\/u><\/b>/g,'<span class="hl-syn">$1</span>');
     text = text.replace(/<u>(.*?)<\/u>/g,'<span class="hl-syn">$1</span>');
   }
+
+  // 자동 후리가나 적용 (fu 맵 있으면 추가로 적용)
+  text = autoFurigana(text, skipKanji);
+  if(q.fu) {
+    Object.entries(q.fu).forEach(([k,v])=>{
+      if(k===skipKanji) return;
+      if(text.includes(`<ruby>${k}`)) return;
+      text = text.replace(new RegExp(k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),
+        `<ruby>${k}<rt>${v}</rt></ruby>`);
+    });
+  }
+
   return text;
+}
+
+function processPassage(text){
+  return autoFurigana(text, null);
 }
 
 function renderCard(q){
@@ -1059,10 +1188,12 @@ function renderCard(q){
   };
   let passageHtml='';
   if(q.t==='reading'&&q.passage){
-    passageHtml=`<div class="passage-label">📄 지문</div><div class="passage-box">${q.passage.replace(/\n/g,'<br>')}</div>`;
+    passageHtml=`<div class="passage-label">📄 지문</div><div class="passage-box">${processPassage(q.passage.replace(/\n/g,'<br>'))}</div>${q.passage_kr?`<div class="passage-kr-box" id="passageKrBox">${q.passage_kr}</div>`:''}`;  
   }
   const qText=processQText(q);
-  const krHtml=q.kr?`<button class="kr-toggle-btn" id="krToggleBtn" onclick="toggleKr()">🇰🇷 번역 보기</button><div class="kr-box" id="krBox">${q.kr}</div>`:'';
+  const hasTranslation = q.kr || (q.t==='reading' && q.passage_kr);
+  const krHtml=hasTranslation?`<button class="kr-toggle-btn" id="krToggleBtn" onclick="toggleKr()">🇰🇷 번역 보기</button>${q.kr?`<div class="kr-box" id="krBox">${q.kr}</div>`:''}`:'';
+
   const sc=[...q.choices]; shuffle(sc);
   window._sc=sc;
   const nums=['1','2','3','4'];
@@ -1085,11 +1216,15 @@ function renderCard(q){
 function toggleKr(){
   const box=document.getElementById('krBox');
   const btn=document.getElementById('krToggleBtn');
-  if(!box) return;
-  const s=box.classList.contains('show');
-  box.classList.toggle('show',!s);
-  btn.classList.toggle('revealed',!s);
-  btn.textContent=s?'🇰🇷 번역 보기':'🙈 번역 숨기기';
+  const pBox=document.getElementById('passageKrBox');
+  if(!box&&!pBox) return;
+  const s=box&&box.classList.contains('show');
+  if(box) box.classList.toggle('show',!s);
+  if(pBox) pBox.classList.toggle('show',!s);
+  if(btn){
+    btn.classList.toggle('revealed',!s);
+    btn.textContent=s?'🇰🇷 번역 보기':'🙈 번역 숨기기';
+  }
 }
 
 function escC(s){return s.replace(/'/g,"\\'");}
@@ -1319,7 +1454,30 @@ function parseAndAdd(text){
   }catch(e){console.error(e);}
 }
 
-// ── TOAST ──
+// ── 후리가나 토글 ──
+let furiganaOn = true;
+function toggleFurigana(){
+  furiganaOn = !furiganaOn;
+  document.body.classList.toggle('no-furigana', !furiganaOn);
+  const btn = document.getElementById('furiganaBtn');
+  if(btn){
+    btn.textContent = furiganaOn ? '読み ON' : '読み OFF';
+    btn.style.color = furiganaOn ? 'rgba(245,240,232,.5)' : 'var(--goldL)';
+    btn.style.borderColor = furiganaOn ? 'rgba(255,255,255,.2)' : 'var(--goldL)';
+  }
+  try{ localStorage.setItem('jpq_furigana', furiganaOn?'1':'0'); }catch(e){}
+}
+function initFurigana(){
+  try{
+    const saved = localStorage.getItem('jpq_furigana');
+    if(saved === '0'){ furiganaOn = false; document.body.classList.add('no-furigana'); }
+  }catch(e){}
+  const btn = document.getElementById('furiganaBtn');
+  if(btn){
+    btn.textContent = furiganaOn ? '読み ON' : '読み OFF';
+    btn.style.color = furiganaOn ? 'rgba(245,240,232,.5)' : 'var(--goldL)';
+  }
+}
 function showToast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);
@@ -1344,6 +1502,7 @@ document.querySelectorAll('.ntab').forEach(t=>t.addEventListener('click',()=>swi
 async function init(){
   await loadAll();
   initPool();
+  initFurigana();
   renderHome();
   renderSettings();
 }
